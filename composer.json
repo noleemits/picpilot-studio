@@ -1,0 +1,11 @@
+{
+  "name": "stephenlee/pic-pilot-studio",
+  "description": "Smart image assistant plugin for WordPress",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "PicPilot\\Studio\\": "includes/"
+    }
+  },
+  "require": {}
+}
