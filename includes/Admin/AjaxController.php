@@ -60,6 +60,7 @@ class AjaxController {
         error_log("📍 File path: $path");
 
         $result = ImageTrimmer::trim($path, $id);
+        wp_send_json($result);
 
         error_log("🔧 Trimming result: " . json_encode($result));
 

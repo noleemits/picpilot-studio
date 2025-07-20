@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     console.log(data);
                     const toast = document.createElement('div');
-                    toast.textContent = data.message || "Done";
+                    toast.textContent = data.message || "✅ Image trimmed. You may need to refresh or clear the cache to see it.";
                     toast.style.cssText = `
   position: fixed;
   bottom: 20px;

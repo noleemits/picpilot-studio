@@ -27,3 +27,26 @@ add_action('admin_enqueue_scripts', function () {
         null
     );
 });
+
+add_action('load-post.php', function () {
+    $screen = get_current_screen();
+    if ($screen && $screen->post_type === 'attachment') {
+        add_action('admin_enqueue_scripts', function () {
+            wp_enqueue_script(
+                'pic-pilot-editor-trim',
+                PIC_PILOT_STUDIO_URL . 'assets/js/editor-trim.js',
+                [],
+                null,
+                true
+            );
+
+            wp_localize_script('pic-pilot-editor-trim', 'PicPilotStudio', [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce'    => wp_create_nonce('pic_pilot_trim_image'),
+            ]);
+        });
+    }
+});
+
+
+add_filter('big_image_size_threshold', '__return_false');
