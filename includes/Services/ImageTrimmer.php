@@ -1,6 +1,6 @@
 <?php
 
-namespace PicPilot\Studio\Services;
+namespace PicPilotStudio\Services;
 
 class ImageTrimmer {
 

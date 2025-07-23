@@ -14,9 +14,13 @@ defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PicPilot\Studio\Plugin;
+// Ensure the Plugin class exists before using it
+if (class_exists('PicPilotStudio\Plugin')) {
+    \PicPilotStudio\Plugin::init();
+} else {
+    error_log('PicPilotStudio\Plugin class not found. Please check autoloading and class definition.');
+}
 
-Plugin::init();
 define('PIC_PILOT_STUDIO_URL', plugin_dir_url(__FILE__));
 
 add_action('admin_enqueue_scripts', function () {
