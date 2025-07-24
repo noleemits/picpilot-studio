@@ -5,6 +5,7 @@ namespace PicPilotStudio\Admin;
 use PicPilotStudio\Services\ImageDuplicator;
 use PicPilotStudio\Services\ImageTrimmer;
 use PicPilotStudio\Helpers\Logger;
+use PicPilotStudio\Helpers\FilenameGenerator;
 
 defined('ABSPATH') || exit;
 
@@ -14,6 +15,26 @@ class AjaxController {
         add_action('wp_ajax_pic_pilot_duplicate_image', [__CLASS__, 'handle_image_duplication']);
         add_action('wp_ajax_pic_pilot_trim_image', [__CLASS__, 'wp_ajax_pic_pilot_trim_image']);
         add_action('wp_ajax_picpilot_generate_metadata', [__CLASS__, 'generate_metadata']);
+        add_action('wp_ajax_picpilot_generate_filename', [__CLASS__, 'wp_ajax_picpilot_generate_filename']);
+    }
+
+    public static function wp_ajax_picpilot_generate_filename() {
+        check_ajax_referer('picpilot_studio_generate', 'nonce');
+
+        $id = absint($_POST['attachment_id'] ?? 0);
+        if (!$id || !wp_attachment_is_image($id)) {
+            wp_send_json_error(['message' => __('Invalid image ID.', 'pic-pilot-studio')]);
+        }
+
+        $result = FilenameGenerator::generate($id);
+
+        if (is_wp_error($result)) {
+            Logger::log('[FILENAME] Error: ' . $result->get_error_message());
+            wp_send_json_error(['message' => $result->get_error_message()]);
+        }
+
+        Logger::log("[FILENAME] ID $id - Generated: $result");
+        wp_send_json_success(['filename' => $result]);
     }
 
 

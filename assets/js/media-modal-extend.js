@@ -13,17 +13,9 @@
       duplicateQuick.className = 'button button-secondary';
       duplicateQuick.style.marginTop = '10px';
 
-      const duplicatePrompt = document.createElement('button');
-      duplicatePrompt.textContent = 'Duplicate + Title';
-      duplicatePrompt.className = 'button button-secondary';
-      duplicatePrompt.style.marginTop = '10px';
-      duplicatePrompt.style.marginLeft = '5px';
 
       const group = document.createElement('div');
       group.className = 'pic-pilot-duplicate-group';
-      group.appendChild(duplicateQuick);
-      group.appendChild(duplicatePrompt);
-
       const container = this.$el.find('.attachment-info')[0];
       if (container) {
         container.appendChild(group);
@@ -36,19 +28,71 @@
         container.appendChild(helper);
 
         duplicateQuick.addEventListener('click', () => {
-          sendDuplicateRequest(this.model.get('id'), null, null);
-        });
+          const id = this.model.get('id');
 
-        duplicatePrompt.addEventListener('click', () => {
-          const newTitle = prompt('Enter a new title for the duplicate (optional):');
-          const newFilename = prompt('Enter a new file name (without extension, optional):');
-          sendDuplicateRequest(this.model.get('id'), newTitle, newFilename);
+          if (PicPilotStudio.enable_filename_generation) {
+            createFilenameModal(id);
+          } else {
+            sendDuplicateRequest(id, null, null);
+          }
         });
       }
 
       return this;
     }
   });
+
+
+  //Modal logic
+  function createFilenameModal(id, button) {
+    if (document.getElementById('picpilot-filename-modal')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'picpilot-filename-modal';
+    modal.style.cssText = `
+    position: fixed; bottom: 100px; right: 20px; background: #fff;
+    border: 1px solid #ccc; padding: 15px; z-index: 9999; width: 320px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3); border-radius: 6px;
+    font-family: sans-serif;
+  `;
+
+    modal.innerHTML = `
+    <h3 style="margin-top: 0; font-size: 16px;">Choose a name for the duplicated file</h3>
+    <p style="font-size: 13px; opacity: 0.85; margin-bottom: 10px;">
+      You may generate a name with AI, type it manually, or use WordPress’s default automatic naming.
+    </p>
+    <input type="text" id="picpilot-filename-input" placeholder="Optional custom filename..." style="width: 100%; margin-bottom: 12px; padding: 6px; font-size: 13px;" />
+    <div style="display: flex; justify-content: space-between; gap: 6px;">
+      <button id="picpilot-filename-ai" style="flex: 1;">🧠 AI Filename</button>
+      <button id="picpilot-filename-manual" style="flex: 1;">💾 Use Manual</button>
+      <button id="picpilot-filename-auto" style="flex: 1;">🔄 Use Automatic</button>
+    </div>
+  `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById('picpilot-filename-ai').onclick = () => {
+      generateFilenameWithAI(id);
+    };
+
+    document.getElementById('picpilot-filename-manual').onclick = () => {
+      const filename = document.getElementById('picpilot-filename-input').value.trim();
+      closeModal();
+      sendDuplicateRequest(id, null, filename || null, button);
+    };
+
+    document.getElementById('picpilot-filename-auto').onclick = () => {
+      closeModal();
+      sendDuplicateRequest(id, null, null, button);
+    };
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('picpilot-filename-modal');
+    if (modal) modal.remove();
+  }
+
+
 
   function sendDuplicateRequest(id, title, filename) {
     const formData = new FormData();

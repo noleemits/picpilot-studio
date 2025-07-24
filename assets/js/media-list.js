@@ -77,6 +77,3 @@ function styleToast(toast) {
         pointer-events: none;
     `;
 }
-
-
-

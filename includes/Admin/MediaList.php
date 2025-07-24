@@ -48,7 +48,7 @@ class MediaList {
         if ($post->post_type === 'attachment' && current_user_can('upload_files')) {
             $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate (Quick)', 'pic-pilot-studio') . '</a>';
 
-            $actions['duplicate_image_prompt'] = '<a href="#" class="pic-pilot-duplicate-image-prompt" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate + Title', 'pic-pilot-studio') . '</a>';
+            // $actions['duplicate_image_prompt'] = '<a href="#" class="pic-pilot-duplicate-image-prompt" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate + Title', 'pic-pilot-studio') . '</a>';
 
             $actions['trim_image'] = '<a href="#" class="pic-pilot-trim-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Trim Image', 'pic-pilot-studio') . '</a>';
         }
@@ -74,8 +74,10 @@ class MediaList {
 
         wp_localize_script('pic-pilot-studio-duplicate', 'PicPilotStudio', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce'    => wp_create_nonce('pic_pilot_duplicate_image'),
+            'nonce'    => wp_create_nonce('picpilot_studio_generate'),
+            'enable_filename_generation' => get_option('picpilot_studio_settings')['enable_filename_generation'] ?? false,
         ]);
+
 
         // Enqueue media list script (vanilla JS)
         wp_enqueue_script(
