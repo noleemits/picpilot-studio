@@ -46,7 +46,7 @@ class MediaList {
 
     public static function add_duplicate_action($actions, $post) {
         if ($post->post_type === 'attachment' && current_user_can('upload_files')) {
-            $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate (Quick)', 'pic-pilot-studio') . '</a>';
+            $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate', 'pic-pilot-studio') . '</a>';
 
             // $actions['duplicate_image_prompt'] = '<a href="#" class="pic-pilot-duplicate-image-prompt" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate + Title', 'pic-pilot-studio') . '</a>';
 
@@ -87,6 +87,15 @@ class MediaList {
             '1.0.0',
             true
         );
+        //Enqueue smart duplication modal
+        wp_enqueue_script(
+            'picpilot-smart-duplication',
+            PIC_PILOT_STUDIO_URL . 'assets/js/smart-duplication-modal.js',
+            [],
+            null,
+            true
+        );
+
 
         // Attach config BEFORE script load
         wp_add_inline_script('pic-pilot-media-list', 'window.picPilotStudio = ' . json_encode([

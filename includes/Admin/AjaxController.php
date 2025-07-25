@@ -6,18 +6,64 @@ use PicPilotStudio\Services\ImageDuplicator;
 use PicPilotStudio\Services\ImageTrimmer;
 use PicPilotStudio\Helpers\Logger;
 use PicPilotStudio\Helpers\FilenameGenerator;
+use PicPilotStudio\Helpers\MetadataGenerator;
+
 
 defined('ABSPATH') || exit;
 
 class AjaxController {
 
     public static function init() {
-        add_action('wp_ajax_pic_pilot_duplicate_image', [__CLASS__, 'handle_image_duplication']);
+        add_action('wp_ajax_pic_pilot_duplicate_image', [__CLASS__, 'duplicate_image']);
         add_action('wp_ajax_pic_pilot_trim_image', [__CLASS__, 'wp_ajax_pic_pilot_trim_image']);
         add_action('wp_ajax_picpilot_generate_metadata', [__CLASS__, 'generate_metadata']);
         add_action('wp_ajax_picpilot_generate_filename', [__CLASS__, 'wp_ajax_picpilot_generate_filename']);
     }
 
+    //Duplicate image
+    public static function duplicate_image() {
+        check_ajax_referer('picpilot_studio_generate', 'nonce');
+
+        $id = absint($_POST['attachment_id'] ?? 0);
+        if (!$id || !wp_attachment_is_image($id)) {
+            wp_send_json_error(['message' => 'Invalid image ID.']);
+        }
+
+        $new_title = sanitize_text_field($_POST['new_title'] ?? '');
+        $new_alt = sanitize_text_field($_POST['new_alt'] ?? '');
+        $new_filename = sanitize_text_field($_POST['new_filename'] ?? '');
+
+        try {
+            if ($new_title === 'generate') {
+                $new_title = MetadataGenerator::generate($id, 'title');
+                if (is_wp_error($new_title)) throw new \Exception($new_title->get_error_message());
+                if (trim($new_title) === '') throw new \Exception('AI returned an empty title.');
+            }
+
+            if ($new_alt === 'generate') {
+                $new_alt = MetadataGenerator::generate($id, 'alt');
+                if (is_wp_error($new_alt)) throw new \Exception($new_alt->get_error_message());
+                if (trim($new_alt) === '') throw new \Exception('AI returned an empty alt text.');
+            }
+
+            if ($new_filename === 'generate') {
+                $new_filename = FilenameGenerator::generate($id);
+                if (is_wp_error($new_filename)) throw new \Exception($new_filename->get_error_message());
+                if (trim($new_filename) === '') throw new \Exception('AI returned an empty filename.');
+            }
+
+            $new_id = ImageDuplicator::duplicate($id, $new_title ?: null, $new_filename ?: null, $new_alt ?: null);
+
+            Logger::log("[DUPLICATE] Created #$new_id from #$id | Title: $new_title | Alt: $new_alt | Filename: $new_filename");
+            wp_send_json_success(['id' => $new_id]);
+        } catch (\Throwable $e) {
+            Logger::log('[DUPLICATE] Error: ' . $e->getMessage());
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+
+    // Generate filename
     public static function wp_ajax_picpilot_generate_filename() {
         check_ajax_referer('picpilot_studio_generate', 'nonce');
 
