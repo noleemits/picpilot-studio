@@ -1,6 +1,7 @@
 <?php
 
 namespace PicPilotStudio\Admin;
+use PicPilotStudio\Helpers\Logger;
 
 class Settings {
 
@@ -17,6 +18,7 @@ class Settings {
                 [self::class, 'render_settings_page']
             );
         });
+        add_action('admin_post_picpilot_clear_log', [self::class, 'handle_clear_log']);
     }
 
 
@@ -145,6 +147,9 @@ class Settings {
         echo '<a href="?page=pic-pilot-studio&tab=information" class="nav-tab ' . ($current_tab === 'information' ? 'nav-tab-active' : '') . '">';
         echo esc_html__('Information & Guide', 'pic-pilot-studio');
         echo '</a>';
+        echo '<a href="?page=pic-pilot-studio&tab=logs" class="nav-tab ' . ($current_tab === 'logs' ? 'nav-tab-active' : '') . '">';
+        echo esc_html__('Logs', 'pic-pilot-studio');
+        echo '</a>';
         echo '</nav>';
         
         echo '<div class="tab-content">';
@@ -155,6 +160,8 @@ class Settings {
             self::render_advanced_prompts_tab();
         } elseif ($current_tab === 'information') {
             self::render_information_tab();
+        } elseif ($current_tab === 'logs') {
+            self::render_logs_tab();
         }
         
         echo '</div>';
@@ -189,6 +196,39 @@ class Settings {
     
     private static function render_information_tab() {
         include __DIR__ . '/templates/settings-section-information.php';
+    }
+
+
+    private static function render_logs_tab() {
+        $log_file = Logger::LOG_FILE;
+        $log_data = file_exists($log_file) ? file_get_contents($log_file) : '';
+
+        if (isset($_GET['cleared'])) {
+            echo '<div class="updated notice"><p>' . esc_html__('Log cleared.', 'pic-pilot-studio') . '</p></div>';
+        }
+
+        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+        echo '<textarea readonly rows="20" style="width:100%;font-family:monospace;">' . esc_textarea($log_data) . '</textarea>';
+        wp_nonce_field('picpilot_clear_log');
+        echo '<input type="hidden" name="action" value="picpilot_clear_log">';
+        submit_button(esc_html__('Clear Log', 'pic-pilot-studio'), 'delete');
+        echo '</form>';
+    }
+
+    public static function handle_clear_log() {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('Unauthorized', 'pic-pilot-studio'));
+        }
+
+        check_admin_referer('picpilot_clear_log');
+
+        $log_file = Logger::LOG_FILE;
+        if (file_exists($log_file)) {
+            unlink($log_file);
+        }
+
+        wp_redirect(admin_url('admin.php?page=pic-pilot-studio&tab=logs&cleared=1'));
+        exit;
     }
 
     public static function sanitize_settings($input) {
