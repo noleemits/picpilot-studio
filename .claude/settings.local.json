@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm:*)",
+      "Bash(php -l:*)",
+      "WebFetch(domain:alttext.ai)",
+      "WebFetch(domain:wordpress.org)"
+    ],
+    "deny": []
+  }
+}

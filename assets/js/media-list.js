@@ -9,6 +9,12 @@ document.addEventListener('click', function (e) {
     btn.textContent = 'Generating...';
     btn.disabled = true;
 
+    // Debug log
+    console.log('Sending metadata request:', {
+        id, type, keywords,
+        keywordsElement: btn.closest('tr').querySelector('.picpilot-keywords')
+    });
+
     fetch(window.picPilotStudio.ajax_url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -23,15 +29,39 @@ document.addEventListener('click', function (e) {
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                showToast((type === 'alt' ? 'Alt' : 'Title') + ' generated ✔: ' + result.data.result);
+                let toastMessage = (type === 'alt' ? 'Alt' : 'Title') + ' generated ✔: ' + result.data.result;
+                
+                // Show fallback message if used
+                if (result.data.used_fallback && result.data.fallback_message) {
+                    toastMessage = result.data.fallback_message;
+                }
+                
+                showToast(toastMessage);
+                
+                // Update button text for alt text (now it exists, so should show "Regenerate")
+                if (type === 'alt') {
+                    btn.textContent = 'Regenerate Alt Text';
+                } else {
+                    btn.textContent = 'Generate Title';
+                }
             } else {
                 showToast('⚠ Failed: ' + result.data, true);
-
+                // Keep original button text on failure
+                btn.textContent = btn.textContent.replace('Generating...', 
+                    type === 'alt' ? 
+                        (btn.textContent.includes('Regenerate') ? 'Regenerate Alt Text' : 'Generate Alt Text') : 
+                        'Generate Title'
+                );
             }
         })
-        .catch(err => showToast('AJAX error: ' + err, true))
+        .catch(err => {
+            showToast('AJAX error: ' + err, true);
+            // Restore original button text on error
+            btn.textContent = type === 'alt' ? 
+                (btn.textContent.includes('Regenerate') ? 'Regenerate Alt Text' : 'Generate Alt Text') : 
+                'Generate Title';
+        })
         .finally(() => {
-            btn.textContent = type === 'alt' ? 'Generate Alt Text' : 'Generate Title';
             btn.disabled = false;
         });
 });

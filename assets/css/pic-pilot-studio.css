@@ -1,4 +1,5 @@
-.pic-pilot-duplicate-group {
+/* Duplicate Group Styles */
+.pic-pilot-studio .pic-pilot-duplicate-group {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -6,13 +7,13 @@
     width: 100%;
 }
 
-.pic-pilot-duplicate-group .button {
+.pic-pilot-studio .pic-pilot-duplicate-group .button {
     flex: 1 1 auto;
     min-width: 110px;
 }
 
-/*Toast style*/
-.pic-pilot-toast {
+/* Toast Notifications */
+.pic-pilot-studio .pic-pilot-toast {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -20,19 +21,319 @@
     color: #fff;
     padding: 10px 15px;
     border-radius: 5px;
-    z-index: 9999;
-    opacity: 0.95;
+    z-index: 169900;
+    opacity: 0;
     font-size: 13px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    z-index: 169900;
 }
 
-.pic-pilot-toast.show {
+.pic-pilot-studio .pic-pilot-toast.show {
     opacity: 0.95;
 }
 
-.pic-pilot-toast.error {
+.pic-pilot-studio .pic-pilot-toast.error {
     background: #d63638;
 }
+
+/* Generate/Regenerate Metadata Buttons */
+.pic-pilot-studio .picpilot-generate-meta {
+    cursor: pointer;
+    background: #2271b1;
+    color: #fff;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 2px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.pic-pilot-studio .picpilot-generate-meta:hover {
+    background: #135e96;
+    border-color: #135e96;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pic-pilot-studio .picpilot-generate-meta:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.pic-pilot-studio .picpilot-generate-meta:disabled {
+    cursor: not-allowed;
+    background: #ddd;
+    border-color: #ddd;
+    color: #999;
+    transform: none;
+    box-shadow: none;
+}
+
+.pic-pilot-studio .picpilot-generate-meta:disabled:hover {
+    background: #ddd;
+    border-color: #ddd;
+    color: #999;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Keywords Input Field */
+.pic-pilot-studio .picpilot-keywords {
+    cursor: text;
+    padding: 3px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 11px;
+    transition: border-color 0.2s ease;
+}
+
+.pic-pilot-studio .picpilot-keywords:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* Comprehensive Image Filter Dropdown */
+.pic-pilot-studio #picpilot-comprehensive-filter {
+    margin-left: 5px;
+    padding: 3px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    background: #fff;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.pic-pilot-studio #picpilot-comprehensive-filter:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+.pic-pilot-studio #picpilot-comprehensive-filter optgroup {
+    font-weight: bold;
+    color: #555;
+}
+
+.pic-pilot-studio #picpilot-comprehensive-filter option {
+    padding: 2px 4px;
+}
+
+/* Legacy alt filter (if still exists) */
+.pic-pilot-studio #picpilot-alt-filter {
+    margin-left: 5px;
+    padding: 3px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.pic-pilot-studio #picpilot-alt-filter:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* Attachment Edit Page Styles */
+.pic-pilot-studio #picpilot-edit-page-controls {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.pic-pilot-studio #picpilot-edit-page-controls h3 {
+    margin-top: 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+.pic-pilot-studio #picpilot-edit-keywords {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 100%;
+    font-size: 13px;
+}
+
+.pic-pilot-studio #picpilot-edit-keywords:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+.pic-pilot-studio .picpilot-edit-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pic-pilot-studio .picpilot-edit-buttons .button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pic-pilot-studio .picpilot-edit-buttons .button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pic-pilot-studio .picpilot-edit-buttons .button:disabled {
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+.pic-pilot-studio .picpilot-edit-buttons .button .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.pic-pilot-studio #picpilot-edit-status {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Image Tags Styles */
+.pic-pilot-studio .column-picpilot_tags {
+    max-width: 200px;
+}
+
+.pic-pilot-studio .picpilot-tag {
+    display: inline-block;
+    background: #0073aa;
+    color: white;
+    padding: 2px 6px;
+    margin: 1px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pic-pilot-studio .picpilot-tag:hover {
+    background: #005a87;
+}
+
+.pic-pilot-studio .picpilot-remove-tag {
+    margin-left: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.pic-pilot-studio .picpilot-remove-tag:hover {
+    opacity: 1;
+}
+
+.pic-pilot-studio .picpilot-add-tag-btn {
+    color: #0073aa;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+.pic-pilot-studio .picpilot-add-tag-btn:hover {
+    color: #005a87;
+    text-decoration: underline;
+}
+
+.pic-pilot-studio .picpilot-no-tags {
+    color: #999;
+    font-style: italic;
+    font-size: 11px;
+}
+
+/* Tag Filter Dropdown */
+.pic-pilot-studio #picpilot-tag-filter {
+    margin-left: 5px;
+    padding: 3px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.pic-pilot-studio #picpilot-tag-filter:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+/* Tag Modal Styles */
+.pic-pilot-studio .picpilot-tag-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pic-pilot-studio .picpilot-tag-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.pic-pilot-studio .picpilot-existing-tag {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.pic-pilot-studio .picpilot-existing-tag:hover {
+    background: #e0e0e0;
+    border-color: #ccc;
+}
+
+.pic-pilot-studio .picpilot-existing-tags {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 3px;
+}
+

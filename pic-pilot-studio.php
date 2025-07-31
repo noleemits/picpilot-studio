@@ -22,6 +22,7 @@ if (class_exists('PicPilotStudio\Plugin')) {
 }
 
 define('PIC_PILOT_STUDIO_URL', plugin_dir_url(__FILE__));
+define('PIC_PILOT_STUDIO_PATH', plugin_dir_path(__FILE__));
 
 add_action('admin_enqueue_scripts', function () {
     wp_enqueue_style(
@@ -32,25 +33,11 @@ add_action('admin_enqueue_scripts', function () {
     );
 });
 
-add_action('load-post.php', function () {
-    $screen = get_current_screen();
-    if ($screen && $screen->post_type === 'attachment') {
-        add_action('admin_enqueue_scripts', function () {
-            wp_enqueue_script(
-                'pic-pilot-editor-trim',
-                PIC_PILOT_STUDIO_URL . 'assets/js/editor-trim.js',
-                [],
-                null,
-                true
-            );
-
-            wp_localize_script('pic-pilot-editor-trim', 'PicPilotStudio', [
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce'    => wp_create_nonce('pic_pilot_trim_image'),
-            ]);
-        });
-    }
+// Add pic-pilot-studio class to WordPress admin body for CSS scoping
+add_action('admin_body_class', function($classes) {
+    return $classes . ' pic-pilot-studio';
 });
+
 
 
 add_filter('big_image_size_threshold', '__return_false');

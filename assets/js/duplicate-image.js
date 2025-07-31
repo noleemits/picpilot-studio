@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!id) return;
 
       if (PicPilotStudio.enable_filename_generation || PicPilotStudio.enable_title_generation_on_duplicate || PicPilotStudio.enable_alt_generation_on_duplicate) {
-        window.PicPilotFilenameModal?.open(id, (data) => {
-          sendDuplicateRequest(id, data.title, data.filename, data.alt, button);
+        window.PicPilotFilenameModal?.open(id, (data, modal, statusEl) => {
+          sendDuplicateRequest(id, data.title, data.filename, data.alt, button, data.keywords, modal, statusEl);
         });
       } else {
         sendDuplicateRequest(id, null, null, null, button);
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  function sendDuplicateRequest(attachmentId, newTitle = null, newFilename = null, newAlt = null, button) {
+  function sendDuplicateRequest(attachmentId, newTitle = null, newFilename = null, newAlt = null, button, keywords = null, modal = null, statusEl = null) {
     const formData = new FormData();
     formData.append('action', 'pic_pilot_duplicate_image');
     formData.append('attachment_id', attachmentId);
@@ -23,8 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (newTitle) formData.append('new_title', newTitle);
     if (newFilename) formData.append('new_filename', newFilename);
     if (newAlt) formData.append('new_alt', newAlt);
+    if (keywords) formData.append('keywords', keywords);
 
     button.textContent = 'Duplicating...';
+    
+    // Update modal status if available
+    if (statusEl) {
+      statusEl.textContent = 'Duplicating image...';
+      statusEl.style.color = '#0073aa';
+    }
 
     fetch(PicPilotStudio.ajax_url, {
       method: 'POST',
@@ -34,15 +41,34 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(res => res.json())
       .then(response => {
         if (response.success) {
+          if (statusEl) {
+            statusEl.textContent = '✅ Image duplicated successfully! Refreshing page...';
+            statusEl.style.color = '#46b450';
+          }
           showToast('✅ Image duplicated successfully!');
-          location.reload();
+          
+          // Close modal after a brief delay to show success message
+          setTimeout(() => {
+            if (modal) modal.remove();
+            location.reload();
+          }, 1500);
         } else {
-          showToast('❌ ' + (response.data?.message || 'Duplication failed.'));
+          const errorMsg = response.data?.message || 'Duplication failed.';
+          if (statusEl) {
+            statusEl.textContent = '❌ ' + errorMsg;
+            statusEl.style.color = '#dc3232';
+          }
+          showToast('❌ ' + errorMsg);
           button.textContent = 'Duplicate';
         }
       })
       .catch(() => {
-        showToast('❌ Request failed. Check your connection.');
+        const errorMsg = 'Request failed. Check your connection.';
+        if (statusEl) {
+          statusEl.textContent = '❌ ' + errorMsg;
+          statusEl.style.color = '#dc3232';
+        }
+        showToast('❌ ' + errorMsg);
         button.textContent = 'Duplicate';
       });
   }

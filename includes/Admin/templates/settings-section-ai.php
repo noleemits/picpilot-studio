@@ -5,10 +5,26 @@ use PicPilotStudio\Admin\Settings;
 
 $settings = [
     [
+        'key' => 'ai_provider',
+        'label' => __('🤖 AI Provider', 'pic-pilot-studio'),
+        'type' => 'select',
+        'options' => [
+            'openai' => __('OpenAI (GPT-4 Vision)', 'pic-pilot-studio'),
+            'gemini' => __('Google Gemini Pro Vision', 'pic-pilot-studio'),
+        ],
+        'description' => __('Choose which AI service to use for generating metadata.', 'pic-pilot-studio'),
+    ],
+    [
         'key' => 'openai_api_key',
         'label' => __('🔑 OpenAI API Key', 'pic-pilot-studio'),
         'type' => 'password-toggle',
-        'description' => __('Required to generate AI metadata using GPT-4 Vision. The key is hidden by default. Click the eye icon to reveal.', 'pic-pilot-studio'),
+        'description' => __('Required when using OpenAI provider. Get your API key from OpenAI dashboard.', 'pic-pilot-studio'),
+    ],
+    [
+        'key' => 'gemini_api_key',
+        'label' => __('🔑 Gemini API Key', 'pic-pilot-studio'),
+        'type' => 'password-toggle',
+        'description' => __('Required when using Gemini provider. Get your API key from Google AI Studio.', 'pic-pilot-studio'),
     ],
     [
         'key' => 'default_prompt_alt',
