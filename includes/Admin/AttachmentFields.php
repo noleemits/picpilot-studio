@@ -167,15 +167,15 @@ class AttachmentFields {
             'pic-pilot-attachment-fields',
             PIC_PILOT_STUDIO_URL . 'assets/css/pic-pilot-studio.css',
             [],
-            '1.0.0'
+            PIC_PILOT_STUDIO_VERSION
         );
 
-        // Enqueue JavaScript (fallback for contexts where inline loading doesn't work)
+        // Enqueue JavaScript (main updated file with jQuery for modal functionality)
         wp_enqueue_script(
             'pic-pilot-attachment-fields',
-            PIC_PILOT_STUDIO_URL . 'assets/js/attachment-fields-vanilla.js',
-            [],
-            '1.0.0',
+            PIC_PILOT_STUDIO_URL . 'assets/js/attachment-fields.js',
+            ['jquery'],
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 

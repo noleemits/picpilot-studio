@@ -1,69 +1,227 @@
 === Pic Pilot: Studio ===
 Contributors: stephenhernandez
-Tags: media library, image SEO, image title, alt text, AI, duplicate image
+Tags: AI, image SEO, alt text, image title, media library, OpenAI, GPT, Gemini, accessibility, metadata
 Requires at least: 5.6
-Tested up to: 6.5
+Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The ultimate media library productivity tool. Easily duplicate images with custom metadata and prepare them for SEO using smart automation.
+AI-powered image metadata generation for WordPress. Automatically create SEO-optimized titles, alt text, and duplicate images with intelligent AI assistance.
 
 == Description ==
 
-**Pic Pilot: Studio** is a productivity plugin for content creators, SEO experts, and image-heavy WordPress sites.
+**Pic Pilot: Studio** is an AI-powered media management plugin that revolutionizes how you handle image metadata on WordPress sites.
 
-Stop wasting time managing titles, filenames, and alt text by hand. Pic Pilot: Studio simplifies image metadata workflows by:
+Transform your content workflow with intelligent automation:
 
-- Duplicating images with custom titles and filenames
-- Offering one-click duplication inside Media Library and image modals
-- Preserving clean UI with toast notifications
-- Fully integrated with the Media Library and Gutenberg interface
+🤖 **AI-Powered Generation**
+- Generate SEO-optimized titles and alt text using OpenAI GPT-4o or Google Gemini
+- Context-aware descriptions with keyword integration
+- Professional-quality metadata in seconds
 
-This plugin is built to extend easily with future AI metadata generation (e.g., GPT/Gemini) and smart keyword suggestions.
+📸 **Smart Media Management**
+- One-click AI generation directly in Media Library
+- Duplicate images with AI-generated metadata
+- Bulk operations for processing multiple images
+- Real-time preview and editing capabilities
 
-**Developer-ready:** Built with Composer, PSR-4, translation-ready, and using vanilla JavaScript (no jQuery).
+⚡ **Performance Optimized**
+- Modern JavaScript with intelligent caching
+- Request deduplication prevents API waste
+- Throttled operations for smooth UI experience
+- Memory leak prevention and cleanup
+
+🔧 **Developer Features**
+- Built with Composer and PSR-4 architecture
+- Comprehensive logging and debugging tools
+- Translation-ready with text domain support
+- Extensible plugin architecture
+
+**Perfect for:** Content creators, SEO specialists, accessibility compliance, e-commerce sites, and any WordPress site with image-heavy content.
 
 == Features ==
 
-* 🔁 Duplicate images with or without custom titles and filenames
-* ⚡ AJAX-powered, non-blocking UI
-* ✨ Toast messages for clear user feedback
-* 💬 Translatable (text domain: `pic-pilot-studio`)
-* 🧱 Works inside the Media Library grid, list view, and modal
-* 🔌 PSR-4 + Composer structure for clean developer maintenance
-* 🔮 Future-ready for AI title/alt/keyword generation
+**🤖 AI-Powered Metadata Generation**
+* OpenAI GPT-4o and Google Gemini integration
+* Intelligent title and alt text generation
+* Context-aware descriptions with keyword support
+* Multiple response handling with best result selection
+* Fallback mechanisms for robust operation
+
+**📱 User Interface**
+* Native WordPress Media Library integration
+* Modal popup for AI tools with real-time preview
+* Bulk operations for processing multiple images
+* One-click generation buttons in attachment details
+* Progress indicators and status messages
+* Copy-to-clipboard functionality for logs
+
+**⚡ Performance & Reliability**
+* Request deduplication prevents API waste
+* Intelligent throttling and caching mechanisms
+* Memory leak prevention with automatic cleanup
+* Modern MutationObserver for efficient DOM monitoring
+* Comprehensive error handling and logging
+
+**🔧 Technical Features**
+* PSR-4 autoloading with Composer architecture
+* Translation-ready (text domain: `pic-pilot-studio`)
+* Extensible settings system with validation
+* Debug mode for development and troubleshooting
+* WordPress coding standards compliance
+
+**🎯 Integration Points**
+* Media Library grid and list views
+* Image edit screens and modals
+* Attachment details sidebar
+* Bulk operations interface
+* Settings page with comprehensive options
 
 == Installation ==
 
-1. Upload the plugin to your `/wp-content/plugins/` directory.
-2. Activate via Plugins → Pic Pilot: Studio.
-3. Use the Media Library to duplicate images or customize metadata.
+1. **Upload and Activate**
+   - Upload the plugin to your `/wp-content/plugins/` directory
+   - Activate via Plugins → Pic Pilot: Studio
+
+2. **Configure AI Settings**
+   - Go to Settings → Pic Pilot Studio
+   - Choose your AI provider (OpenAI or Google Gemini)
+   - Add your API key
+   - Configure generation settings and prompts
+
+3. **Start Using AI Tools**
+   - Open Media Library
+   - Click on any image to open details
+   - Use "🤖 AI Tools" button for metadata generation
+   - Or use bulk operations for multiple images
+
+**Requirements:**
+- WordPress 5.6 or higher
+- PHP 7.4 or higher
+- OpenAI API key or Google Gemini API key
+- cURL extension enabled
 
 == Screenshots ==
 
-1. Media Library (grid view) showing duplication buttons
-2. Image duplication prompt for title and file name
-3. Success toast message after duplication
+1. AI Tools modal showing title and alt text generation options
+2. Media Library integration with AI generation buttons
+3. Settings page with OpenAI and Gemini configuration
+4. Bulk operations interface for processing multiple images
+5. Real-time generation progress and success messages
+6. Debug logs with copy-to-clipboard functionality
 
 == Roadmap ==
 
-* AI-powered title/alt generation (ChatGPT, Gemini, Claude)
-* Keyword suggestions from post content
-* Image tagging and classification
-* Settings panel to choose metadata engines
-* Page builder compatibility enhancements
+**🗓️ Version 2.3 - Multilanguage Support (Q1 2025)**
+* Full internationalization (i18n) implementation
+* Translation support for Spanish, French, German, Portuguese, Italian
+* Language-specific AI prompt optimization
+* RTL language support (Arabic, Hebrew)
+* Community translation program launch
+
+**🗓️ Version 2.4 - Enhanced AI Features (Q2 2025)**
+* Claude AI integration (Anthropic)
+* Advanced keyword extraction from post content
+* Image classification and auto-tagging
+* Custom prompt templates and variables
+* AI model selection per image type
+
+**🗓️ Version 2.5 - Workflow Automation (Q3 2025)**
+* Automatic generation on image upload
+* Scheduled batch processing
+* Custom workflow rules and triggers
+* Integration with popular page builders (Elementor, Divi, Beaver Builder)
+* Advanced bulk operations with filtering
+
+**🗓️ Version 3.0 - Enterprise Features (Q4 2025)**
+* Multi-site network support
+* Team collaboration and approval workflows
+* Advanced analytics and usage reporting
+* Custom AI model training
+* White-label options for agencies
+* API endpoints for third-party integrations
+
+**🔮 Future Considerations**
+* Image background removal integration
+* Advanced image optimization features
+* Social media metadata generation
+* SEO score analysis and recommendations
+* Integration with popular SEO plugins (Yoast, RankMath)
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial release with image duplication and toast UI support
+= 2.2.0 - Performance Optimization Release =
+* **Performance**: Replaced deprecated DOMNodeInserted with modern MutationObserver
+* **Performance**: Implemented intelligent throttling and request deduplication
+* **Performance**: Added DOM query caching and memory leak prevention
+* **Performance**: Optimized event handling and reduced console logging overhead
+* **UI**: Added copy-to-clipboard functionality for debug logs
+* **Fix**: Resolved duplicate request error messages in frontend
+* **Dev**: Enhanced debugging tools with conditional logging
+
+= 2.1.2 - Stability & Deduplication =
+* **Fix**: Resolved multiple concurrent AJAX requests causing flickering UI
+* **Fix**: Implemented client-side and server-side request deduplication
+* **Enhancement**: Added version tracking for deployment verification
+* **Enhancement**: Improved error handling and user feedback messages
+* **Dev**: Enhanced logging system for better troubleshooting
+
+= 2.1.0 - AI Integration Major Release =
+* **New**: OpenAI GPT-4o integration for title and alt text generation
+* **New**: Google Gemini AI support as alternative provider
+* **New**: AI Tools modal with real-time preview
+* **New**: Context-aware generation with keyword support
+* **New**: Bulk operations for processing multiple images
+* **New**: Comprehensive settings page with AI configuration
+* **Enhancement**: Smart duplicate detection and handling
+* **Enhancement**: Professional prompt templates for better results
+
+= 2.0.0 - Architecture Rebuild =
+* **Major**: Complete codebase restructure with PSR-4 and Composer
+* **New**: Modern WordPress coding standards implementation
+* **New**: Extensible plugin architecture for future features
+* **New**: Comprehensive logging and debugging system
+* **New**: Translation-ready infrastructure
+* **Enhancement**: Improved Media Library integration
+* **Performance**: Modern JavaScript with jQuery optimization
+
+= 1.0.0 - Initial Release =
+* Basic image duplication functionality
+* Media Library integration
+* Toast notification system
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-First release of Pic Pilot: Studio – safe to upgrade.
+= 2.2.0 =
+Major performance improvements! Significantly faster Media Library experience with intelligent caching and modern DOM handling. Update recommended for all users.
+
+= 2.1.2 =
+Critical stability fix for AI generation. Resolves duplicate requests and flickering UI issues. Update strongly recommended.
+
+= 2.1.0 =
+Major feature release with full AI integration! OpenAI and Gemini support, bulk operations, and comprehensive AI tools. Backup before upgrading.
+
+== FAQ ==
+
+**Q: Do I need an API key to use this plugin?**
+A: Yes, you need either an OpenAI API key or Google Gemini API key to use the AI features. The plugin provides clear setup instructions.
+
+**Q: How much do the AI API calls cost?**
+A: OpenAI GPT-4o costs approximately $0.01-0.03 per image for title and alt text generation. Gemini is generally less expensive. The plugin includes request deduplication to minimize costs.
+
+**Q: Can I use this plugin without AI features?**
+A: The plugin focuses on AI-powered metadata generation. While image duplication works without AI, the main value comes from the AI features.
+
+**Q: Is my API key secure?**
+A: Yes, API keys are stored in your WordPress database and never transmitted except to the respective AI services (OpenAI/Google). Follow WordPress security best practices.
+
+**Q: Does this work with page builders?**
+A: Yes, the plugin integrates with WordPress Media Library, which works with all major page builders including Elementor, Divi, and Gutenberg.
+
+**Q: Can I customize the AI prompts?**
+A: Yes, the settings page allows you to customize prompts for different types of content and adjust AI behavior to match your needs.
 
 == License ==
 

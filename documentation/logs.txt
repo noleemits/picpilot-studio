@@ -1,125 +1,174 @@
-[2025-07-30 22:28:42] [AJAX] generate_metadata called - ID: 3327, Type: alt, Keywords: ''
-[2025-07-30 22:28:42] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"15a82f9c02","attachment_id":"3327","type":"alt","keywords":""}
-[2025-07-30 22:28:42] [AJAX] Calling MetadataGenerator::generate with keywords: ''
-[2025-07-30 22:28:42] [alt] === GEMINI METADATA GENERATION START ===
-[2025-07-30 22:28:42] [alt] Attachment ID: 3327
-[2025-07-30 22:28:42] [alt] Type: alt
-[2025-07-30 22:28:42] [alt] Keywords: '' (length: 0)
-[2025-07-30 22:28:42] [alt] Base prompt: Describe this image for alt text in one short sentence....
-[2025-07-30 22:28:42] [alt] WARNING: No keywords provided for metadata generation - AI will not have professional context
-[2025-07-30 22:28:42] [alt] Final prompt preview: Describe this image for alt text in one short sentence....
-[2025-07-30 22:28:42] [alt] Image processed - MIME: image/png, Base64 length: 4321616
-[2025-07-30 22:28:42] [alt] Making Gemini API request...
-[2025-07-30 22:28:47] [alt] Gemini API response received, checking for errors...
-[2025-07-30 22:28:47] [alt] Raw Gemini response (keywords: ''): A lush green lawn is surrounded by a vibrant garden and borders a tan house.
-[2025-07-30 22:28:47] [alt] Final cleaned result: A lush green lawn is surrounded by a vibrant garden and borders a tan house.
-[2025-07-30 22:28:47] [alt] === GEMINI METADATA GENERATION END ===
-[2025-07-30 22:28:47] [alt] Updated alt text for image ID: 3327
-[2025-07-30 22:28:47] [SUCCESS] [alt] Image ID: 3327, Keywords: '', Result: A lush green lawn is surrounded by a vibrant garden and borders a tan house.
-[2025-07-30 22:30:01] [AJAX] generate_metadata called - ID: 3327, Type: title, Keywords: ''
-[2025-07-30 22:30:01] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"15a82f9c02","attachment_id":"3327","type":"title","keywords":""}
-[2025-07-30 22:30:01] [AJAX] Calling MetadataGenerator::generate with keywords: ''
-[2025-07-30 22:30:01] [title] === GEMINI METADATA GENERATION START ===
-[2025-07-30 22:30:01] [title] Attachment ID: 3327
-[2025-07-30 22:30:01] [title] Type: title
-[2025-07-30 22:30:01] [title] Keywords: '' (length: 0)
-[2025-07-30 22:30:01] [title] Base prompt: Suggest a short SEO-friendly title for this image....
-[2025-07-30 22:30:01] [title] WARNING: No keywords provided for metadata generation - AI will not have professional context
-[2025-07-30 22:30:01] [title] Final prompt preview: Suggest a short SEO-friendly title for this image....
-[2025-07-30 22:30:01] [title] Image processed - MIME: image/png, Base64 length: 4321616
-[2025-07-30 22:30:01] [title] Making Gemini API request...
-[2025-07-30 22:30:08] [title] Gemini API response received, checking for errors...
-[2025-07-30 22:30:08] [title] Raw Gemini response (keywords: ''): Here are a few SEO-friendly title options for the image:
-
-* **Lush Green Garden Landscaping Ideas**
-* **Beautiful Backyard Garden Design**
-* **Home Landscaping with Lush Green Lawn**
-* **Curb Appeal: Stunning Garden Landscape**
-* **Residential Landscaping Inspiration**
-[2025-07-30 22:30:08] [EXTRACT] Found multiple suggestions, using first: Lush Green Garden Landscaping Ideas...
-[2025-07-30 22:30:08] [title] Final cleaned result: Lush Green Garden Landscaping Ideas
-[2025-07-30 22:30:08] [title] === GEMINI METADATA GENERATION END ===
-[2025-07-30 22:30:08] [title] Updated title for image ID: 3327
-[2025-07-30 22:30:08] [SUCCESS] [title] Image ID: 3327, Keywords: '', Result: Lush Green Garden Landscaping Ideas
-[2025-07-30 22:30:21] [AJAX] generate_metadata called - ID: 3327, Type: alt, Keywords: 'sweet scape'
-[2025-07-30 22:30:21] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"15a82f9c02","attachment_id":"3327","type":"alt","keywords":"sweet scape"}
-[2025-07-30 22:30:21] [AJAX] Calling MetadataGenerator::generate with keywords: 'sweet scape'
-[2025-07-30 22:30:21] [alt] === GEMINI METADATA GENERATION START ===
-[2025-07-30 22:30:21] [alt] Attachment ID: 3327
-[2025-07-30 22:30:21] [alt] Type: alt
-[2025-07-30 22:30:21] [alt] Keywords: 'sweet scape' (length: 11)
-[2025-07-30 22:30:21] [alt] Base prompt: Describe this image for alt text in one short sentence....
-[2025-07-30 22:30:21] [alt] Processing keywords: 'sweet scape'
-[2025-07-30 22:30:21] [alt] Enhanced prompt with keywords created (length: 598)
-[2025-07-30 22:30:21] [alt] Final prompt preview: CRITICAL CONTEXT: This image showssweet scape. Your description MUST start with their professional role. If an organization name is provided, include it. If not, just use the role. Format: '[Role]' or...
-[2025-07-30 22:30:21] [alt] Image processed - MIME: image/png, Base64 length: 4321616
-[2025-07-30 22:30:21] [alt] Making Gemini API request...
-[2025-07-30 22:30:27] [alt] Gemini API response received, checking for errors...
-[2025-07-30 22:30:27] [alt] Raw Gemini response (keywords: 'sweet scape'): Landscape Designer, wearing n/a, posing n/a. A lush green lawn is surrounded by a variety of plants and trees, with a house in the background.
-[2025-07-30 22:30:27] [EXTRACT] Multiple sentences detected, using first: Landscape Designer, wearing n/a, posing n/a....
-[2025-07-30 22:30:27] [alt] WARNING: Generated content may not include provided professional context
-[2025-07-30 22:30:27] [alt] Final cleaned result: Landscape Designer, wearing n/a, posing n/a.
-[2025-07-30 22:30:27] [alt] === GEMINI METADATA GENERATION END ===
-[2025-07-30 22:30:27] [alt] Updated alt text for image ID: 3327
-[2025-07-30 22:30:27] [SUCCESS] [alt] Image ID: 3327, Keywords: 'sweet scape', Result: Landscape Designer, wearing n/a, posing n/a.
-[2025-07-30 22:36:56] [AJAX] generate_metadata called - ID: 3327, Type: alt, Keywords: 'sweet scape'
-[2025-07-30 22:36:56] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"15a82f9c02","attachment_id":"3327","type":"alt","keywords":"sweet scape"}
-[2025-07-30 22:36:56] [AJAX] Calling MetadataGenerator::generate with keywords: 'sweet scape'
-[2025-07-30 22:36:56] [alt] === GEMINI METADATA GENERATION START ===
-[2025-07-30 22:36:56] [alt] Attachment ID: 3327
-[2025-07-30 22:36:56] [alt] Type: alt
-[2025-07-30 22:36:56] [alt] Keywords: 'sweet scape' (length: 11)
-[2025-07-30 22:36:56] [alt] Base prompt: Describe this image for alt text in one short sentence....
-[2025-07-30 22:36:56] [alt] Processing keywords: 'sweet scape'
-[2025-07-30 22:36:56] [alt] Enhanced prompt with keywords created (length: 98)
-[2025-07-30 22:36:56] [alt] Final prompt preview: This image showssweet scapeThis image showsDescribe this image for alt text in one short sentence....
-[2025-07-30 22:36:56] [alt] Image processed - MIME: image/png, Base64 length: 4321616
-[2025-07-30 22:36:56] [alt] Making Gemini API request...
-[2025-07-30 22:37:02] [alt] Gemini API response received, checking for errors...
-[2025-07-30 22:37:02] [alt] Raw Gemini response (keywords: 'sweet scape'): A lush green lawn is surrounded by a variety of plants and trees in a landscaped yard next to a tan house.
-[2025-07-30 22:37:02] [alt] WARNING: Generated content may not include provided professional context
-[2025-07-30 22:37:02] [alt] Final cleaned result: A lush green lawn is surrounded by a variety of plants and trees in a landscaped yard next to a tan house.
-[2025-07-30 22:37:02] [alt] === GEMINI METADATA GENERATION END ===
-[2025-07-30 22:37:02] [alt] Updated alt text for image ID: 3327
-[2025-07-30 22:37:02] [SUCCESS] [alt] Image ID: 3327, Keywords: 'sweet scape', Result: A lush green lawn is surrounded by a variety of plants and trees in a landscaped yard next to a tan 
-[2025-07-30 22:42:23] [AJAX] generate_metadata called - ID: 3327, Type: title, Keywords: 'sweet scape'
-[2025-07-30 22:42:23] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"15a82f9c02","attachment_id":"3327","type":"title","keywords":"sweet scape"}
-[2025-07-30 22:42:23] [AJAX] Calling MetadataGenerator::generate with keywords: 'sweet scape'
-[2025-07-30 22:42:23] [title] === GEMINI METADATA GENERATION START ===
-[2025-07-30 22:42:23] [title] Attachment ID: 3327
-[2025-07-30 22:42:23] [title] Type: title
-[2025-07-30 22:42:23] [title] Keywords: 'sweet scape' (length: 11)
-[2025-07-30 22:42:23] [title] Base prompt: Suggest a short SEO-friendly title for this image....
-[2025-07-30 22:42:23] [title] Processing keywords: 'sweet scape'
-[2025-07-30 22:42:23] [title] Enhanced prompt with keywords created (length: 93)
-[2025-07-30 22:42:23] [title] Final prompt preview: This image showssweet scapeThis image showsSuggest a short SEO-friendly title for this image....
-[2025-07-30 22:42:23] [title] Image processed - MIME: image/png, Base64 length: 4321616
-[2025-07-30 22:42:23] [title] Making Gemini API request...
-[2025-07-30 22:42:37] [title] Gemini API response received, checking for errors...
-[2025-07-30 22:42:37] [title] Raw Gemini response (keywords: 'sweet scape'): Here are some SEO-friendly title options for the image:
-
-**Short & Sweet:**
-
-* Lush Green Lawn Landscaping
-* Backyard Garden Oasis
-* Beautiful Home Garden Design
-
-**More Descriptive:**
-
-* Residential Landscaping with Lush Green Lawn
-* Backyard Garden Paradise with Tropical Plants
-* Home Garden Design Ideas with Curb Appeal
-
-**Keyword Focused:**
-
-* Landscape Design Ideas for Small Yards
-* Tropical Garden Landscaping Inspiration
-* Creating a Lush Green Lawn: Tips & Tricks
-
-
-When choosing, consider the specific content where the image will be used and the target audience.  For example, if the image is for a landscaping company's website, a more keyword-focused title might be best.  If it's for a general gardening blog
-[2025-07-30 22:42:37] [EXTRACT] Found multiple suggestions, using first: *Short & Sweet:**...
-[2025-07-30 22:42:37] [title] Final cleaned result: *Short & Sweet:**
-[2025-07-30 22:42:37] [title] === GEMINI METADATA GENERATION END ===
-[2025-07-30 22:42:37] [title] Updated title for image ID: 3327
-[2025-07-30 22:42:37] [SUCCESS] [title] Image ID: 3327, Keywords: 'sweet scape', Result: *Short & Sweet:**
+[2025-07-31 14:47:13] [UPLOAD] handle_new_attachment called for ID: 116063
+[2025-07-31 14:47:13] [UPLOAD] Skipping non-image attachment ID: 116063
+[2025-07-31 14:53:45] [UPLOAD] handle_new_attachment called for ID: 116065
+[2025-07-31 14:53:45] [UPLOAD] Settings - Alt: disabled, Title: disabled
+[2025-07-31 14:53:45] [UPLOAD] No auto-generation features enabled, skipping
+[2025-07-31 15:08:18] [UPLOAD] handle_new_attachment called for ID: 116070
+[2025-07-31 15:08:18] [UPLOAD] Settings - Alt: disabled, Title: disabled
+[2025-07-31 15:08:18] [UPLOAD] No auto-generation features enabled, skipping
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Request marked as active - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] === METADATA GENERATION START ===
+[2025-07-31 15:08:39] [alt] Attachment ID: 116070
+[2025-07-31 15:08:39] [alt] Type: alt
+[2025-07-31 15:08:39] [alt] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:39] [alt] Keywords empty check: NO
+[2025-07-31 15:08:39] [alt] Base prompt: Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the mai...
+[2025-07-31 15:08:39] [alt] Processing keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] Enhanced prompt with keywords created (length: 300)
+[2025-07-31 15:08:39] [alt] Final prompt preview: Context: This image shows Pilates. Incorporate this context naturally into your description. Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the main subje...
+[2025-07-31 15:08:39] [alt] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:39] [alt] Making OpenAI API request...
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:39] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Request marked as active - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] === METADATA GENERATION START ===
+[2025-07-31 15:08:39] [alt] Attachment ID: 116070
+[2025-07-31 15:08:39] [alt] Type: alt
+[2025-07-31 15:08:39] [alt] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:39] [alt] Keywords empty check: NO
+[2025-07-31 15:08:39] [alt] Base prompt: Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the mai...
+[2025-07-31 15:08:39] [alt] Processing keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] Enhanced prompt with keywords created (length: 300)
+[2025-07-31 15:08:39] [alt] Final prompt preview: Context: This image shows Pilates. Incorporate this context naturally into your description. Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the main subje...
+[2025-07-31 15:08:39] [alt] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:39] [alt] Making OpenAI API request...
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:39] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:39] [AJAX] Request marked as active - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] === METADATA GENERATION START ===
+[2025-07-31 15:08:39] [alt] Attachment ID: 116070
+[2025-07-31 15:08:39] [alt] Type: alt
+[2025-07-31 15:08:39] [alt] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:39] [alt] Keywords empty check: NO
+[2025-07-31 15:08:39] [alt] Base prompt: Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the mai...
+[2025-07-31 15:08:39] [alt] Processing keywords: 'Pilates'
+[2025-07-31 15:08:39] [alt] Enhanced prompt with keywords created (length: 300)
+[2025-07-31 15:08:39] [alt] Final prompt preview: Context: This image shows Pilates. Incorporate this context naturally into your description. Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the main subje...
+[2025-07-31 15:08:39] [alt] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:39] [alt] Making OpenAI API request...
+[2025-07-31 15:08:39] [AJAX] generate_metadata called - ID: 116070, Type: alt, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"alt","keywords":"Pilates"}
+[2025-07-31 15:08:39] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:39] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:39] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:42] [alt] API response received, checking for errors...
+[2025-07-31 15:08:42] [alt] Raw AI response (keywords: 'Pilates'): Women practicing Pilates on reformers, stretching arms over heads. Mirrors and plants in the background enhance the studio setting.
+[2025-07-31 15:08:42] [EXTRACT] Multiple sentences detected, using first: Women practicing Pilates on reformers, stretching arms over heads....
+[2025-07-31 15:08:42] [alt] SUCCESS: Generated content includes professional context
+[2025-07-31 15:08:42] [alt] Final cleaned result: Women practicing Pilates on reformers, stretching arms over heads.
+[2025-07-31 15:08:42] [alt] === METADATA GENERATION END ===
+[2025-07-31 15:08:42] [alt] Updated alt text for image ID: 116070
+[2025-07-31 15:08:42] [SUCCESS] [alt] Image ID: 116070, Keywords: 'Pilates', Result: Women practicing Pilates on reformers, stretching arms over heads.
+[2025-07-31 15:08:42] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:42] [alt] API response received, checking for errors...
+[2025-07-31 15:08:42] [alt] Raw AI response (keywords: 'Pilates'): Women perform Pilates stretches on reformer machines in a studio, focusing on balance and flexibility.
+[2025-07-31 15:08:42] [alt] SUCCESS: Generated content includes professional context
+[2025-07-31 15:08:42] [alt] Final cleaned result: Women perform Pilates stretches on reformer machines in a studio, focusing on balance and flexibility.
+[2025-07-31 15:08:42] [alt] === METADATA GENERATION END ===
+[2025-07-31 15:08:42] [alt] Updated alt text for image ID: 116070
+[2025-07-31 15:08:42] [SUCCESS] [alt] Image ID: 116070, Keywords: 'Pilates', Result: Women perform Pilates stretches on reformer machines in a studio, focusing on balance and flexibilit
+[2025-07-31 15:08:42] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:42] [alt] API response received, checking for errors...
+[2025-07-31 15:08:42] [alt] Raw AI response (keywords: 'Pilates'): Women practicing Pilates on reformer machines, stretching sideways, smiling, and focusing on movement in a studio setting.
+[2025-07-31 15:08:42] [alt] SUCCESS: Generated content includes professional context
+[2025-07-31 15:08:42] [alt] Final cleaned result: Women practicing Pilates on reformer machines, stretching sideways, smiling, and focusing on movement in a studio setting.
+[2025-07-31 15:08:42] [alt] === METADATA GENERATION END ===
+[2025-07-31 15:08:42] [alt] Updated alt text for image ID: 116070
+[2025-07-31 15:08:42] [SUCCESS] [alt] Image ID: 116070, Keywords: 'Pilates', Result: Women practicing Pilates on reformer machines, stretching sideways, smiling, and focusing on movemen
+[2025-07-31 15:08:42] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_alt_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] Request marked as active - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] === METADATA GENERATION START ===
+[2025-07-31 15:08:51] [title] Attachment ID: 116070
+[2025-07-31 15:08:51] [title] Type: title
+[2025-07-31 15:08:51] [title] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:51] [title] Keywords empty check: NO
+[2025-07-31 15:08:51] [title] Base prompt: Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key element...
+[2025-07-31 15:08:51] [title] Processing keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] Enhanced prompt with keywords created (length: 276)
+[2025-07-31 15:08:51] [title] Final prompt preview: Context: This image shows Pilates. Use this context to create a more specific and relevant title. Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key elements....
+[2025-07-31 15:08:51] [title] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:51] [title] Making OpenAI API request...
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:51] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Request marked as active - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] === METADATA GENERATION START ===
+[2025-07-31 15:08:51] [title] Attachment ID: 116070
+[2025-07-31 15:08:51] [title] Type: title
+[2025-07-31 15:08:51] [title] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:51] [title] Keywords empty check: NO
+[2025-07-31 15:08:51] [title] Base prompt: Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key element...
+[2025-07-31 15:08:51] [title] Processing keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] Enhanced prompt with keywords created (length: 276)
+[2025-07-31 15:08:51] [title] Final prompt preview: Context: This image shows Pilates. Use this context to create a more specific and relevant title. Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key elements....
+[2025-07-31 15:08:51] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:51] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:51] [title] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:51] [title] Making OpenAI API request...
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] Request marked as active - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Calling MetadataGenerator::generate with keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] === METADATA GENERATION START ===
+[2025-07-31 15:08:51] [title] Attachment ID: 116070
+[2025-07-31 15:08:51] [title] Type: title
+[2025-07-31 15:08:51] [title] Keywords: 'Pilates' (length: 7)
+[2025-07-31 15:08:51] [title] Keywords empty check: NO
+[2025-07-31 15:08:51] [title] Base prompt: Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key element...
+[2025-07-31 15:08:51] [title] Processing keywords: 'Pilates'
+[2025-07-31 15:08:51] [title] Enhanced prompt with keywords created (length: 276)
+[2025-07-31 15:08:51] [title] Final prompt preview: Context: This image shows Pilates. Use this context to create a more specific and relevant title. Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key elements....
+[2025-07-31 15:08:51] [title] Image processed - MIME: image/webp, Base64 length: 71196
+[2025-07-31 15:08:51] [title] Making OpenAI API request...
+[2025-07-31 15:08:51] [AJAX] generate_metadata called - ID: 116070, Type: title, Keywords: 'Pilates', JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Raw POST data: {"action":"picpilot_generate_metadata","nonce":"43fd23f02d","attachment_id":"116070","type":"title","keywords":"Pilates"}
+[2025-07-31 15:08:51] [AJAX] Duplicate request blocked - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:51] [AJAX] Request failed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f
+[2025-07-31 15:08:51] [ERROR] Image ID: 116070, Reason: Duplicate request blocked - generation already in progress
+[2025-07-31 15:08:52] [title] API response received, checking for errors...
+[2025-07-31 15:08:52] [title] Raw AI response (keywords: 'Pilates'): Group Pilates Class on Reformers for Core Strength and Flexibility
+[2025-07-31 15:08:52] [title] Final cleaned result: Group Pilates Class on Reformers for Core Strength and Flexibility
+[2025-07-31 15:08:52] [title] === METADATA GENERATION END ===
+[2025-07-31 15:08:52] [title] Updated title for image ID: 116070
+[2025-07-31 15:08:52] [SUCCESS] [title] Image ID: 116070, Keywords: 'Pilates', Result: Group Pilates Class on Reformers for Core Strength and Flexibility
+[2025-07-31 15:08:52] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:53] [title] API response received, checking for errors...
+[2025-07-31 15:08:53] [title] Raw AI response (keywords: 'Pilates'): Dynamic Pilates Class on Reformers: Enhancing Flexibility and Strength
+[2025-07-31 15:08:53] [title] Final cleaned result: Dynamic Pilates Class on Reformers: Enhancing Flexibility and Strength
+[2025-07-31 15:08:53] [title] === METADATA GENERATION END ===
+[2025-07-31 15:08:53] [title] Updated title for image ID: 116070
+[2025-07-31 15:08:53] [SUCCESS] [title] Image ID: 116070, Keywords: 'Pilates', Result: Dynamic Pilates Class on Reformers: Enhancing Flexibility and Strength
+[2025-07-31 15:08:53] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown
+[2025-07-31 15:08:53] [title] API response received, checking for errors...
+[2025-07-31 15:08:53] [title] Raw AI response (keywords: 'Pilates'): Women Enjoying Group Pilates Reformer Class in Fitness Studio
+[2025-07-31 15:08:53] [title] Final cleaned result: Women Enjoying Group Pilates Reformer Class in Fitness Studio
+[2025-07-31 15:08:53] [title] === METADATA GENERATION END ===
+[2025-07-31 15:08:53] [title] Updated title for image ID: 116070
+[2025-07-31 15:08:53] [SUCCESS] [title] Image ID: 116070, Keywords: 'Pilates', Result: Women Enjoying Group Pilates Reformer Class in Fitness Studio
+[2025-07-31 15:08:53] [AJAX] Request completed and cleaned up - Key: picpilot_gen_116070_title_703de7736fc7280a781ecafec1d9401f, JS Version: unknown

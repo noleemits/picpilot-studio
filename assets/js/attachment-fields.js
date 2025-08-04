@@ -4,9 +4,17 @@
  */
 
 // Immediate test to verify script loading
-console.log('🖼️ PicPilot attachment-fields.js is loading...');
-console.log('🖼️ Location:', window.location.href);
-console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
+const PICPILOT_JS_VERSION = '2.2.0-performance-optimized';
+const PICPILOT_DEBUG = false; // Set to true for debugging
+
+// Optimized logging
+function debugLog(...args) {
+    if (PICPILOT_DEBUG && console?.log) {
+        console.log('🖼️', ...args);
+    }
+}
+
+debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION);
 
 (function($) {
     'use strict';
@@ -19,111 +27,187 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
         return false;
     };
 
+    // Global state for request deduplication and performance optimization
+    window.picPilotActiveRequests = window.picPilotActiveRequests || {};
+    let initAIToolsThrottled = null;
+    let mutationObserver = null;
+    
     $(document).ready(function() {
         try {
-            console.log('🖼️ Pic Pilot Attachment Fields initialized');
-            console.log('🖼️ jQuery version:', $.fn.jquery);
-            console.log('🖼️ Current URL:', window.location.href);
-            initAITools();
+            debugLog('Pic Pilot Attachment Fields initialized - Version:', PICPILOT_JS_VERSION);
+            initializePerformantAITools();
         } catch (error) {
             console.error('🖼️ Error during initialization:', error);
         }
     });
 
-    // Initialize when media modal opens or content changes
-    $(document).on('DOMNodeInserted', function(e) {
-        if ($(e.target).find('.pic-pilot-attachment-ai-tools').length) {
-            console.log('🖼️ AI Tools detected in new content, initializing...');
-            setTimeout(initAITools, 100); // Small delay to ensure DOM is ready
+    // Throttled initAITools to prevent excessive calls
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
         }
-    });
-    
-    // More aggressive detection for when attachment details show
-    $(document).on('click', '.attachment, .media-modal .attachment', function() {
-        setTimeout(function() {
-            console.log('🖼️ Attachment clicked, checking for AI Tools...');
-            initAITools();
-        }, 300);
-    });
+    }
 
-    // Also listen for WordPress media events
-    $(document).on('click', '.media-modal', function() {
-        setTimeout(initAITools, 200);
-    });
+    // Performance-optimized initialization
+    function initializePerformantAITools() {
+        // Create throttled version of initAITools (max once per 250ms)
+        initAIToolsThrottled = throttle(initAITools, 250);
+        
+        // Initialize immediately
+        initAIToolsThrottled();
+        
+        // Set up modern MutationObserver instead of deprecated DOMNodeInserted
+        setupMutationObserver();
+        
+        // Set up optimized event listeners
+        setupOptimizedEventListeners();
+    }
 
-    // More comprehensive WordPress media events
-    if (typeof wp !== 'undefined' && wp.media) {
-        // Hook into media modal opening
-        $(document).on('click', '.add_media, .elementor-control-media__file__edit', function() {
-            setTimeout(function() {
-                console.log('🖼️ Media modal opened via button click, initializing...');
-                initAITools();
-            }, 500);
+    function setupMutationObserver() {
+        if (mutationObserver) {
+            mutationObserver.disconnect();
+        }
+
+        mutationObserver = new MutationObserver(function(mutations) {
+            let shouldInit = false;
+            
+            mutations.forEach(function(mutation) {
+                // Only check added nodes
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    for (let node of mutation.addedNodes) {
+                        if (node.nodeType === 1) { // Element node
+                            // Check if AI tools container was added
+                            if (node.classList?.contains('pic-pilot-attachment-ai-tools') ||
+                                node.querySelector?.('.pic-pilot-attachment-ai-tools')) {
+                                shouldInit = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (shouldInit) {
+                debugLog('AI Tools detected via MutationObserver');
+                initAIToolsThrottled();
+            }
         });
 
-        // Hook into media frame events if available
-        wp.media.view.Modal && (function() {
+        // Observe changes to body and media modal containers
+        mutationObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    function setupOptimizedEventListeners() {
+        // Single consolidated click handler with event delegation
+        $(document).off('click.picpilot').on('click.picpilot', '.attachment, .media-modal, .add_media', function(e) {
+            // Only init if clicking on attachment or media modal areas
+            if ($(e.target).closest('.attachment, .media-modal').length > 0) {
+                debugLog('Media interaction detected, initializing AI Tools');
+                initAIToolsThrottled();
+            }
+        });
+    }
+
+    // Optimized WordPress media events integration
+    function setupWordPressMediaHooks() {
+        if (typeof wp === 'undefined' || !wp.media) return;
+
+        // Hook into media frame events if available (throttled)
+        if (wp.media.view.Modal) {
             const originalOpen = wp.media.view.Modal.prototype.open;
             wp.media.view.Modal.prototype.open = function() {
                 const result = originalOpen.apply(this, arguments);
-                setTimeout(initAITools, 300);
+                // Use throttled version with minimal delay
+                setTimeout(initAIToolsThrottled, 100);
                 return result;
             };
-        })();
+        }
 
-        // Hook into attachment details rendering
-        wp.media.view.Attachment && wp.media.view.Attachment.Details && (function() {
+        // Hook into attachment details rendering (throttled)
+        if (wp.media.view.Attachment && wp.media.view.Attachment.Details) {
             const originalRender = wp.media.view.Attachment.Details.prototype.render;
             wp.media.view.Attachment.Details.prototype.render = function() {
                 const result = originalRender.apply(this, arguments);
-                setTimeout(initAITools, 100);
+                // Use throttled version immediately after render
+                initAIToolsThrottled();
                 return result;
             };
-        })();
+        }
     }
+
+    // Initialize WordPress hooks after DOM ready
+    $(document).ready(function() {
+        setupWordPressMediaHooks();
+    });
+
+    // Cache DOM queries to improve performance
+    let $cachedElements = {
+        buttons: null,
+        containers: null,
+        lastUpdate: 0
+    };
+    
+    const CACHE_DURATION = 1000; // Cache for 1 second
 
     function initAITools() {
         try {
-            const $buttons = $('.pic-pilot-launch-modal-btn:not(.bound)');
-            console.log('🖼️ Found', $buttons.length, 'unbound AI Tools buttons');
-            
-            if ($buttons.length === 0) {
-                console.log('🖼️ No AI Tools buttons found. Looking for containers...');
-                console.log('🖼️ AI Tools containers:', $('.pic-pilot-attachment-ai-tools').length);
-                
-                // Debug: Check what's in the media sidebar
-                console.log('🖼️ Media sidebar elements:', $('.media-sidebar').length);
-                console.log('🖼️ Attachment details elements:', $('.attachment-details').length);
-                console.log('🖼️ All buttons in sidebar:', $('.media-sidebar button, .attachment-details button').length);
+            // Check if we need to refresh cache
+            const now = Date.now();
+            if (!$cachedElements.buttons || (now - $cachedElements.lastUpdate) > CACHE_DURATION) {
+                $cachedElements.buttons = $('.pic-pilot-launch-modal-btn:not(.bound)');
+                $cachedElements.containers = $('.pic-pilot-attachment-ai-tools');
+                $cachedElements.lastUpdate = now;
             }
             
-            // Bind click events to modal launch buttons
-            $buttons.addClass('bound').on('click', function(e) {
+            const $buttons = $cachedElements.buttons;
+            debugLog('Found', $buttons.length, 'unbound AI Tools buttons');
+            
+            if ($buttons.length === 0) {
+                debugLog('No unbound AI Tools buttons found');
+                return;
+            }
+            
+            // Bind click events to modal launch buttons (one-time binding)
+            $buttons.addClass('bound').off('click.picpilot-modal').on('click.picpilot-modal', function(e) {
                 try {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🖼️ AI Tools button clicked!');
+                    
                     const $button = $(this);
                     const attachmentId = $button.data('attachment-id');
-                    console.log('🖼️ Attachment ID:', attachmentId);
                     
                     if (!attachmentId) {
                         console.error('🖼️ No attachment ID found on button');
                         return;
                     }
                     
+                    debugLog('AI Tools button clicked for attachment:', attachmentId);
                     openAIToolsModal(attachmentId);
                 } catch (clickError) {
                     console.error('🖼️ Error in button click handler:', clickError);
                 }
             });
+            
+            // Invalidate cache after binding
+            $cachedElements.buttons = null;
+            
         } catch (error) {
             console.error('🖼️ Error in initAITools:', error);
         }
     }
 
     function openAIToolsModal(attachmentId) {
-        console.log('🖼️ Opening AI Tools modal for attachment:', attachmentId);
+        debugLog('Opening AI Tools modal for attachment:', attachmentId);
         
         // Remove existing modal if any
         $('#pic-pilot-ai-modal').remove();
@@ -136,7 +220,7 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
         const currentAlt = getImageAlt(attachmentId);
         const imageUrl = getImageUrl(attachmentId);
         
-        console.log('🖼️ Modal data:', { currentTitle, currentAlt, imageUrl });
+        debugLog('Modal data:', { currentTitle, currentAlt, imageUrl });
         
         // If we can't get image data, show a warning but continue
         if (!imageUrl) {
@@ -444,8 +528,21 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
         const $keywordsInput = $container.find('.pic-pilot-keywords-input');
         const $status = $container.find(`.pic-pilot-${type}-status`);
         const keywords = $keywordsInput.val().trim();
-        
         const originalText = $button.text();
+        
+        // Create unique request key for deduplication
+        const requestKey = `${attachmentId}-${type}-${keywords}`;
+        
+        // Check if there's already an active request for this combination
+        if (window.picPilotActiveRequests[requestKey]) {
+            debugLog(`[${PICPILOT_JS_VERSION}] Request already in progress for ${requestKey}, skipping duplicate`);
+            showStatus($status, `Generation already in progress...`, 'info');
+            return;
+        }
+
+        // Mark request as active
+        window.picPilotActiveRequests[requestKey] = true;
+        debugLog(`[${PICPILOT_JS_VERSION}] Starting generation request: ${requestKey}`);
 
         // Update UI
         $button.prop('disabled', true).text('Generating...');
@@ -460,11 +557,21 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
                     nonce: picPilotAttachment.nonce,
                     attachment_id: attachmentId,
                     type: type,
-                    keywords: keywords
+                    keywords: keywords,
+                    js_version: PICPILOT_JS_VERSION  // Add version to track deployment
                 }
             });
 
+            debugLog(`[${PICPILOT_JS_VERSION}] Received response for ${requestKey}:`, response);
+
             if (response.success) {
+                // Check if this was a duplicate request that was blocked
+                if (response.data.duplicate_blocked) {
+                    debugLog(`[${PICPILOT_JS_VERSION}] Duplicate request handled silently for ${requestKey}`);
+                    showStatus($status, `Generation in progress, please wait...`, 'info');
+                    return; // Don't update anything for duplicate requests
+                }
+                
                 // Update the corresponding WordPress field
                 updateWordPressField(type, response.data.result, attachmentId);
                 
@@ -482,12 +589,17 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
                     $button.text('Regenerate Alt Text');
                 }
             } else {
+                console.error(`🖼️ [${PICPILOT_JS_VERSION}] Generation failed for ${requestKey}:`, response.data);
                 showStatus($status, `❌ Failed to generate ${type}: ${response.data}`, 'error');
             }
         } catch (error) {
-            console.error('Generation error:', error);
+            console.error(`🖼️ [${PICPILOT_JS_VERSION}] Network error for ${requestKey}:`, error);
             showStatus($status, `❌ Generation failed: ${error.statusText || 'Unknown error'}`, 'error');
         } finally {
+            // Clear the active request flag
+            delete window.picPilotActiveRequests[requestKey];
+            debugLog(`[${PICPILOT_JS_VERSION}] Completed request: ${requestKey}`);
+            
             $button.prop('disabled', false);
             if ($button.text() === 'Generating...') {
                 $button.text(originalText);
@@ -539,6 +651,18 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
     }
 
     function updateWordPressField(type, value, attachmentId) {
+        // Prevent multiple rapid updates by debouncing
+        if (window.picPilotUpdateInProgress) {
+            console.log(`🖼️ Update already in progress, skipping duplicate update for ${type}`);
+            return;
+        }
+        
+        window.picPilotUpdateInProgress = true;
+        
+        setTimeout(() => {
+            window.picPilotUpdateInProgress = false;
+        }, 1000);
+        
         if (type === 'alt') {
             // Look for alt text field - try multiple selectors for different contexts
             const altSelectors = [
@@ -555,16 +679,26 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
             for (const selector of altSelectors) {
                 $altField = $(selector);
                 if ($altField.length) {
-                    console.log(`🖼️ Found alt field with selector: ${selector}`);
+                    debugLog(`Found alt field with selector: ${selector}`);
                     break;
                 }
             }
 
             if ($altField && $altField.length) {
-                $altField.val(value).trigger('change');
-                console.log(`🖼️ Updated alt text: ${value}`);
+                // Temporarily disable any change event listeners to prevent cascades
+                const currentVal = $altField.val();
+                if (currentVal !== value) {
+                    $altField.off('change.picpilot').val(value);
+                    
+                    // Trigger change after a delay to ensure it's the final value
+                    setTimeout(() => {
+                        $altField.trigger('change');
+                    }, 100);
+                    
+                    debugLog(`Updated alt text: ${value}`);
+                }
             } else {
-                console.warn('🖼️ Could not find alt text field to update');
+                debugLog('Could not find alt text field to update');
             }
 
         } else if (type === 'title') {
@@ -589,8 +723,18 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
             }
 
             if ($titleField && $titleField.length) {
-                $titleField.val(value).trigger('change');
-                console.log(`🖼️ Updated title: ${value}`);
+                // Temporarily disable any change event listeners to prevent cascades
+                const currentVal = $titleField.val();
+                if (currentVal !== value) {
+                    $titleField.off('change.picpilot').val(value);
+                    
+                    // Trigger change after a delay to ensure it's the final value
+                    setTimeout(() => {
+                        $titleField.trigger('change');
+                    }, 100);
+                    
+                    console.log(`🖼️ Updated title: ${value}`);
+                }
             } else {
                 console.warn('🖼️ Could not find title field to update');
             }
@@ -687,8 +831,21 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
     async function generateModalMetadata($button, type, attachmentId) {
         const keywords = $('#pic-pilot-modal-keywords').val().trim();
         const $status = $(`.pic-pilot-${type}-status`);
-        
         const originalText = $button.text();
+
+        // Create unique request key for deduplication
+        const requestKey = `${attachmentId}-${type}-${keywords}`;
+        
+        // Check if there's already an active request for this combination
+        if (window.picPilotActiveRequests[requestKey]) {
+            debugLog(`[${PICPILOT_JS_VERSION}] Request already in progress for ${requestKey}, skipping duplicate`);
+            showModalStatus($status, `Generation already in progress...`, 'info');
+            return;
+        }
+
+        // Mark request as active
+        window.picPilotActiveRequests[requestKey] = true;
+        debugLog(`[${PICPILOT_JS_VERSION}] Starting generation request: ${requestKey}`);
 
         // Update UI
         $button.prop('disabled', true).text('Generating...');
@@ -703,16 +860,30 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
                     nonce: picPilotAttachment.nonce,
                     attachment_id: attachmentId,
                     type: type,
-                    keywords: keywords
+                    keywords: keywords,
+                    js_version: PICPILOT_JS_VERSION  // Add version to track deployment
                 }
             });
 
+            console.log(`🖼️ [${PICPILOT_JS_VERSION}] Received response for ${requestKey}:`, response);
+
             if (response.success) {
-                // Update the corresponding WordPress field
-                updateWordPressField(type, response.data.result, attachmentId);
+                // Check if this was a duplicate request that was blocked
+                if (response.data.duplicate_blocked) {
+                    console.log(`🖼️ [${PICPILOT_JS_VERSION}] Duplicate request handled silently for ${requestKey}`);
+                    showModalStatus($status, `Generation in progress, please wait...`, 'info');
+                    return; // Don't update anything for duplicate requests
+                }
                 
-                // Update the modal preview
-                updateModalPreview(type, response.data.result);
+                // Only update once we have the final result
+                const finalResult = response.data.result;
+                console.log(`🖼️ [${PICPILOT_JS_VERSION}] Final result for ${requestKey}: ${finalResult}`);
+                
+                // Update the corresponding WordPress field with final result only
+                updateWordPressField(type, finalResult, attachmentId);
+                
+                // Update the modal preview with final result only
+                updateModalPreview(type, finalResult);
                 
                 showModalStatus($status, `✅ ${capitalizeFirst(type)} generated successfully!`, 'success');
                 
@@ -728,12 +899,17 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
                     $button.text('Regenerate Alt Text');
                 }
             } else {
+                console.error(`🖼️ [${PICPILOT_JS_VERSION}] Generation failed for ${requestKey}:`, response.data);
                 showModalStatus($status, `❌ Failed to generate ${type}: ${response.data}`, 'error');
             }
         } catch (error) {
-            console.error('Generation error:', error);
+            console.error(`🖼️ [${PICPILOT_JS_VERSION}] Network error for ${requestKey}:`, error);
             showModalStatus($status, `❌ Generation failed: ${error.statusText || 'Unknown error'}`, 'error');
         } finally {
+            // Clear the active request flag
+            delete window.picPilotActiveRequests[requestKey];
+            debugLog(`[${PICPILOT_JS_VERSION}] Completed request: ${requestKey}`);
+            
             $button.prop('disabled', false);
             if ($button.text() === 'Generating...') {
                 $button.text(originalText);
@@ -785,14 +961,25 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
     }
 
     function updateModalPreview(type, value) {
+        const $imageInfo = $('.pic-pilot-image-info');
+        if (!$imageInfo.length) return;
+        
         if (type === 'title') {
-            $('.pic-pilot-image-info').html(function(i, html) {
-                return html.replace(/(<strong>Current Title:<\/strong>)[^<]*(<br>)/, `$1 ${value}$2`);
-            });
+            // Get current HTML and update title portion
+            let currentHtml = $imageInfo.html();
+            const titleRegex = /(<strong>Current Title:<\/strong>)\s*([^<]*?)(<br>)/;
+            if (titleRegex.test(currentHtml)) {
+                const newHtml = currentHtml.replace(titleRegex, `$1 ${value}$3`);
+                $imageInfo.html(newHtml);
+            }
         } else if (type === 'alt') {
-            $('.pic-pilot-image-info').html(function(i, html) {
-                return html.replace(/(<strong>Current Alt Text:<\/strong>)[^<]*$/, `$1 ${value}`);
-            });
+            // Get current HTML and update alt text portion
+            let currentHtml = $imageInfo.html();
+            const altRegex = /(<strong>Current Alt Text:<\/strong>)\s*(.*)$/;
+            if (altRegex.test(currentHtml)) {
+                const newHtml = currentHtml.replace(altRegex, `$1 ${value}`);
+                $imageInfo.html(newHtml);
+            }
         }
     }
 
@@ -810,23 +997,58 @@ console.log('🖼️ jQuery available:', typeof jQuery !== 'undefined');
         }
     }
 
-    // Global functions for debugging
-    window.picPilotDebug = {
-        initAITools: initAITools,
-        openModal: openAIToolsModal,
-        checkElements: function() {
-            console.log('🖼️ === DEBUG INFO ===');
-            console.log('🖼️ AI Tools buttons:', $('.pic-pilot-launch-modal-btn').length);
-            console.log('🖼️ AI Tools containers:', $('.pic-pilot-attachment-ai-tools').length);
-            console.log('🖼️ Media sidebar:', $('.media-sidebar').length);
-            console.log('🖼️ Attachment details:', $('.attachment-details').length);
-            console.log('🖼️ All forms:', $('form').length);
-            
-            // Show all attachment IDs found
-            $('.pic-pilot-launch-modal-btn').each(function(i, btn) {
-                console.log('🖼️ Button', i, 'has attachment ID:', $(btn).data('attachment-id'));
-            });
+    // Cleanup function to prevent memory leaks
+    function cleanup() {
+        // Disconnect MutationObserver
+        if (mutationObserver) {
+            mutationObserver.disconnect();
+            mutationObserver = null;
         }
-    };
+        
+        // Clear cached elements
+        $cachedElements = {
+            buttons: null,
+            containers: null,
+            lastUpdate: 0
+        };
+        
+        // Clear active requests
+        window.picPilotActiveRequests = {};
+        
+        // Remove event listeners
+        $(document).off('click.picpilot');
+        
+        debugLog('PicPilot cleanup completed');
+    }
+    
+    // Clean up when page is unloaded
+    $(window).on('beforeunload', cleanup);
+    
+    // Global functions for debugging (only expose in debug mode)
+    if (PICPILOT_DEBUG) {
+        window.picPilotDebug = {
+            initAITools: initAITools,
+            openModal: openAIToolsModal,
+            cleanup: cleanup,
+            toggleDebug: function() {
+                window.PICPILOT_DEBUG = !PICPILOT_DEBUG;
+                console.log('🖼️ Debug mode:', PICPILOT_DEBUG ? 'ON' : 'OFF');
+            },
+            checkElements: function() {
+                console.log('🖼️ === DEBUG INFO ===');
+                console.log('🖼️ AI Tools buttons:', $('.pic-pilot-launch-modal-btn').length);
+                console.log('🖼️ AI Tools containers:', $('.pic-pilot-attachment-ai-tools').length);
+                console.log('🖼️ Media sidebar:', $('.media-sidebar').length);
+                console.log('🖼️ Attachment details:', $('.attachment-details').length);
+                console.log('🖼️ Active requests:', Object.keys(window.picPilotActiveRequests).length);
+                console.log('🖼️ MutationObserver active:', !!mutationObserver);
+                
+                // Show all attachment IDs found
+                $('.pic-pilot-launch-modal-btn').each(function(i, btn) {
+                    console.log('🖼️ Button', i, 'has attachment ID:', $(btn).data('attachment-id'));
+                });
+            }
+        };
+    }
 
 })(jQuery);

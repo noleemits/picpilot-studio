@@ -57,13 +57,11 @@
     background: #135e96;
     border-color: #135e96;
     color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .pic-pilot-studio .picpilot-generate-meta:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    background: #0f4c7a;
+    border-color: #0f4c7a;
 }
 
 .pic-pilot-studio .picpilot-generate-meta:disabled {
@@ -71,16 +69,12 @@
     background: #ddd;
     border-color: #ddd;
     color: #999;
-    transform: none;
-    box-shadow: none;
 }
 
 .pic-pilot-studio .picpilot-generate-meta:disabled:hover {
     background: #ddd;
     border-color: #ddd;
     color: #999;
-    transform: none;
-    box-shadow: none;
 }
 
 /* Keywords Input Field */
@@ -190,14 +184,12 @@
 }
 
 .pic-pilot-studio .picpilot-edit-buttons .button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #135e96;
+    border-color: #135e96;
 }
 
 .pic-pilot-studio .picpilot-edit-buttons .button:disabled {
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
     opacity: 0.6;
 }
 
@@ -337,3 +329,60 @@
     border-radius: 3px;
 }
 
+/* PicPilot Column Styles */
+.pic-pilot-studio .column-picpilot_tools {
+    width: 160px;
+    max-width: 160px;
+}
+
+.pic-pilot-studio .picpilot-column-wrapper {
+    min-height: 40px;
+    padding: 5px;
+    font-size: 11px;
+}
+
+.pic-pilot-studio .picpilot-column-wrapper .picpilot-keywords {
+    width: 100%;
+    margin-bottom: 5px;
+    font-size: 10px;
+    padding: 2px 4px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.pic-pilot-studio .picpilot-button-group {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+}
+
+.pic-pilot-studio .picpilot-button-group .button {
+    font-size: 9px !important;
+    padding: 6px 9px !important;
+    line-height: 1.2 !important;
+    min-height: auto !important;
+    border-radius: 2px;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pic-pilot-studio .picpilot-button-group .button:hover {
+    background-color: #0056b3 !important;
+    border-color: #004085 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    color: white;
+}
+
+.pic-pilot-studio .picpilot-button-group .button.button-secondary:hover {
+    background-color: #5a5a5a !important;
+    border-color: #484848 !important;
+    color: white !important;
+}
+
+.pic-pilot-studio .picpilot-column-wrapper:hover {
+    background-color: #f0f8ff;
+    border-radius: 3px;
+}

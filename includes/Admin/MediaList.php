@@ -12,6 +12,10 @@ class MediaList {
         add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_scripts']);
         add_filter('media_row_actions', [__CLASS__, 'add_generate_button'], 10, 2);
         
+        // Register custom column for media list
+        add_filter('manage_media_columns', [__CLASS__, 'add_picpilot_column']);
+        add_action('manage_media_custom_column', [__CLASS__, 'render_picpilot_column'], 10, 2);
+        
         // Add alt text filtering
         add_action('restrict_manage_posts', [__CLASS__, 'add_alt_text_filter']);
         add_filter('pre_get_posts', [__CLASS__, 'filter_by_alt_text']);
@@ -31,6 +35,13 @@ class MediaList {
         if ($post->post_type !== 'attachment' || !wp_attachment_is_image($post->ID)) return $actions;
 
         $settings = get_option('picpilot_studio_settings', []);
+        $show_in_column = !empty($settings['show_picpilot_in_column']);
+        
+        // If showing in column, don't add to row actions
+        if ($show_in_column) {
+            return $actions;
+        }
+
         $show_keywords = !empty($settings['show_keywords_field']);
 
         // Only output keyword input once
@@ -64,7 +75,13 @@ class MediaList {
 
     public static function add_duplicate_action($actions, $post) {
         if ($post->post_type === 'attachment' && current_user_can('upload_files')) {
-            $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate', 'pic-pilot-studio') . '</a>';
+            $settings = get_option('picpilot_studio_settings', []);
+            $show_in_column = !empty($settings['show_picpilot_in_column']);
+            
+            // If showing in column, don't add to row actions
+            if (!$show_in_column) {
+                $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate', 'pic-pilot-studio') . '</a>';
+            }
         }
 
         return $actions;
@@ -92,7 +109,7 @@ class MediaList {
             'pic-pilot-studio-duplicate',
             PIC_PILOT_STUDIO_URL . 'assets/js/duplicate-image.js',
             ['jquery'],
-            null,
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -110,7 +127,7 @@ class MediaList {
             'pic-pilot-media-list',
             PIC_PILOT_STUDIO_URL . 'assets/js/media-list.js',
             [],
-            '1.0.0',
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -119,7 +136,7 @@ class MediaList {
             'picpilot-smart-duplication',
             PIC_PILOT_STUDIO_URL . 'assets/js/smart-duplication-modal.js',
             [],
-            null,
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -129,7 +146,7 @@ class MediaList {
             'pic-pilot-bulk-operations',
             PIC_PILOT_STUDIO_URL . 'assets/js/bulk-operations.js',
             [],
-            '1.0.0',
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -138,7 +155,7 @@ class MediaList {
             'pic-pilot-image-tags',
             PIC_PILOT_STUDIO_URL . 'assets/js/image-tags.js',
             [],
-            '1.0.0',
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -404,7 +421,7 @@ class MediaList {
             'pic-pilot-studio-edit',
             PIC_PILOT_STUDIO_URL . 'assets/js/attachment-edit.js',
             [],
-            '1.0.0',
+            PIC_PILOT_STUDIO_VERSION,
             true
         );
 
@@ -475,5 +492,91 @@ class MediaList {
                  sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-studio'), $count) . 
                  '</p></div>';
         }
+    }
+
+    /**
+     * Add PicPilot column to media list
+     */
+    public static function add_picpilot_column($columns) {
+        $settings = get_option('picpilot_studio_settings', []);
+        $show_in_column = !empty($settings['show_picpilot_in_column']);
+        
+        if ($show_in_column) {
+            $columns['picpilot_tools'] = __('PicPilot Tools', 'pic-pilot-studio');
+        }
+        
+        return $columns;
+    }
+
+    /**
+     * Render PicPilot column content
+     */
+    public static function render_picpilot_column($column_name, $post_id) {
+        if ($column_name !== 'picpilot_tools' || !wp_attachment_is_image($post_id)) {
+            return;
+        }
+
+        $settings = get_option('picpilot_studio_settings', []);
+        $show_keywords = !empty($settings['show_keywords_field']);
+        $show_hover_info = !empty($settings['show_hover_info']);
+        
+        // Get current metadata for individual button tooltips
+        $alt_text = get_post_meta($post_id, '_wp_attachment_image_alt', true);
+        $title = get_the_title($post_id);
+        $filename = basename(get_attached_file($post_id));
+        
+        echo '<div class="picpilot-column-wrapper">';
+        
+        // Keywords input
+        if ($show_keywords) {
+            echo '<input type="text" class="picpilot-keywords" placeholder="' . esc_attr__('Keywords', 'pic-pilot-studio') . '" data-id="' . esc_attr($post_id) . '" style="width:100%;margin-bottom:5px;font-size:11px;" />';
+        }
+        
+        // Check if alt text already exists
+        $existing_alt = get_post_meta($post_id, '_wp_attachment_image_alt', true);
+        $alt_button_text = !empty($existing_alt) ? 
+            esc_html__('Regen Alt', 'pic-pilot-studio') : 
+            esc_html__('Gen Alt', 'pic-pilot-studio');
+        
+        // Prepare tooltips for each button if hover info is enabled
+        $alt_tooltip = '';
+        $title_tooltip = '';
+        $duplicate_tooltip = '';
+        
+        if ($show_hover_info) {
+            $alt_tooltip = $alt_text ? 'Alt: ' . esc_attr($alt_text) : 'No alt text';
+            $title_tooltip = $title ? 'Title: ' . esc_attr($title) : 'No title';
+            $duplicate_tooltip = $filename ? 'File: ' . esc_attr($filename) : 'Unknown file';
+        }
+        
+        // Compact button layout
+        echo '<div class="picpilot-button-group" style="display:flex;gap:2px;flex-wrap:wrap;">';
+        
+        // Alt text button
+        echo sprintf(
+            '<button type="button" class="button button-small picpilot-generate-meta" data-id="%d" data-type="alt"%s>%s</button>',
+            esc_attr($post_id),
+            $alt_tooltip ? ' title="' . $alt_tooltip . '"' : '',
+            $alt_button_text
+        );
+        
+        // Title button
+        echo sprintf(
+            '<button type="button" class="button button-small picpilot-generate-meta" data-id="%d" data-type="title"%s>%s</button>',
+            esc_attr($post_id),
+            $title_tooltip ? ' title="' . $title_tooltip . '"' : '',
+            esc_html__('Gen Title', 'pic-pilot-studio')
+        );
+        
+        // Duplicate button
+        echo sprintf(
+            '<button type="button" class="button button-small pic-pilot-duplicate-image" data-id="%d"%s>%s</button>',
+            esc_attr($post_id),
+            $duplicate_tooltip ? ' title="' . $duplicate_tooltip . '"' : '',
+            esc_html__('Duplicate', 'pic-pilot-studio')
+        );
+        
+        echo '</div>';
+        echo '</div>';
     }
 }

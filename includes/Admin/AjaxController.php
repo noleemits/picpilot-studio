@@ -181,10 +181,35 @@ class AjaxController {
         $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
 
         // Debug logging
-        Logger::log("[AJAX] generate_metadata called - ID: $id, Type: $type, Keywords: '$keywords'");
+        $js_version = \sanitize_text_field($_POST['js_version'] ?? 'unknown');
+        Logger::log("[AJAX] generate_metadata called - ID: $id, Type: $type, Keywords: '$keywords', JS Version: $js_version");
         Logger::log("[AJAX] Raw POST data: " . json_encode($_POST));
 
+        // Server-side request deduplication
+        $request_key = "picpilot_gen_{$id}_{$type}_" . md5($keywords);
+        $active_requests = \get_transient('picpilot_active_requests') ?: [];
+        
+        if (isset($active_requests[$request_key]) && (time() - $active_requests[$request_key]) < 30) {
+            Logger::log("[AJAX] Duplicate request blocked - Key: $request_key, JS Version: $js_version");
+            // Return success with a message instead of error to avoid showing error to user
+            \wp_send_json_success([
+                'type' => $type,
+                'result' => 'Generation already in progress',
+                'shouldUpdate' => false,
+                'duplicate_blocked' => true
+            ]);
+            return;
+        }
+        
+        // Mark request as active
+        $active_requests[$request_key] = time();
+        \set_transient('picpilot_active_requests', $active_requests, 60);
+        Logger::log("[AJAX] Request marked as active - Key: $request_key, JS Version: $js_version");
+
         if (!$id || !\wp_attachment_is_image($id)) {
+            // Clean up on error
+            unset($active_requests[$request_key]);
+            \set_transient('picpilot_active_requests', $active_requests, 60);
             return self::log_and_fail($id, 'Invalid image ID');
         }
 
@@ -238,10 +263,27 @@ class AjaxController {
 
         Logger::log("[SUCCESS] [$type] Image ID: $id, Keywords: '$keywords', Result: " . substr($content, 0, 100));
 
+        // Clean up active request
+        $active_requests = \get_transient('picpilot_active_requests') ?: [];
+        unset($active_requests[$request_key]);
+        \set_transient('picpilot_active_requests', $active_requests, 60);
+        Logger::log("[AJAX] Request completed and cleaned up - Key: $request_key, JS Version: $js_version");
+
         \wp_send_json_success($response_data);
     }
 
     public static function log_and_fail($id, $message) {
+        // Clean up active request on error if we have the context
+        if (isset($_POST['type']) && isset($_POST['keywords'])) {
+            $type = \sanitize_text_field($_POST['type']);
+            $keywords = \sanitize_text_field($_POST['keywords']);
+            $request_key = "picpilot_gen_{$id}_{$type}_" . md5($keywords);
+            $active_requests = \get_transient('picpilot_active_requests') ?: [];
+            unset($active_requests[$request_key]);
+            \set_transient('picpilot_active_requests', $active_requests, 60);
+            Logger::log("[AJAX] Request failed and cleaned up - Key: $request_key");
+        }
+        
         Logger::log("[ERROR] Image ID: $id, Reason: $message");
         \wp_send_json_error($message);
         exit;

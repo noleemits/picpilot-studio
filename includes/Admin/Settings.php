@@ -208,11 +208,40 @@ class Settings {
         }
 
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
-        echo '<textarea readonly rows="20" style="width:100%;font-family:monospace;">' . esc_textarea($log_data) . '</textarea>';
+        echo '<textarea id="picpilot-log-content" readonly rows="20" style="width:100%;font-family:monospace;">' . esc_textarea($log_data) . '</textarea>';
+        echo '<div style="margin-top: 10px;">';
+        echo '<button type="button" id="picpilot-copy-log" class="button" style="margin-right: 10px;">📋 ' . esc_html__('Copy to Clipboard', 'pic-pilot-studio') . '</button>';
         wp_nonce_field('picpilot_clear_log');
         echo '<input type="hidden" name="action" value="picpilot_clear_log">';
-        submit_button(esc_html__('Clear Log', 'pic-pilot-studio'), 'delete');
+        submit_button(esc_html__('Clear Log', 'pic-pilot-studio'), 'delete', 'submit', false);
+        echo '</div>';
         echo '</form>';
+        
+        // Add JavaScript for copy functionality
+        echo '<script>
+        document.getElementById("picpilot-copy-log").addEventListener("click", function() {
+            const logContent = document.getElementById("picpilot-log-content");
+            logContent.select();
+            logContent.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand("copy");
+                const button = this;
+                const originalText = button.innerHTML;
+                button.innerHTML = "✅ ' . esc_js(__('Copied!', 'pic-pilot-studio')) . '";
+                button.style.backgroundColor = "#46b450";
+                button.style.color = "white";
+                
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.backgroundColor = "";
+                    button.style.color = "";
+                }, 2000);
+            } catch (err) {
+                alert("' . esc_js(__('Failed to copy. Please select the text manually and copy.', 'pic-pilot-studio')) . '");
+            }
+        });
+        </script>';
     }
 
     public static function handle_clear_log() {

@@ -45,6 +45,18 @@ $settings = [
         'type' => 'checkbox',
         'description' => __('Logs all metadata generation attempts, results, and errors for debugging.', 'pic-pilot-studio'),
     ],
+    [
+        'key' => 'show_picpilot_in_column',
+        'label' => __('📋 Show PicPilot Tools in Column', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('Display PicPilot tools in a dedicated column instead of hover row actions. More comfortable for frequent use.', 'pic-pilot-studio'),
+    ],
+    [
+        'key' => 'show_hover_info',
+        'label' => __('ℹ️ Show Metadata on Hover', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('Display alt text, title, and filename on hover when using the PicPilot column. Requires "Show PicPilot Tools in Column" to be enabled.', 'pic-pilot-studio'),
+    ],
 ];
 
 foreach ($settings as $setting) {
