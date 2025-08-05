@@ -17,6 +17,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 // Ensure the Plugin class exists before using it
 if (class_exists('PicPilotStudio\Plugin')) {
     \PicPilotStudio\Plugin::init();
+    
+    // Register activation hook
+    register_activation_hook(__FILE__, ['PicPilotStudio\Plugin', 'activate_plugin']);
 } else {
     error_log('PicPilotStudio\Plugin class not found. Please check autoloading and class definition.');
 }

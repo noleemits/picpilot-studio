@@ -7,6 +7,10 @@ use PicPilotStudio\Admin\MediaList;
 use PicPilotStudio\Admin\Settings;
 use PicPilotStudio\Admin\AttachmentFields;
 use PicPilotStudio\Admin\ImageTags;
+use PicPilotStudio\Admin\DashboardController;
+use PicPilotStudio\Admin\ScanController;
+use PicPilotStudio\Admin\ExportController;
+use PicPilotStudio\Admin\DatabaseManager;
 use PicPilotStudio\Helpers\Logger;
 use PicPilotStudio\Helpers\MetadataGenerator;
 use PicPilotStudio\Helpers\PromptManager;
@@ -30,6 +34,9 @@ class Plugin {
             Settings::init(); // This will handle admin_init and settings logic
             AttachmentFields::init(); // Add AI tools to image edit screens
             ImageTags::init(); // Initialize image tagging system
+            DashboardController::init(); // Initialize dashboard functionality
+            ScanController::init(); // Initialize scanning functionality
+            ExportController::init(); // Initialize export functionality
             
             // Initialize default advanced prompt settings
             self::init_default_prompt_settings();
@@ -144,6 +151,19 @@ class Plugin {
             update_option('picpilot_studio_settings', $existing_settings);
             Logger::log("[PLUGIN] Initialized default advanced prompt settings");
         }
+    }
+    
+    /**
+     * Plugin activation hook
+     */
+    public static function activate_plugin() {
+        // Create database tables
+        DatabaseManager::create_tables();
+        
+        // Set database version
+        update_option(DatabaseManager::DB_VERSION_OPTION, DatabaseManager::DB_VERSION);
+        
+        Logger::log("[PLUGIN] Plugin activated - database tables created");
     }
 
 }

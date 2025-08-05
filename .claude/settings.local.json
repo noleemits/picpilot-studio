@@ -4,7 +4,8 @@
       "Bash(rm:*)",
       "Bash(php -l:*)",
       "WebFetch(domain:alttext.ai)",
-      "WebFetch(domain:wordpress.org)"
+      "WebFetch(domain:wordpress.org)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
