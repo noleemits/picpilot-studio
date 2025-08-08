@@ -56,6 +56,10 @@ class AjaxController {
         add_action('wp_ajax_picpilot_bulk_process', [__CLASS__, 'bulk_process']);
         add_action('wp_ajax_picpilot_get_images_without_alt', [__CLASS__, 'get_images_without_alt']);
         add_action('wp_ajax_picpilot_get_images_without_titles', [__CLASS__, 'get_images_without_titles']);
+        add_action('wp_ajax_picpilot_generate_both', [__CLASS__, 'generate_both_metadata']);
+        add_action('wp_ajax_picpilot_check_image_usage', [__CLASS__, 'check_image_usage']);
+        add_action('wp_ajax_picpilot_rename_filename', [__CLASS__, 'rename_filename']);
+        add_action('wp_ajax_picpilot_generate_ai_filename', [__CLASS__, 'generate_ai_filename']);
     }
 
     public static function duplicate_image() {
@@ -262,6 +266,7 @@ class AjaxController {
         ];
 
         Logger::log("[SUCCESS] [$type] Image ID: $id, Keywords: '$keywords', Result: " . substr($content, 0, 100));
+        Logger::log("[SUCCESS] Response data being sent: " . json_encode($response_data));
 
         // Clean up active request
         $active_requests = \get_transient('picpilot_active_requests') ?: [];
@@ -423,5 +428,317 @@ class AjaxController {
             'image_ids' => $image_ids,
             'count' => count($image_ids)
         ]);
+    }
+
+    /**
+     * Generate both alt text and title for an image
+     */
+    public static function generate_both_metadata() {
+        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+
+        $id = \absint($_POST['attachment_id'] ?? 0);
+        $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
+
+        if (!$id || !\wp_attachment_is_image($id)) {
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+        }
+
+        if (!\current_user_can('upload_files')) {
+            \wp_send_json_error(['message' => 'Insufficient permissions']);
+        }
+
+        // Check if both generation features are enabled
+        $settings = \get_option('picpilot_studio_settings', []);
+        $both_enabled = $settings['enable_auto_generate_both'] ?? false;
+        $alt_enabled = $settings['enable_alt_generation_on_duplicate'] ?? false;
+        $title_enabled = $settings['enable_title_generation_on_duplicate'] ?? false;
+
+        if (!$both_enabled) {
+            \wp_send_json_error(['message' => 'Auto-generate both feature is disabled in settings']);
+        }
+
+        if (!$alt_enabled || !$title_enabled) {
+            \wp_send_json_error(['message' => 'Both alt text and title generation must be enabled in settings']);
+        }
+
+        try {
+            // Generate alt text
+            $alt_result = MetadataGenerator::generate($id, 'alt', $keywords);
+            if (\is_wp_error($alt_result)) {
+                throw new \Exception('Alt text generation failed: ' . $alt_result->get_error_message());
+            }
+
+            // Generate title
+            $title_result = MetadataGenerator::generate($id, 'title', $keywords);
+            if (\is_wp_error($title_result)) {
+                throw new \Exception('Title generation failed: ' . $title_result->get_error_message());
+            }
+
+            // Update the attachment
+            \update_post_meta($id, '_wp_attachment_image_alt', $alt_result);
+            \wp_update_post(['ID' => $id, 'post_title' => $title_result]);
+
+            Logger::log("[GENERATE_BOTH] Updated image $id - Alt: '$alt_result', Title: '$title_result'");
+
+            \wp_send_json_success([
+                'alt_result' => $alt_result,
+                'title_result' => $title_result,
+                'message' => 'Both alt text and title generated successfully'
+            ]);
+        } catch (\Throwable $e) {
+            Logger::log('[GENERATE_BOTH] Error: ' . $e->getMessage());
+            \wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Check where an image is being used
+     */
+    public static function check_image_usage() {
+        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+
+        $id = \absint($_POST['attachment_id'] ?? 0);
+
+        if (!$id || !\wp_attachment_is_image($id)) {
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+        }
+
+        if (!\current_user_can('upload_files')) {
+            \wp_send_json_error(['message' => 'Insufficient permissions']);
+        }
+
+        global $wpdb;
+        
+        $usage = [];
+        $image_url = \wp_get_attachment_url($id);
+        $attachment_data = \get_post($id);
+        
+        if (!$attachment_data) {
+            \wp_send_json_error(['message' => 'Image not found']);
+        }
+
+        // Check if it's a featured image
+        $featured_posts = $wpdb->get_results($wpdb->prepare(
+            "SELECT p.ID, p.post_title, p.post_type FROM {$wpdb->posts} p 
+             JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id 
+             WHERE pm.meta_key = '_thumbnail_id' AND pm.meta_value = %d AND p.post_status = 'publish'",
+            $id
+        ));
+
+        foreach ($featured_posts as $post) {
+            $usage[] = [
+                'type' => 'Featured Image',
+                'post_title' => $post->post_title,
+                'post_type' => $post->post_type,
+                'post_id' => $post->ID,
+                'edit_url' => \get_edit_post_link($post->ID)
+            ];
+        }
+
+        // Check content references by URL
+        $filename = basename($image_url);
+        $posts_with_content = $wpdb->get_results($wpdb->prepare(
+            "SELECT ID, post_title, post_type FROM {$wpdb->posts} 
+             WHERE post_content LIKE %s AND post_status = 'publish'",
+            '%' . $wpdb->esc_like($filename) . '%'
+        ));
+
+        foreach ($posts_with_content as $post) {
+            $usage[] = [
+                'type' => 'Content Reference',
+                'post_title' => $post->post_title,
+                'post_type' => $post->post_type,
+                'post_id' => $post->ID,
+                'edit_url' => \get_edit_post_link($post->ID)
+            ];
+        }
+
+        // Check shortcodes and gallery references
+        $gallery_posts = $wpdb->get_results($wpdb->prepare(
+            "SELECT ID, post_title, post_type FROM {$wpdb->posts} 
+             WHERE post_content LIKE %s AND post_status = 'publish'",
+            '%ids=' . $id . '%'
+        ));
+
+        foreach ($gallery_posts as $post) {
+            $usage[] = [
+                'type' => 'Gallery/Shortcode',
+                'post_title' => $post->post_title,
+                'post_type' => $post->post_type,
+                'post_id' => $post->ID,
+                'edit_url' => \get_edit_post_link($post->ID)
+            ];
+        }
+
+        $is_safe_to_rename = empty($usage);
+        
+        \wp_send_json_success([
+            'usage' => $usage,
+            'is_safe_to_rename' => $is_safe_to_rename,
+            'usage_count' => count($usage),
+            'current_filename' => basename(\get_attached_file($id))
+        ]);
+    }
+
+    /**
+     * Rename image filename (dangerous operation)
+     */
+    public static function rename_filename() {
+        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+
+        $id = \absint($_POST['attachment_id'] ?? 0);
+        $new_filename = \sanitize_file_name($_POST['new_filename'] ?? '');
+        $force_rename = $_POST['force_rename'] === 'true';
+
+        if (!$id || !\wp_attachment_is_image($id)) {
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+        }
+
+        if (!\current_user_can('upload_files')) {
+            \wp_send_json_error(['message' => 'Insufficient permissions']);
+        }
+
+        // Check if dangerous renaming is enabled
+        $settings = \get_option('picpilot_studio_settings', []);
+        $rename_enabled = $settings['enable_dangerous_filename_rename'] ?? false;
+
+        if (!$rename_enabled) {
+            \wp_send_json_error(['message' => 'Dangerous filename renaming is disabled in settings']);
+        }
+
+        if (empty($new_filename)) {
+            \wp_send_json_error(['message' => 'New filename cannot be empty']);
+        }
+
+        try {
+            $current_file = \get_attached_file($id);
+            $current_filename = basename($current_file);
+            $file_extension = pathinfo($current_file, PATHINFO_EXTENSION);
+            
+            // Ensure new filename has correct extension
+            $new_filename_with_ext = pathinfo($new_filename, PATHINFO_EXTENSION) ? 
+                $new_filename : $new_filename . '.' . $file_extension;
+
+            if ($current_filename === $new_filename_with_ext) {
+                \wp_send_json_error(['message' => 'New filename is the same as current filename']);
+            }
+
+            $upload_dir = \wp_upload_dir();
+            $old_path = $current_file;
+            $new_path = dirname($current_file) . '/' . $new_filename_with_ext;
+
+            // Check if new filename already exists
+            if (file_exists($new_path)) {
+                \wp_send_json_error(['message' => 'A file with this name already exists']);
+            }
+
+            // Check usage unless forced
+            if (!$force_rename) {
+                // This is a quick usage check - the frontend should have already done the full check
+                global $wpdb;
+                $usage_count = $wpdb->get_var($wpdb->prepare(
+                    "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = '_thumbnail_id' AND meta_value = %d",
+                    $id
+                ));
+                
+                if ($usage_count > 0) {
+                    \wp_send_json_error([
+                        'message' => 'Image is in use. Use force_rename=true to proceed anyway.',
+                        'requires_force' => true
+                    ]);
+                }
+            }
+
+            // Rename the physical file
+            if (!rename($old_path, $new_path)) {
+                throw new \Exception('Failed to rename physical file');
+            }
+
+            // Update database records
+            \update_post_meta($id, '_wp_attached_file', str_replace($upload_dir['basedir'] . '/', '', $new_path));
+            
+            // Update any size variations
+            $metadata = \wp_get_attachment_metadata($id);
+            if ($metadata && isset($metadata['sizes'])) {
+                $old_dir = dirname($old_path);
+                $old_basename = pathinfo($current_filename, PATHINFO_FILENAME);
+                $new_basename = pathinfo($new_filename_with_ext, PATHINFO_FILENAME);
+                
+                foreach ($metadata['sizes'] as $size => $size_data) {
+                    $old_size_file = $old_dir . '/' . $old_basename . '-' . $size_data['width'] . 'x' . $size_data['height'] . '.' . $file_extension;
+                    $new_size_file = $old_dir . '/' . $new_basename . '-' . $size_data['width'] . 'x' . $size_data['height'] . '.' . $file_extension;
+                    
+                    if (file_exists($old_size_file)) {
+                        rename($old_size_file, $new_size_file);
+                        $metadata['sizes'][$size]['file'] = basename($new_size_file);
+                    }
+                }
+                
+                $metadata['file'] = str_replace($upload_dir['basedir'] . '/', '', $new_path);
+                \wp_update_attachment_metadata($id, $metadata);
+            }
+
+            Logger::log("[RENAME] Renamed image $id from '$current_filename' to '$new_filename_with_ext'");
+
+            \wp_send_json_success([
+                'message' => 'Filename renamed successfully',
+                'old_filename' => $current_filename,
+                'new_filename' => $new_filename_with_ext,
+                'new_url' => \wp_get_attachment_url($id)
+            ]);
+        } catch (\Throwable $e) {
+            Logger::log('[RENAME] Error: ' . $e->getMessage());
+            \wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Generate AI filename for an attachment
+     */
+    public static function generate_ai_filename() {
+        \check_ajax_referer('picpilot_studio_generate', 'nonce');
+
+        if (!\current_user_can('upload_files')) {
+            \wp_send_json_error(['message' => 'Permission denied']);
+        }
+
+        $id = \absint($_POST['attachment_id'] ?? 0);
+        if (!$id || !\wp_attachment_is_image($id)) {
+            \wp_send_json_error(['message' => 'Invalid image ID']);
+        }
+
+        $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
+
+        // Check if dangerous filename rename is enabled
+        $settings = \get_option('picpilot_studio_settings', []);
+        $rename_enabled = $settings['enable_dangerous_filename_rename'] ?? false;
+
+        if (!$rename_enabled) {
+            \wp_send_json_error(['message' => 'Dangerous filename renaming is disabled in settings']);
+        }
+
+        try {
+            $filename = FilenameGenerator::generate($id, $keywords);
+            
+            if (\is_wp_error($filename)) {
+                Logger::log('[AI_FILENAME] Generation failed: ' . $filename->get_error_message());
+                \wp_send_json_error(['message' => $filename->get_error_message()]);
+            }
+
+            if (empty($filename)) {
+                Logger::log('[AI_FILENAME] Generation returned empty result');
+                \wp_send_json_error(['message' => 'AI returned an empty filename']);
+            }
+
+            Logger::log("[AI_FILENAME] Generated filename for image $id: '$filename' (keywords: '$keywords')");
+
+            \wp_send_json_success([
+                'filename' => $filename,
+                'message' => 'Filename generated successfully'
+            ]);
+        } catch (\Throwable $e) {
+            Logger::log('[AI_FILENAME] Error: ' . $e->getMessage());
+            \wp_send_json_error(['message' => $e->getMessage()]);
+        }
     }
 }

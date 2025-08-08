@@ -101,12 +101,15 @@ class MetadataGenerator {
             return new WP_Error('api_error', 'OpenAI API error: ' . ($data['error']['message'] ?? 'Unknown error'));
         }
 
+        // Log full response structure for debugging
+        Logger::log("[{$type}] Full API response structure: " . json_encode($data, JSON_PRETTY_PRINT));
+
         $content = trim($data['choices'][0]['message']['content'] ?? '');
 
         Logger::log("[{$type}] Raw AI response (keywords: '$keywords'): " . $content);
 
         if (!$content) {
-            Logger::log("[{$type}] Empty response from API");
+            Logger::log("[{$type}] Empty response from API - full response: " . json_encode($data));
             return new WP_Error('empty_response', 'Empty response from AI API');
         }
 
@@ -268,12 +271,15 @@ class MetadataGenerator {
             return new WP_Error('api_error', 'Gemini API error: ' . ($data['error']['message'] ?? 'Unknown error'));
         }
 
+        // Log full response structure for debugging
+        Logger::log("[{$type}] Full Gemini API response structure: " . json_encode($data, JSON_PRETTY_PRINT));
+
         $content = trim($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
 
         Logger::log("[{$type}] Raw Gemini response (keywords: '$keywords'): " . $content);
 
         if (!$content) {
-            Logger::log("[{$type}] Empty response from API");
+            Logger::log("[{$type}] Empty response from Gemini API - full response: " . json_encode($data));
             return new WP_Error('empty_response', 'Empty response from AI API');
         }
 

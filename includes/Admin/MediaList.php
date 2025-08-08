@@ -56,6 +56,12 @@ class MediaList {
             esc_html__('Regenerate Alt Text', 'pic-pilot-studio') : 
             esc_html__('Generate Alt Text', 'pic-pilot-studio');
 
+        // Check if title already exists
+        $existing_title = get_the_title($post->ID);
+        $title_button_text = !empty($existing_title) ? 
+            esc_html__('Regenerate Title', 'pic-pilot-studio') : 
+            esc_html__('Generate Title', 'pic-pilot-studio');
+
         $actions['generate_meta'] = $keywords_input
             . sprintf(
                 '<button type="button" class="picpilot-generate-meta" data-id="%d" data-type="alt">%s</button> ',
@@ -65,7 +71,7 @@ class MediaList {
             . sprintf(
                 '<button type="button" class="picpilot-generate-meta" data-id="%d" data-type="title">%s</button>',
                 esc_attr($post->ID),
-                esc_html__('Generate Title', 'pic-pilot-studio')
+                $title_button_text
             );
 
         return $actions;
@@ -130,6 +136,16 @@ class MediaList {
             PIC_PILOT_STUDIO_VERSION,
             true
         );
+        
+        // Localize script for media list
+        wp_localize_script('pic-pilot-media-list', 'PicPilotStudio', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('picpilot_studio_generate'),
+            'settings' => [
+                'auto_generate_both_enabled' => !empty($settings['enable_auto_generate_both']),
+                'dangerous_rename_enabled' => !empty($settings['enable_dangerous_filename_rename'])
+            ]
+        ]);
 
         //Enqueue smart duplication modal
         wp_enqueue_script(
@@ -362,6 +378,12 @@ class MediaList {
             esc_html__('Regenerate Alt Text', 'pic-pilot-studio') : 
             esc_html__('Generate Alt Text', 'pic-pilot-studio');
 
+        // Check if title already exists
+        $existing_title = get_the_title($post->ID);
+        $title_button_text = !empty($existing_title) ? 
+            esc_html__('Regenerate Title', 'pic-pilot-studio') : 
+            esc_html__('Generate Title', 'pic-pilot-studio');
+
         ?>
         <div id="picpilot-edit-page-controls" style="margin: 20px 0; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">
             <h3 style="margin-top: 0; font-size: 14px; color: #333;">
@@ -382,7 +404,7 @@ class MediaList {
             <div class="picpilot-edit-buttons" style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button type="button" id="picpilot-generate-title-edit" class="button button-secondary" data-id="<?php echo esc_attr($post->ID); ?>">
                     <span class="dashicons dashicons-format-chat" style="margin-right: 5px;"></span>
-                    <?php esc_html_e('Generate Title', 'pic-pilot-studio'); ?>
+                    <?php echo $title_button_text; ?>
                 </button>
                 
                 <button type="button" id="picpilot-generate-alt-edit" class="button button-secondary" data-id="<?php echo esc_attr($post->ID); ?>">
@@ -519,11 +541,18 @@ class MediaList {
         $settings = get_option('picpilot_studio_settings', []);
         $show_keywords = !empty($settings['show_keywords_field']);
         $show_hover_info = !empty($settings['show_hover_info']);
+        $auto_generate_both_enabled = !empty($settings['enable_auto_generate_both']);
+        $dangerous_rename_enabled = !empty($settings['enable_dangerous_filename_rename']);
         
-        // Get current metadata for individual button tooltips
+        // Get current metadata for individual button tooltips and status
         $alt_text = get_post_meta($post_id, '_wp_attachment_image_alt', true);
         $title = get_the_title($post_id);
         $filename = basename(get_attached_file($post_id));
+        
+        // Check what's missing for "Generate Both" button
+        $is_missing_alt = empty($alt_text);
+        $is_missing_title = empty($title) || strpos(strtolower($title), strtolower(pathinfo($filename, PATHINFO_FILENAME))) !== false;
+        $is_missing_both = $is_missing_alt && $is_missing_title;
         
         echo '<div class="picpilot-column-wrapper">';
         
@@ -542,14 +571,30 @@ class MediaList {
         $alt_tooltip = '';
         $title_tooltip = '';
         $duplicate_tooltip = '';
+        $both_tooltip = '';
+        $rename_tooltip = '';
         
         if ($show_hover_info) {
             $alt_tooltip = $alt_text ? 'Alt: ' . esc_attr($alt_text) : 'No alt text';
             $title_tooltip = $title ? 'Title: ' . esc_attr($title) : 'No title';
             $duplicate_tooltip = $filename ? 'File: ' . esc_attr($filename) : 'Unknown file';
+            $both_tooltip = 'Generate both alt text and title with AI';
+            $rename_tooltip = 'Rename filename (dangerous operation)';
         }
         
-        // Compact button layout
+        // Show "Generate Both" button prominently if both are missing and feature is enabled
+        if ($is_missing_both && $auto_generate_both_enabled) {
+            echo '<div class="picpilot-generate-both-section" style="margin-bottom:5px;">';
+            echo sprintf(
+                '<button type="button" class="button button-primary button-small picpilot-generate-both" data-id="%d"%s style="width:100%%;font-weight:600;">🪄 %s</button>',
+                esc_attr($post_id),
+                $both_tooltip ? ' title="' . $both_tooltip . '"' : '',
+                esc_html__('Generate Both', 'pic-pilot-studio')
+            );
+            echo '</div>';
+        }
+        
+        // Compact button layout for individual actions
         echo '<div class="picpilot-button-group" style="display:flex;gap:2px;flex-wrap:wrap;">';
         
         // Alt text button
@@ -577,6 +622,19 @@ class MediaList {
         );
         
         echo '</div>';
+        
+        // Dangerous rename section (only if enabled)
+        if ($dangerous_rename_enabled) {
+            echo '<div class="picpilot-rename-section" style="margin-top:5px;padding-top:5px;border-top:1px solid #ddd;">';
+            echo sprintf(
+                '<button type="button" class="button button-small picpilot-rename-filename" data-id="%d"%s style="font-size:10px;color:#d63638;">⚠️ %s</button>',
+                esc_attr($post_id),
+                $rename_tooltip ? ' title="' . $rename_tooltip . '"' : '',
+                esc_html__('Rename', 'pic-pilot-studio')
+            );
+            echo '</div>';
+        }
+        
         echo '</div>';
     }
 }

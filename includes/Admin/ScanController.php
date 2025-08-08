@@ -634,4 +634,92 @@ class ScanController {
         
         return $scannable_types;
     }
+    
+    /**
+     * Get available post types with their labels for filtering
+     */
+    public static function get_available_post_types() {
+        $post_types = get_post_types([
+            'public' => true,
+            'exclude_from_search' => false
+        ], 'objects');
+        
+        // Remove attachment post type
+        unset($post_types['attachment']);
+        
+        $available_types = [];
+        
+        foreach ($post_types as $post_type) {
+            $available_types[$post_type->name] = $post_type->label;
+        }
+        
+        // Ensure common types are always included even if not "public"
+        $essential_types = [
+            'post' => 'Posts',
+            'page' => 'Pages'
+        ];
+        
+        foreach ($essential_types as $type => $label) {
+            if (post_type_exists($type) && !isset($available_types[$type])) {
+                $available_types[$type] = $label;
+            }
+        }
+        
+        // Add WooCommerce product if available
+        if (post_type_exists('product') && !isset($available_types['product'])) {
+            $available_types['product'] = 'Products';
+        }
+        
+        // Sort by label for better UX
+        asort($available_types);
+        
+        return $available_types;
+    }
+    
+    /**
+     * Get post types that actually have scanned content
+     */
+    public static function get_scanned_post_types($scan_id = null) {
+        global $wpdb;
+        
+        $table = $wpdb->prefix . 'picpilot_scan_results';
+        
+        if ($scan_id) {
+            $sql = "SELECT DISTINCT page_type FROM $table WHERE scan_id = %s ORDER BY page_type";
+            $results = $wpdb->get_col($wpdb->prepare($sql, $scan_id));
+        } else {
+            // Get from latest scan
+            $latest_scan = self::get_latest_scan();
+            if (!$latest_scan) {
+                return [];
+            }
+            
+            $sql = "SELECT DISTINCT page_type FROM $table WHERE scan_id = %s ORDER BY page_type";
+            $results = $wpdb->get_col($wpdb->prepare($sql, $latest_scan['scan_id']));
+        }
+        
+        $post_types_with_labels = [];
+        foreach ($results as $post_type) {
+            $post_type_obj = get_post_type_object($post_type);
+            $label = $post_type_obj ? $post_type_obj->label : ucfirst($post_type);
+            $post_types_with_labels[$post_type] = $label;
+        }
+        
+        return $post_types_with_labels;
+    }
+    
+    /**
+     * Get latest scan data
+     */
+    private static function get_latest_scan() {
+        global $wpdb;
+        
+        $table = $wpdb->prefix . 'picpilot_scan_history';
+        return $wpdb->get_row($wpdb->prepare("
+            SELECT * FROM $table 
+            WHERE status = 'completed' 
+            ORDER BY completed_at DESC 
+            LIMIT 1
+        "), ARRAY_A);
+    }
 }

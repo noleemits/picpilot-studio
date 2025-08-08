@@ -2,6 +2,8 @@
 
 namespace PicPilotStudio\Admin;
 
+use PicPilotStudio\Helpers\Logger;
+
 defined('ABSPATH') || exit;
 
 class AttachmentFields {
@@ -22,6 +24,11 @@ class AttachmentFields {
             return $form_fields;
         }
 
+        // Check if media modal tools are enabled
+        if (!Settings::get('enable_media_modal_tools', false)) {
+            return $form_fields;
+        }
+
         // Get current values
         $current_alt = get_post_meta($post->ID, '_wp_attachment_image_alt', true);
         $current_title = $post->post_title;
@@ -35,7 +42,7 @@ class AttachmentFields {
         $field_keys = array_keys($form_fields);
         
         // Debug: Log available fields to understand the structure
-        error_log('PicPilot: Available form fields: ' . implode(', ', $field_keys));
+        Logger::log('[MODAL] Available form fields: ' . implode(', ', $field_keys));
         
         // Look for common fields that appear before alt text
         $target_fields = ['image_url', 'post_excerpt', 'post_content', 'url'];
@@ -43,7 +50,7 @@ class AttachmentFields {
             $pos = array_search($target_field, $field_keys);
             if ($pos !== false) {
                 $insert_position = $pos + 1;
-                error_log("PicPilot: Found $target_field at position $pos, inserting AI tools at position $insert_position");
+                Logger::log("[MODAL] Found $target_field at position $pos, inserting AI tools at position $insert_position");
                 break;
             }
         }
@@ -52,7 +59,7 @@ class AttachmentFields {
         if ($insert_position === 0) {
             $alt_pos = array_search('image_alt', $field_keys);
             $insert_position = $alt_pos !== false ? $alt_pos : count($form_fields);
-            error_log("PicPilot: No target fields found, inserting at position $insert_position (before alt or at end)");
+            Logger::log("[MODAL] No target fields found, inserting at position $insert_position (before alt or at end)");
         }
         
         // Split the array and insert our field
@@ -78,31 +85,50 @@ class AttachmentFields {
     private static function render_ai_tools_section($attachment_id, $current_title, $current_alt) {
         ob_start();
         
+        // Get settings to check which features are enabled
+        $settings = get_option('picpilot_studio_settings', []);
+        $auto_generate_both_enabled = !empty($settings['enable_auto_generate_both']);
+        $dangerous_rename_enabled = !empty($settings['enable_dangerous_filename_rename']);
+        $show_keywords = !empty($settings['show_keywords_field']);
+        
+        // Check what's missing for "Generate Both" button
+        $filename = basename(get_attached_file($attachment_id));
+        $is_missing_alt = empty($current_alt);
+        $is_missing_title = empty($current_title) || strpos(strtolower($current_title), strtolower(pathinfo($filename, PATHINFO_FILENAME))) !== false;
+        $is_missing_both = $is_missing_alt && $is_missing_title;
+        
         // Load script inline for page builder compatibility
         static $script_loaded = false;
         if (!$script_loaded) {
             $script_loaded = true;
-            $script_url = PIC_PILOT_STUDIO_URL . 'assets/js/attachment-fields-vanilla.js?v=' . get_plugin_data(PIC_PILOT_STUDIO_PATH . 'pic-pilot-studio.php')['Version'];
             $ajax_url = admin_url('admin-ajax.php');
             $nonce = wp_create_nonce('picpilot_studio_generate');
             ?>
             <script>
-            window.picPilotAttachment = { ajax_url: '<?php echo esc_js($ajax_url); ?>', nonce: '<?php echo esc_js($nonce); ?>' };
+            // Ensure window.picPilotAttachment exists for all contexts
+            if (typeof window.picPilotAttachment === 'undefined') {
+                window.picPilotAttachment = { 
+                    ajax_url: '<?php echo esc_js($ajax_url); ?>', 
+                    nonce: '<?php echo esc_js($nonce); ?>' 
+                };
+            }
             </script>
-            <script src="<?php echo esc_url($script_url); ?>"></script>
             <?php
         }
         ?>
         <div class="pic-pilot-attachment-ai-tools" data-attachment-id="<?php echo esc_attr($attachment_id); ?>">
-            <div class="pic-pilot-ai-launcher" style="text-align: center; padding: 10px;">
+            <div class="pic-pilot-ai-launcher" style="padding: 15px; text-align: center;">
+                <h4 style="margin-top: 0; color: #2271b1; font-size: 14px;">🤖 PicPilot AI Tools</h4>
+                
                 <button type="button" 
                         class="button button-primary pic-pilot-launch-modal-btn" 
                         data-attachment-id="<?php echo esc_attr($attachment_id); ?>"
-                        style="background: #2271b1; border-color: #2271b1; font-size: 14px; padding: 8px 16px;">
-                    🤖 AI Tools
+                        style="width: 100%; background: #2271b1; border-color: #2271b1; font-size: 14px; font-weight: 600; padding: 10px 16px;">
+                    🚀 Open AI Tools & Metadata
                 </button>
-                <p style="margin: 8px 0 0 0; font-size: 12px; color: #666;">
-                    Generate alt text, titles, and duplicate with AI
+                
+                <p style="margin: 8px 0 0 0; font-size: 11px; color: #666; text-align: center;">
+                    Generate alt text, titles, duplicate images & more
                 </p>
             </div>
         </div>
@@ -159,6 +185,11 @@ class AttachmentFields {
     public static function enqueue_attachment_scripts($hook = '') {
         // Only enqueue in admin or frontend editor contexts where media modals are used
         if (!is_admin() && !isset($_GET['elementor-preview']) && !isset($_GET['fl_builder'])) {
+            return;
+        }
+
+        // Check if media modal tools are enabled
+        if (!Settings::get('enable_media_modal_tools', false)) {
             return;
         }
 

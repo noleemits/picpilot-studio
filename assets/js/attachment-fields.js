@@ -590,7 +590,8 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
                 }
             } else {
                 console.error(`🖼️ [${PICPILOT_JS_VERSION}] Generation failed for ${requestKey}:`, response.data);
-                showStatus($status, `❌ Failed to generate ${type}: ${response.data}`, 'error');
+                const errorMessage = typeof response.data === 'object' && response.data.message ? response.data.message : (typeof response.data === 'string' ? response.data : 'Unknown error');
+                showStatus($status, `❌ Failed to generate ${type}: ${errorMessage}`, 'error');
             }
         } catch (error) {
             console.error(`🖼️ [${PICPILOT_JS_VERSION}] Network error for ${requestKey}:`, error);
@@ -852,17 +853,23 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
         showModalStatus($status, `Generating ${type}...`, 'info');
 
         try {
+            const requestData = {
+                action: 'picpilot_generate_metadata',
+                nonce: picPilotAttachment.nonce,
+                attachment_id: attachmentId,
+                type: type,
+                keywords: keywords,
+                js_version: PICPILOT_JS_VERSION  // Add version to track deployment
+            };
+            
+            console.log(`🖼️ [${PICPILOT_JS_VERSION}] Making AJAX request for ${requestKey}:`, requestData);
+            console.log(`🖼️ [${PICPILOT_JS_VERSION}] URL:`, picPilotAttachment.ajax_url);
+            console.log(`🖼️ [${PICPILOT_JS_VERSION}] picPilotAttachment object:`, window.picPilotAttachment);
+            
             const response = await $.ajax({
                 url: picPilotAttachment.ajax_url,
                 method: 'POST',
-                data: {
-                    action: 'picpilot_generate_metadata',
-                    nonce: picPilotAttachment.nonce,
-                    attachment_id: attachmentId,
-                    type: type,
-                    keywords: keywords,
-                    js_version: PICPILOT_JS_VERSION  // Add version to track deployment
-                }
+                data: requestData
             });
 
             console.log(`🖼️ [${PICPILOT_JS_VERSION}] Received response for ${requestKey}:`, response);
@@ -876,14 +883,20 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
                 }
                 
                 // Only update once we have the final result
-                const finalResult = response.data.result;
+                const finalResult = response.data && response.data.result ? response.data.result : null;
                 console.log(`🖼️ [${PICPILOT_JS_VERSION}] Final result for ${requestKey}: ${finalResult}`);
                 
-                // Update the corresponding WordPress field with final result only
-                updateWordPressField(type, finalResult, attachmentId);
-                
-                // Update the modal preview with final result only
-                updateModalPreview(type, finalResult);
+                if (finalResult) {
+                    // Update the corresponding WordPress field with final result only
+                    updateWordPressField(type, finalResult, attachmentId);
+                    
+                    // Update the modal preview with final result only
+                    updateModalPreview(type, finalResult);
+                } else {
+                    console.error(`🖼️ [${PICPILOT_JS_VERSION}] No result data found in response for ${requestKey}:`, response.data);
+                    showModalStatus($status, `❌ Invalid response from server: No result data`, 'error');
+                    return;
+                }
                 
                 showModalStatus($status, `✅ ${capitalizeFirst(type)} generated successfully!`, 'success');
                 
@@ -900,7 +913,8 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
                 }
             } else {
                 console.error(`🖼️ [${PICPILOT_JS_VERSION}] Generation failed for ${requestKey}:`, response.data);
-                showModalStatus($status, `❌ Failed to generate ${type}: ${response.data}`, 'error');
+                const errorMessage = typeof response.data === 'object' && response.data.message ? response.data.message : (typeof response.data === 'string' ? response.data : 'Unknown error');
+                showModalStatus($status, `❌ Failed to generate ${type}: ${errorMessage}`, 'error');
             }
         } catch (error) {
             console.error(`🖼️ [${PICPILOT_JS_VERSION}] Network error for ${requestKey}:`, error);

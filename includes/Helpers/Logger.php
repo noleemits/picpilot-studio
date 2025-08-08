@@ -8,7 +8,11 @@ class Logger {
 
     public static function log($message) {
         $settings = get_option('picpilot_studio_settings', []);
-        if (empty($settings['log_enabled'])) return;
+        
+        // For debugging purposes, temporarily force logging on debug messages
+        $force_debug = strpos($message, '[DEBUG]') !== false || strpos($message, '[AJAX]') !== false;
+        
+        if (empty($settings['log_enabled']) && !$force_debug) return;
 
         $timestamp = current_time('mysql');
         $line = "[$timestamp] $message\n";

@@ -57,6 +57,24 @@ $settings = [
         'type' => 'checkbox',
         'description' => __('Display alt text, title, and filename on hover when using the PicPilot column. Requires "Show PicPilot Tools in Column" to be enabled.', 'pic-pilot-studio'),
     ],
+    [
+        'key' => 'enable_media_modal_tools',
+        'label' => __('🔧 Enable AI Tools in Media Modal', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('Show AI tools in media library modal/popup. ⚠️ Disable this if you experience conflicts with page builders or performance issues.', 'pic-pilot-studio'),
+    ],
+    [
+        'key' => 'enable_auto_generate_both',
+        'label' => __('🪄 Enable Auto-Generate Both Button', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('Shows an additional "Auto-Generate Both" button when an image is missing both alt text and title. This generates both attributes at once with AI. ⚠️ This feature consumes more API credits.', 'pic-pilot-studio'),
+    ],
+    [
+        'key' => 'enable_dangerous_filename_rename',
+        'label' => __('⚠️ Enable Dangerous Filename Renaming', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('DANGEROUS: Allows renaming image filenames which may break existing references. The system will detect image usage and warn you, but proceed with extreme caution. Only enable if you understand the risks.', 'pic-pilot-studio'),
+    ],
 ];
 
 foreach ($settings as $setting) {

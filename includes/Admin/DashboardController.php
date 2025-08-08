@@ -47,6 +47,8 @@ class DashboardController {
             PIC_PILOT_STUDIO_VERSION
         );
         
+        $settings = get_option('picpilot_studio_settings', []);
+        
         wp_localize_script('pic-pilot-dashboard', 'picPilotDashboard', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('pic_pilot_dashboard'),
@@ -59,6 +61,17 @@ class DashboardController {
                 'no_issues_found' => __('Great! No accessibility issues found.', 'pic-pilot-studio'),
                 'loading' => __('Loading...', 'pic-pilot-studio')
             ]
+        ]);
+        
+        // Pass settings to JavaScript for feature detection
+        wp_localize_script('pic-pilot-dashboard', 'picPilotSettings', [
+            'ai_features_enabled' => !empty($settings['openai_api_key']) || !empty($settings['gemini_api_key']),
+            'auto_generate_both_enabled' => !empty($settings['enable_auto_generate_both']),
+            'dangerous_rename_enabled' => !empty($settings['enable_dangerous_filename_rename']),
+            'alt_generation_enabled' => !empty($settings['enable_alt_generation_on_duplicate']),
+            'title_generation_enabled' => !empty($settings['enable_title_generation_on_duplicate']),
+            'filename_generation_enabled' => !empty($settings['enable_filename_generation']),
+            'generate_nonce' => wp_create_nonce('picpilot_studio_generate')
         ]);
     }
     

@@ -2,9 +2,11 @@
 defined('ABSPATH') || exit;
 
 use PicPilotStudio\Admin\DashboardController;
+use PicPilotStudio\Admin\ScanController;
 
 $stats = DashboardController::get_dashboard_stats();
 $recent_scans = DashboardController::get_recent_scans();
+$scanned_post_types = ScanController::get_scanned_post_types();
 ?>
 
 <div class="wrap pic-pilot-dashboard">
@@ -172,9 +174,9 @@ $recent_scans = DashboardController::get_recent_scans();
                 
                 <select id="filter-page-type">
                     <option value=""><?php _e('All Page Types', 'pic-pilot-studio'); ?></option>
-                    <option value="post"><?php _e('Posts', 'pic-pilot-studio'); ?></option>
-                    <option value="page"><?php _e('Pages', 'pic-pilot-studio'); ?></option>
-                    <option value="product"><?php _e('Products', 'pic-pilot-studio'); ?></option>
+                    <?php foreach ($scanned_post_types as $post_type => $label): ?>
+                        <option value="<?php echo esc_attr($post_type); ?>"><?php echo esc_html($label); ?></option>
+                    <?php endforeach; ?>
                 </select>
                 
                 <input type="search" id="search-issues" placeholder="<?php _e('Search pages or images...', 'pic-pilot-studio'); ?>">
