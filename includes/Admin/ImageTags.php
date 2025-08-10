@@ -1,6 +1,6 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
 defined('ABSPATH') || exit;
 
@@ -36,15 +36,15 @@ class ImageTags {
     public static function register_image_tags_taxonomy() {
         register_taxonomy('picpilot_image_tags', 'attachment', [
             'labels' => [
-                'name' => __('Image Tags', 'pic-pilot-studio'),
-                'singular_name' => __('Image Tag', 'pic-pilot-studio'),
-                'search_items' => __('Search Tags', 'pic-pilot-studio'),
-                'all_items' => __('All Tags', 'pic-pilot-studio'),
-                'edit_item' => __('Edit Tag', 'pic-pilot-studio'),
-                'update_item' => __('Update Tag', 'pic-pilot-studio'),
-                'add_new_item' => __('Add New Tag', 'pic-pilot-studio'),
-                'new_item_name' => __('New Tag Name', 'pic-pilot-studio'),
-                'menu_name' => __('Image Tags', 'pic-pilot-studio'),
+                'name' => __('Image Tags', 'pic-pilot-meta'),
+                'singular_name' => __('Image Tag', 'pic-pilot-meta'),
+                'search_items' => __('Search Tags', 'pic-pilot-meta'),
+                'all_items' => __('All Tags', 'pic-pilot-meta'),
+                'edit_item' => __('Edit Tag', 'pic-pilot-meta'),
+                'update_item' => __('Update Tag', 'pic-pilot-meta'),
+                'add_new_item' => __('Add New Tag', 'pic-pilot-meta'),
+                'new_item_name' => __('New Tag Name', 'pic-pilot-meta'),
+                'menu_name' => __('Image Tags', 'pic-pilot-meta'),
             ],
             'hierarchical' => false,
             'public' => false,
@@ -218,7 +218,7 @@ class ImageTags {
      * Add tags column to media list
      */
     public static function add_tags_column($columns) {
-        $columns['picpilot_tags'] = __('Tags', 'pic-pilot-studio');
+        $columns['picpilot_tags'] = __('Tags', 'pic-pilot-meta');
         return $columns;
     }
 
@@ -238,8 +238,8 @@ class ImageTags {
         $tags = wp_get_object_terms($attachment_id, 'picpilot_image_tags');
         
         if (empty($tags) || is_wp_error($tags)) {
-            echo '<span class="picpilot-no-tags" style="color: #999;">' . esc_html__('No tags', 'pic-pilot-studio') . '</span>';
-            echo '<br><button type="button" class="picpilot-add-tag-btn button-link" data-id="' . esc_attr($attachment_id) . '" style="font-size: 12px; color: #0073aa;">' . esc_html__('+ Add tag', 'pic-pilot-studio') . '</button>';
+            echo '<span class="picpilot-no-tags" style="color: #999;">' . esc_html__('No tags', 'pic-pilot-meta') . '</span>';
+            echo '<br><button type="button" class="picpilot-add-tag-btn button-link" data-id="' . esc_attr($attachment_id) . '" style="font-size: 12px; color: #0073aa;">' . esc_html__('+ Add tag', 'pic-pilot-meta') . '</button>';
             return;
         }
 
@@ -249,13 +249,13 @@ class ImageTags {
                 '<span class="picpilot-tag" data-tag="%s" data-id="%d" style="display: inline-block; background: #0073aa; color: white; padding: 2px 6px; margin: 1px; border-radius: 3px; font-size: 11px; cursor: pointer;" title="%s">%s <span class="picpilot-remove-tag" style="margin-left: 4px; cursor: pointer;">&times;</span></span>',
                 esc_attr($tag->name),
                 esc_attr($attachment_id),
-                esc_attr__('Click × to remove', 'pic-pilot-studio'),
+                esc_attr__('Click × to remove', 'pic-pilot-meta'),
                 esc_html($tag->name)
             );
         }
 
         echo implode(' ', $tag_names);
-        echo '<br><button type="button" class="picpilot-add-tag-btn button-link" data-id="' . esc_attr($attachment_id) . '" style="font-size: 12px; color: #0073aa;">' . esc_html__('+ Add tag', 'pic-pilot-studio') . '</button>';
+        echo '<br><button type="button" class="picpilot-add-tag-btn button-link" data-id="' . esc_attr($attachment_id) . '" style="font-size: 12px; color: #0073aa;">' . esc_html__('+ Add tag', 'pic-pilot-meta') . '</button>';
     }
 
     /**

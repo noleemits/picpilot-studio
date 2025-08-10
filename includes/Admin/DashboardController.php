@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Helpers\Logger;
+use PicPilotMeta\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -18,9 +18,9 @@ class DashboardController {
     
     public static function add_dashboard_submenu() {
         add_submenu_page(
-            'pic-pilot-studio',
-            __('Dashboard', 'pic-pilot-studio'),
-            __('Dashboard', 'pic-pilot-studio'),
+            'pic-pilot-meta',
+            __('Dashboard', 'pic-pilot-meta'),
+            __('Dashboard', 'pic-pilot-meta'),
             'manage_options',
             'pic-pilot-dashboard',
             [__CLASS__, 'render_dashboard_page']
@@ -28,38 +28,38 @@ class DashboardController {
     }
     
     public static function enqueue_dashboard_assets($hook) {
-        if ($hook !== 'pic-pilot-studio_page_pic-pilot-dashboard') {
+        if ($hook !== 'pic-pilot-meta_page_pic-pilot-dashboard') {
             return;
         }
         
         wp_enqueue_script(
             'pic-pilot-dashboard',
-            PIC_PILOT_STUDIO_URL . 'assets/js/dashboard.js',
+            PIC_PILOT_META_URL . 'assets/js/dashboard.js',
             ['jquery'],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
         
         wp_enqueue_style(
             'pic-pilot-dashboard',
-            PIC_PILOT_STUDIO_URL . 'assets/css/dashboard.css',
+            PIC_PILOT_META_URL . 'assets/css/dashboard.css',
             [],
-            PIC_PILOT_STUDIO_VERSION
+            PIC_PILOT_META_VERSION
         );
         
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         
         wp_localize_script('pic-pilot-dashboard', 'picPilotDashboard', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('pic_pilot_dashboard'),
             'strings' => [
-                'scan_starting' => __('Starting scan...', 'pic-pilot-studio'),
-                'scan_progress' => __('Scanning page {current} of {total}...', 'pic-pilot-studio'),
-                'scan_completed' => __('Scan completed successfully!', 'pic-pilot-studio'),
-                'scan_failed' => __('Scan failed. Please try again.', 'pic-pilot-studio'),
-                'confirm_new_scan' => __('This will start a new scan. Continue?', 'pic-pilot-studio'),
-                'no_issues_found' => __('Great! No accessibility issues found.', 'pic-pilot-studio'),
-                'loading' => __('Loading...', 'pic-pilot-studio')
+                'scan_starting' => __('Starting scan...', 'pic-pilot-meta'),
+                'scan_progress' => __('Scanning page {current} of {total}...', 'pic-pilot-meta'),
+                'scan_completed' => __('Scan completed successfully!', 'pic-pilot-meta'),
+                'scan_failed' => __('Scan failed. Please try again.', 'pic-pilot-meta'),
+                'confirm_new_scan' => __('This will start a new scan. Continue?', 'pic-pilot-meta'),
+                'no_issues_found' => __('Great! No accessibility issues found.', 'pic-pilot-meta'),
+                'loading' => __('Loading...', 'pic-pilot-meta')
             ]
         ]);
         
@@ -89,7 +89,7 @@ class DashboardController {
         if (!$latest_scan) {
             return [
                 'has_scan' => false,
-                'message' => __('No scans found. Click "Scan Now" to get started.', 'pic-pilot-studio')
+                'message' => __('No scans found. Click "Scan Now" to get started.', 'pic-pilot-meta')
             ];
         }
         

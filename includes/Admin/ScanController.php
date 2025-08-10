@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Helpers\Logger;
+use PicPilotMeta\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -20,7 +20,7 @@ class ScanController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-studio'));
+            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         $scan_type = sanitize_text_field($_POST['scan_type'] ?? 'partial');
@@ -36,7 +36,7 @@ class ScanController {
         
         if (empty($pages)) {
             wp_send_json_error([
-                'message' => __('No pages found to scan.', 'pic-pilot-studio')
+                'message' => __('No pages found to scan.', 'pic-pilot-meta')
             ]);
         }
         
@@ -45,7 +45,7 @@ class ScanController {
         
         if (!$scan_id) {
             wp_send_json_error([
-                'message' => __('Failed to create scan session.', 'pic-pilot-studio')
+                'message' => __('Failed to create scan session.', 'pic-pilot-meta')
             ]);
         }
         
@@ -60,7 +60,7 @@ class ScanController {
         wp_send_json_success([
             'scan_id' => $scan_id,
             'total_pages' => count($pages),
-            'message' => __('Scan started successfully', 'pic-pilot-studio')
+            'message' => __('Scan started successfully', 'pic-pilot-meta')
         ]);
     }
     
@@ -68,7 +68,7 @@ class ScanController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-studio'));
+            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         $scan_id = sanitize_text_field($_POST['scan_id']);
@@ -82,7 +82,7 @@ class ScanController {
         
         if (!$scan || $scan['status'] !== 'running') {
             wp_send_json_error([
-                'message' => __('Scan not found or not running.', 'pic-pilot-studio')
+                'message' => __('Scan not found or not running.', 'pic-pilot-meta')
             ]);
         }
         
@@ -148,7 +148,7 @@ class ScanController {
         $scan = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE scan_id = %s", $scan_id), ARRAY_A);
         
         if (!$scan) {
-            wp_send_json_error(['message' => __('Scan not found.', 'pic-pilot-studio')]);
+            wp_send_json_error(['message' => __('Scan not found.', 'pic-pilot-meta')]);
         }
         
         wp_send_json_success($scan);
@@ -166,7 +166,7 @@ class ScanController {
         
         Logger::log("[SCAN] Cancelled scan {$scan_id}");
         
-        wp_send_json_success(['message' => __('Scan cancelled.', 'pic-pilot-studio')]);
+        wp_send_json_success(['message' => __('Scan cancelled.', 'pic-pilot-meta')]);
     }
     
     public static function handle_get_issues() {
@@ -183,7 +183,7 @@ class ScanController {
         }
         
         if (empty($scan_id)) {
-            wp_send_json_error(['message' => __('No scan data available.', 'pic-pilot-studio')]);
+            wp_send_json_error(['message' => __('No scan data available.', 'pic-pilot-meta')]);
         }
         
         $results = DatabaseManager::get_scan_results($scan_id, $filters, $page, $per_page);

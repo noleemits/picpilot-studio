@@ -1,4 +1,4 @@
-=== Pic Pilot: Studio ===
+=== Pic Pilot Meta ===
 Contributors: stephenhernandez
 Tags: AI, image SEO, alt text, image title, media library, OpenAI, GPT, Gemini, accessibility, metadata
 Requires at least: 5.6
@@ -12,7 +12,7 @@ AI-powered image metadata generation for WordPress. Automatically create SEO-opt
 
 == Description ==
 
-**Pic Pilot: Studio** is an AI-powered media management plugin that revolutionizes how you handle image metadata on WordPress sites.
+**Pic Pilot Meta** is an AI-powered media management plugin that revolutionizes how you handle image metadata on WordPress sites.
 
 Transform your content workflow with intelligent automation:
 
@@ -86,7 +86,7 @@ Transform your content workflow with intelligent automation:
    - Activate via Plugins → Pic Pilot: Studio
 
 2. **Configure AI Settings**
-   - Go to Settings → Pic Pilot Studio
+   - Go to Settings → Pic Pilot Meta
    - Choose your AI provider (OpenAI or Google Gemini)
    - Add your API key
    - Configure generation settings and prompts

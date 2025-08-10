@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Services;
+namespace PicPilotMeta\Services;
 
-use PicPilotStudio\Helpers\PromptManager;
+use PicPilotMeta\Helpers\PromptManager;
 use WP_Post;
 
 defined('ABSPATH') || exit;

@@ -7,7 +7,14 @@
       "WebFetch(domain:wordpress.org)",
       "Bash(git checkout:*)",
       "Bash(git add:*)",
-      "WebFetch(domain:hooks.wpbeaverbuilder.com)"
+      "WebFetch(domain:hooks.wpbeaverbuilder.com)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(for file in ExportController.php ImageTags.php MediaList.php ScanController.php Settings.php)",
+      "Bash(do echo \"Processing $file...\")",
+      "Bash(sed:*)",
+      "Bash(done)"
     ],
     "deny": []
   }

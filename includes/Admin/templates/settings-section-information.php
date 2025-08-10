@@ -237,28 +237,28 @@ defined('ABSPATH') || exit;
 </div>
 
 <style>
-.pic-pilot-studio .pic-pilot-info-content .postbox {
+.pic-pilot-meta .pic-pilot-info-content .postbox {
     margin-bottom: 20px;
     border: 1px solid #ddd;
 }
 
-.pic-pilot-studio .pic-pilot-info-content .postbox .hndle {
+.pic-pilot-meta .pic-pilot-info-content .postbox .hndle {
     font-size: 16px;
     font-weight: 600;
 }
 
-.pic-pilot-studio .pic-pilot-info-content h3 {
+.pic-pilot-meta .pic-pilot-info-content h3 {
     font-size: 15px;
     margin-bottom: 10px;
 }
 
-.pic-pilot-studio .pic-pilot-info-content h4 {
+.pic-pilot-meta .pic-pilot-info-content h4 {
     font-size: 14px;
     margin-bottom: 5px;
     color: #333;
 }
 
-.pic-pilot-studio .tab-content {
+.pic-pilot-meta .tab-content {
     margin-top: 20px;
 }
 </style>

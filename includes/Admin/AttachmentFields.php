@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Helpers\Logger;
+use PicPilotMeta\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -95,7 +95,7 @@ class AttachmentFields {
         ob_start();
         
         // Get settings to check which features are enabled
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         $auto_generate_both_enabled = !empty($settings['enable_auto_generate_both']);
         $dangerous_rename_enabled = !empty($settings['enable_dangerous_filename_rename']);
         $show_keywords = !empty($settings['show_keywords_field']);
@@ -371,17 +371,17 @@ class AttachmentFields {
         // Enqueue styles
         wp_enqueue_style(
             'pic-pilot-attachment-fields',
-            PIC_PILOT_STUDIO_URL . 'assets/css/pic-pilot-studio.css',
+            PIC_PILOT_META_URL . 'assets/css/pic-pilot-meta.css',
             [],
-            PIC_PILOT_STUDIO_VERSION
+            PIC_PILOT_META_VERSION
         );
 
         // Enqueue universal modal script for page builders
         wp_enqueue_script(
             'pic-pilot-universal-modal',
-            PIC_PILOT_STUDIO_URL . 'assets/js/universal-modal.js',
+            PIC_PILOT_META_URL . 'assets/js/universal-modal.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 

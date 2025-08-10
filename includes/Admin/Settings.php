@@ -1,20 +1,20 @@
 <?php
 
-namespace PicPilotStudio\Admin;
-use PicPilotStudio\Helpers\Logger;
+namespace PicPilotMeta\Admin;
+use PicPilotMeta\Helpers\Logger;
 
 class Settings {
 
     public static function init() {
-        register_setting('picpilot_studio_settings_group', 'picpilot_studio_settings', [
+        register_setting('picpilot_meta_settings_group', 'picpilot_meta_settings', [
             'sanitize_callback' => [self::class, 'sanitize_settings']
         ]);
         add_action('admin_menu', function () {
             add_options_page(
-                __('Pic Pilot Studio Settings', 'pic-pilot-studio'),
-                __('Pic Pilot Studio', 'pic-pilot-studio'),
+                __('Pic Pilot Meta Settings', 'pic-pilot-meta'),
+                __('Pic Pilot Meta', 'pic-pilot-meta'),
                 'manage_options',
-                'picpilot-studio-settings',
+                'picpilot-meta-settings',
                 [self::class, 'render_settings_page']
             );
         });
@@ -23,32 +23,32 @@ class Settings {
 
 
     public static function render_setting_row($setting) {
-        $value = get_option('picpilot_studio_settings')[$setting['key']] ?? '';
+        $value = get_option('picpilot_meta_settings')[$setting['key']] ?? '';
         echo '<tr valign="top">';
         echo '<th scope="row">' . esc_html($setting['label']) . '</th>';
         echo '<td>';
 
         switch ($setting['type']) {
             case 'checkbox':
-                echo '<label><input type="checkbox" name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" value="1" ' . checked($value, 1, false) . '> ' . esc_html($setting['description']) . '</label>';
+                echo '<label><input type="checkbox" name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" value="1" ' . checked($value, 1, false) . '> ' . esc_html($setting['description']) . '</label>';
                 break;
 
             case 'text':
-                echo '<input type="text" name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($value) . '" class="regular-text" />';
+                echo '<input type="text" name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($value) . '" class="regular-text" />';
                 if (!empty($setting['description'])) {
                     echo '<p class="description">' . esc_html($setting['description']) . '</p>';
                 }
                 break;
             case 'password-toggle':
                 echo '<div style="position:relative;">';
-                echo '<input type="password" data-toggleable name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($value) . '" class="regular-text" />';
+                echo '<input type="password" data-toggleable name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($value) . '" class="regular-text" />';
                 echo '</div>';
                 if (!empty($setting['description'])) {
                     echo '<p class="description">' . esc_html($setting['description']) . '</p>';
                 }
                 break;
             case 'select':
-                echo '<select name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" class="regular-text">';
+                echo '<select name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" class="regular-text">';
                 if (isset($setting['options']) && is_array($setting['options'])) {
                     foreach ($setting['options'] as $option_value => $option_label) {
                         echo '<option value="' . esc_attr($option_value) . '" ' . selected($value, $option_value, false) . '>' . esc_html($option_label) . '</option>';
@@ -65,7 +65,7 @@ class Settings {
     }
 
     public static function render_setting_with_toggle($setting) {
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         $mode_key = $setting['key'] . '_mode';
         $current_mode = $settings[$mode_key] ?? 'default';
         $current_value = $settings[$setting['key']] ?? '';
@@ -77,8 +77,8 @@ class Settings {
         
         // Radio buttons
         echo '<div style="margin-bottom: 10px;">';
-        echo '<label style="margin-right: 20px;"><input type="radio" name="picpilot_studio_settings[' . esc_attr($mode_key) . ']" value="default" ' . checked($current_mode, 'default', false) . ' onchange="toggleCustomField(\'' . esc_attr($setting['key']) . '\')"> Use Optimized Default</label>';
-        echo '<label><input type="radio" name="picpilot_studio_settings[' . esc_attr($mode_key) . ']" value="custom" ' . checked($current_mode, 'custom', false) . ' onchange="toggleCustomField(\'' . esc_attr($setting['key']) . '\')"> Custom</label>';
+        echo '<label style="margin-right: 20px;"><input type="radio" name="picpilot_meta_settings[' . esc_attr($mode_key) . ']" value="default" ' . checked($current_mode, 'default', false) . ' onchange="toggleCustomField(\'' . esc_attr($setting['key']) . '\')"> Use Optimized Default</label>';
+        echo '<label><input type="radio" name="picpilot_meta_settings[' . esc_attr($mode_key) . ']" value="custom" ' . checked($current_mode, 'custom', false) . ' onchange="toggleCustomField(\'' . esc_attr($setting['key']) . '\')"> Custom</label>';
         echo '</div>';
         
         // Default value display (read-only)
@@ -91,9 +91,9 @@ class Settings {
         // Custom input field
         echo '<div id="custom_' . esc_attr($setting['key']) . '" style="' . ($current_mode === 'default' ? 'display: none;' : '') . '">';
         if ($setting['type'] === 'textarea') {
-            echo '<textarea name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" rows="3" class="large-text">' . esc_textarea($current_value) . '</textarea>';
+            echo '<textarea name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" rows="3" class="large-text">' . esc_textarea($current_value) . '</textarea>';
         } else {
-            echo '<input type="text" name="picpilot_studio_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($current_value) . '" class="large-text" />';
+            echo '<input type="text" name="picpilot_meta_settings[' . esc_attr($setting['key']) . ']" value="' . esc_attr($current_value) . '" class="large-text" />';
         }
         echo '</div>';
         
@@ -110,7 +110,7 @@ class Settings {
             function toggleCustomField(key) {
                 const defaultDiv = document.getElementById("default_" + key);
                 const customDiv = document.getElementById("custom_" + key);
-                const radios = document.querySelectorAll(`input[name="picpilot_studio_settings[${key}_mode]"]`);
+                const radios = document.querySelectorAll(`input[name="picpilot_meta_settings[${key}_mode]"]`);
                 
                 let selectedValue = "";
                 radios.forEach(radio => {
@@ -133,22 +133,22 @@ class Settings {
     public static function render_settings_page() {
         $current_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'settings';
         
-        echo '<div class="wrap pic-pilot-studio">';
-        echo '<h1>' . esc_html__('Pic Pilot Studio', 'pic-pilot-studio') . '</h1>';
+        echo '<div class="wrap pic-pilot-meta">';
+        echo '<h1>' . esc_html__('Pic Pilot Meta', 'pic-pilot-meta') . '</h1>';
         
         // Tab navigation
         echo '<nav class="nav-tab-wrapper">';
-        echo '<a href="?page=pic-pilot-studio&tab=settings" class="nav-tab ' . ($current_tab === 'settings' ? 'nav-tab-active' : '') . '">';
-        echo esc_html__('Settings', 'pic-pilot-studio');
+        echo '<a href="?page=picpilot-meta-settings&tab=settings" class="nav-tab ' . ($current_tab === 'settings' ? 'nav-tab-active' : '') . '">';
+        echo esc_html__('Settings', 'pic-pilot-meta');
         echo '</a>';
-        echo '<a href="?page=pic-pilot-studio&tab=advanced-prompts" class="nav-tab ' . ($current_tab === 'advanced-prompts' ? 'nav-tab-active' : '') . '">';
-        echo esc_html__('Advanced Prompts', 'pic-pilot-studio');
+        echo '<a href="?page=picpilot-meta-settings&tab=advanced-prompts" class="nav-tab ' . ($current_tab === 'advanced-prompts' ? 'nav-tab-active' : '') . '">';
+        echo esc_html__('Advanced Prompts', 'pic-pilot-meta');
         echo '</a>';
-        echo '<a href="?page=pic-pilot-studio&tab=information" class="nav-tab ' . ($current_tab === 'information' ? 'nav-tab-active' : '') . '">';
-        echo esc_html__('Information & Guide', 'pic-pilot-studio');
+        echo '<a href="?page=picpilot-meta-settings&tab=information" class="nav-tab ' . ($current_tab === 'information' ? 'nav-tab-active' : '') . '">';
+        echo esc_html__('Information & Guide', 'pic-pilot-meta');
         echo '</a>';
-        echo '<a href="?page=pic-pilot-studio&tab=logs" class="nav-tab ' . ($current_tab === 'logs' ? 'nav-tab-active' : '') . '">';
-        echo esc_html__('Logs', 'pic-pilot-studio');
+        echo '<a href="?page=picpilot-meta-settings&tab=logs" class="nav-tab ' . ($current_tab === 'logs' ? 'nav-tab-active' : '') . '">';
+        echo esc_html__('Logs', 'pic-pilot-meta');
         echo '</a>';
         echo '</nav>';
         
@@ -170,7 +170,7 @@ class Settings {
     
     private static function render_settings_tab() {
         echo '<form method="post" action="options.php">';
-        settings_fields('picpilot_studio_settings_group');
+        settings_fields('picpilot_meta_settings_group');
         echo '<table class="form-table">';
 
         // Load modular sections
@@ -184,7 +184,7 @@ class Settings {
     
     private static function render_advanced_prompts_tab() {
         echo '<form method="post" action="options.php">';
-        settings_fields('picpilot_studio_settings_group');
+        settings_fields('picpilot_meta_settings_group');
         echo '<table class="form-table">';
 
         include __DIR__ . '/templates/settings-section-advanced-prompts.php';
@@ -204,16 +204,16 @@ class Settings {
         $log_data = file_exists($log_file) ? file_get_contents($log_file) : '';
 
         if (isset($_GET['cleared'])) {
-            echo '<div class="updated notice"><p>' . esc_html__('Log cleared.', 'pic-pilot-studio') . '</p></div>';
+            echo '<div class="updated notice"><p>' . esc_html__('Log cleared.', 'pic-pilot-meta') . '</p></div>';
         }
 
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
         echo '<textarea id="picpilot-log-content" readonly rows="20" style="width:100%;font-family:monospace;">' . esc_textarea($log_data) . '</textarea>';
         echo '<div style="margin-top: 10px;">';
-        echo '<button type="button" id="picpilot-copy-log" class="button" style="margin-right: 10px;">📋 ' . esc_html__('Copy to Clipboard', 'pic-pilot-studio') . '</button>';
+        echo '<button type="button" id="picpilot-copy-log" class="button" style="margin-right: 10px;">📋 ' . esc_html__('Copy to Clipboard', 'pic-pilot-meta') . '</button>';
         wp_nonce_field('picpilot_clear_log');
         echo '<input type="hidden" name="action" value="picpilot_clear_log">';
-        submit_button(esc_html__('Clear Log', 'pic-pilot-studio'), 'delete', 'submit', false);
+        submit_button(esc_html__('Clear Log', 'pic-pilot-meta'), 'delete', 'submit', false);
         echo '</div>';
         echo '</form>';
         
@@ -228,7 +228,7 @@ class Settings {
                 document.execCommand("copy");
                 const button = this;
                 const originalText = button.innerHTML;
-                button.innerHTML = "✅ ' . esc_js(__('Copied!', 'pic-pilot-studio')) . '";
+                button.innerHTML = "✅ ' . esc_js(__('Copied!', 'pic-pilot-meta')) . '";
                 button.style.backgroundColor = "#46b450";
                 button.style.color = "white";
                 
@@ -238,7 +238,7 @@ class Settings {
                     button.style.color = "";
                 }, 2000);
             } catch (err) {
-                alert("' . esc_js(__('Failed to copy. Please select the text manually and copy.', 'pic-pilot-studio')) . '");
+                alert("' . esc_js(__('Failed to copy. Please select the text manually and copy.', 'pic-pilot-meta')) . '");
             }
         });
         </script>';
@@ -246,7 +246,7 @@ class Settings {
 
     public static function handle_clear_log() {
         if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized', 'pic-pilot-studio'));
+            wp_die(esc_html__('Unauthorized', 'pic-pilot-meta'));
         }
 
         check_admin_referer('picpilot_clear_log');
@@ -256,13 +256,13 @@ class Settings {
             unlink($log_file);
         }
 
-        wp_redirect(admin_url('admin.php?page=pic-pilot-studio&tab=logs&cleared=1'));
+        wp_redirect(admin_url('admin.php?page=picpilot-meta-settings&tab=logs&cleared=1'));
         exit;
     }
 
     public static function sanitize_settings($input) {
         // Get existing settings to preserve values from other tabs
-        $existing_settings = get_option('picpilot_studio_settings', []);
+        $existing_settings = get_option('picpilot_meta_settings', []);
         
         // Handle checkbox fields - if not present in input, they should be 0
         $checkbox_fields = [
@@ -298,7 +298,7 @@ class Settings {
     }
 
     public static function get($key, $default = null) {
-        $options = get_option('picpilot_studio_settings', []);
+        $options = get_option('picpilot_meta_settings', []);
         return $options[$key] ?? $default;
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Helpers;
+namespace PicPilotMeta\Helpers;
 
-use PicPilotStudio\Admin\Settings;
+use PicPilotMeta\Admin\Settings;
 
 class PromptManager {
 
@@ -212,6 +212,11 @@ class PromptManager {
      */
     public static function getDefaultSettings() {
         return [
+            // Default base prompts
+            'default_prompt_alt' => 'Describe this image for alt text in one short sentence.',
+            'default_prompt_title' => 'Suggest a short SEO-friendly title for this image.',
+            'default_prompt_filename' => 'Generate a short, SEO-friendly filename based on this image.',
+            
             // System messages
             'system_message_alt' => 'You are an accessibility expert. Create concise, descriptive alt text under 125 characters. Focus on what\'s meaningful about the image and its purpose. Be objective and specific.',
             'system_message_title' => 'You are a content writer. Create ONE SEO-friendly, descriptive title that captures the main subject and context of the image. Do not provide multiple options or explanations.',
