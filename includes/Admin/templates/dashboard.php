@@ -58,29 +58,28 @@ $scanned_post_types = ScanController::get_scanned_post_types();
                     </div>
                 </div>
                 
-                <!-- Priority Explanations -->
+                <!-- Priority Legend -->
                 <div class="priority-explanations">
                     <div class="priority-explanation">
                         <span class="priority-badge priority-critical">Critical</span>
-                        <span class="priority-description"><?php _e('Featured images, hero images, or images missing both alt text and title attributes', 'pic-pilot-studio'); ?></span>
+                        <span class="priority-description"><?php _e('Missing both attributes', 'pic-pilot-studio'); ?></span>
                     </div>
                     <div class="priority-explanation">
                         <span class="priority-badge priority-high">High</span>
-                        <span class="priority-description"><?php _e('First/second images on pages, important content images, or pages with multiple accessibility issues', 'pic-pilot-studio'); ?></span>
+                        <span class="priority-description"><?php _e('Important content images', 'pic-pilot-studio'); ?></span>
                     </div>
                     <div class="priority-explanation">
                         <span class="priority-badge priority-medium">Medium</span>
-                        <span class="priority-description"><?php _e('Standard content images, decorative images, or images with partial accessibility attributes', 'pic-pilot-studio'); ?></span>
+                        <span class="priority-description"><?php _e('Standard content images', 'pic-pilot-studio'); ?></span>
                     </div>
                 </div>
                 
-                <!-- Important Notes -->
+                <!-- Scan Info -->
                 <div class="scan-notes">
-                    <h4><?php _e('Important Notes', 'pic-pilot-studio'); ?></h4>
                     <ul>
-                        <li><?php _e('<strong>Missing images:</strong> Some page builders may reference images that no longer exist. These will show "Missing issue data" errors when clicked - simply remove the empty image widgets from your pages.', 'pic-pilot-studio'); ?></li>
-                        <li><?php _e('<strong>External images:</strong> Only images hosted on your domain are scanned for accessibility compliance.', 'pic-pilot-studio'); ?></li>
-                        <li><?php _e('<strong>Page builders:</strong> The scanner works with all major page builders by analyzing the final HTML output.', 'pic-pilot-studio'); ?></li>
+                        <li><strong><?php _e('Missing Images', 'pic-pilot-studio'); ?></strong></li>
+                        <li><strong><?php _e('External Images', 'pic-pilot-studio'); ?></strong></li>
+                        <li><strong><?php _e('Page Builders', 'pic-pilot-studio'); ?></strong></li>
                     </ul>
                 </div>
             </div>

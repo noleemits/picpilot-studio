@@ -10,7 +10,10 @@ class Logger {
         $settings = get_option('picpilot_studio_settings', []);
         
         // For debugging purposes, temporarily force logging on debug messages
-        $force_debug = strpos($message, '[DEBUG]') !== false || strpos($message, '[AJAX]') !== false;
+        $force_debug = strpos($message, '[DEBUG]') !== false || 
+                      strpos($message, '[AJAX]') !== false || 
+                      strpos($message, '[USAGE_CHECK]') !== false ||
+                      strpos($message, '[RENAME]') !== false;
         
         if (empty($settings['log_enabled']) && !$force_debug) return;
 

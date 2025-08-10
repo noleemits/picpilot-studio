@@ -350,8 +350,22 @@ function performRename(attachmentId, newFilename, btn, originalText) {
             attachment_id: attachmentId
         })
     })
-        .then(response => response.json())
+        .then(response => {
+            // Log response for debugging
+            console.log('Usage check response status:', response.status);
+            return response.text().then(text => {
+                console.log('Usage check raw response:', text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', text);
+                    throw new Error('Invalid JSON response: ' + text.substring(0, 100));
+                }
+            });
+        })
         .then(result => {
+            console.log('Usage check parsed result:', result);
+            
             if (result.success) {
                 const usageData = result.data;
                 let proceed = true;
@@ -401,7 +415,9 @@ function performRename(attachmentId, newFilename, btn, originalText) {
                     btn.disabled = false;
                 }
             } else {
-                showToast('⚠ Usage check failed: ' + (result.data?.message || result.data), true);
+                const errorMessage = result.data?.message || result.data || 'Unknown error';
+                console.error('Usage check failed:', result);
+                showToast('⚠ Usage check failed: ' + errorMessage, true);
                 btn.textContent = originalText;
                 btn.disabled = false;
             }

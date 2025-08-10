@@ -6,7 +6,8 @@
       "WebFetch(domain:alttext.ai)",
       "WebFetch(domain:wordpress.org)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:hooks.wpbeaverbuilder.com)"
     ],
     "deny": []
   }

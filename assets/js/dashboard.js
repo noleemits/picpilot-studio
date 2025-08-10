@@ -255,7 +255,7 @@
                     <td class="column-image">
                         <div class="image-info">
                             <strong>${issue.image_filename}</strong>
-                            <div class="image-meta">${issue.image_width}×${issue.image_height} • ${issue.image_size_formatted}</div>
+                            <div class="image-meta">${issue.image_width}x${issue.image_height} • ${issue.image_size_formatted}</div>
                         </div>
                     </td>
                     <td class="column-status">

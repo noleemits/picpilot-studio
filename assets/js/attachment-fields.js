@@ -5,7 +5,7 @@
 
 // Immediate test to verify script loading
 const PICPILOT_JS_VERSION = '2.2.0-performance-optimized';
-const PICPILOT_DEBUG = false; // Set to true for debugging
+const PICPILOT_DEBUG = true; // Enable for debugging modal issues
 
 // Optimized logging
 function debugLog(...args) {
@@ -15,6 +15,7 @@ function debugLog(...args) {
 }
 
 debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION);
+console.log('🖼️ MODAL DEBUG: attachment-fields.js loaded, looking for pic-pilot-launch-modal-btn buttons');
 
 (function($) {
     'use strict';
@@ -170,6 +171,12 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
             }
             
             const $buttons = $cachedElements.buttons;
+            console.log('🖼️ MODAL DEBUG: Button search results:', {
+                selector: '.pic-pilot-launch-modal-btn:not(.bound)',
+                foundButtons: $buttons.length,
+                allButtons: $('.pic-pilot-launch-modal-btn').length,
+                containers: $('.pic-pilot-attachment-ai-tools').length
+            });
             debugLog('Found', $buttons.length, 'unbound AI Tools buttons');
             
             if ($buttons.length === 0) {
@@ -186,12 +193,19 @@ debugLog('PicPilot attachment-fields.js loading - Version:', PICPILOT_JS_VERSION
                     const $button = $(this);
                     const attachmentId = $button.data('attachment-id');
                     
+                    console.log('🖼️ MODAL DEBUG: Button clicked!', {
+                        button: $button[0],
+                        attachmentId: attachmentId,
+                        buttonData: $button.data()
+                    });
+                    
                     if (!attachmentId) {
                         console.error('🖼️ No attachment ID found on button');
                         return;
                     }
                     
                     debugLog('AI Tools button clicked for attachment:', attachmentId);
+                    console.log('🖼️ MODAL DEBUG: About to open modal for attachment:', attachmentId);
                     openAIToolsModal(attachmentId);
                 } catch (clickError) {
                     console.error('🖼️ Error in button click handler:', clickError);

@@ -434,7 +434,7 @@ class AjaxController {
      * Generate both alt text and title for an image
      */
     public static function generate_both_metadata() {
-        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+        \check_ajax_referer('picpilot_studio_generate', 'nonce');
 
         $id = \absint($_POST['attachment_id'] ?? 0);
         $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
@@ -495,11 +495,21 @@ class AjaxController {
      * Check where an image is being used
      */
     public static function check_image_usage() {
-        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+        Logger::log('[USAGE_CHECK] Starting usage check. POST data: ' . json_encode($_POST));
+        
+        try {
+            \check_ajax_referer('picpilot_studio_generate', 'nonce');
+        } catch (\Exception $e) {
+            Logger::log('[USAGE_CHECK] Nonce verification failed: ' . $e->getMessage());
+            \wp_send_json_error(['message' => 'Security check failed']);
+            return;
+        }
 
         $id = \absint($_POST['attachment_id'] ?? 0);
+        Logger::log("[USAGE_CHECK] Checking usage for attachment ID: $id");
 
         if (!$id || !\wp_attachment_is_image($id)) {
+            Logger::log("[USAGE_CHECK] Invalid image ID: $id");
             \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
         }
 
@@ -572,6 +582,8 @@ class AjaxController {
 
         $is_safe_to_rename = empty($usage);
         
+        Logger::log("[USAGE_CHECK] Completed for ID $id. Usage count: " . count($usage) . ", Safe to rename: " . ($is_safe_to_rename ? 'yes' : 'no'));
+        
         \wp_send_json_success([
             'usage' => $usage,
             'is_safe_to_rename' => $is_safe_to_rename,
@@ -584,7 +596,7 @@ class AjaxController {
      * Rename image filename (dangerous operation)
      */
     public static function rename_filename() {
-        \check_ajax_referer('pic_pilot_dashboard', 'nonce');
+        \check_ajax_referer('picpilot_studio_generate', 'nonce');
 
         $id = \absint($_POST['attachment_id'] ?? 0);
         $new_filename = \sanitize_file_name($_POST['new_filename'] ?? '');

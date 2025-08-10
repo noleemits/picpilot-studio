@@ -117,7 +117,7 @@ class ExportController {
             $priority_label = self::get_priority_label($result['priority_score']);
             $image_size = '';
             if ($result['image_width'] && $result['image_height']) {
-                $image_size = $result['image_width'] . '×' . $result['image_height'];
+                $image_size = $result['image_width'] . 'x' . $result['image_height'];
                 if ($result['image_filesize']) {
                     $image_size .= ' (' . size_format($result['image_filesize']) . ')';
                 }
@@ -149,11 +149,12 @@ class ExportController {
             $csv_data[] = $row;
         }
         
-        // Convert to CSV string
-        $output = '';
+        // Convert to CSV string with UTF-8 BOM
+        $output = "\xEF\xBB\xBF"; // UTF-8 BOM
         foreach ($csv_data as $row) {
             $output .= '"' . implode('","', array_map(function($field) {
-                return str_replace('"', '""', $field); // Escape quotes
+                // Ensure UTF-8 encoding and escape quotes
+                return str_replace('"', '""', mb_convert_encoding($field, 'UTF-8', 'UTF-8'));
             }, $row)) . '"' . "\n";
         }
         
