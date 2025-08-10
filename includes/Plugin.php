@@ -1,23 +1,23 @@
 <?php
 
-namespace PicPilotStudio;
+namespace PicPilotMeta;
 
-use PicPilotStudio\Admin\AjaxController;
-use PicPilotStudio\Admin\MediaList;
-use PicPilotStudio\Admin\Settings;
-use PicPilotStudio\Admin\AttachmentFields;
-use PicPilotStudio\Admin\ImageTags;
-use PicPilotStudio\Admin\DashboardController;
-use PicPilotStudio\Admin\ScanController;
-use PicPilotStudio\Admin\ExportController;
-use PicPilotStudio\Admin\DatabaseManager;
-use PicPilotStudio\Helpers\Logger;
-use PicPilotStudio\Helpers\MetadataGenerator;
-use PicPilotStudio\Helpers\PromptManager;
+use PicPilotMeta\Admin\AjaxController;
+use PicPilotMeta\Admin\MediaList;
+use PicPilotMeta\Admin\Settings;
+use PicPilotMeta\Admin\AttachmentFields;
+use PicPilotMeta\Admin\ImageTags;
+use PicPilotMeta\Admin\DashboardController;
+use PicPilotMeta\Admin\ScanController;
+use PicPilotMeta\Admin\ExportController;
+use PicPilotMeta\Admin\DatabaseManager;
+use PicPilotMeta\Helpers\Logger;
+use PicPilotMeta\Helpers\MetadataGenerator;
+use PicPilotMeta\Helpers\PromptManager;
 
 defined('ABSPATH') || exit;
 
-define('PIC_PILOT_STUDIO_LANG_PATH', plugin_dir_path(__FILE__) . 'languages');
+define('PIC_PILOT_META_LANG_PATH', plugin_dir_path(__FILE__) . 'languages');
 
 class Plugin {
     public static function init() {
@@ -47,15 +47,15 @@ class Plugin {
     }
 
     public static function load_textdomain() {
-        load_plugin_textdomain('pic-pilot-studio', false, basename(PIC_PILOT_STUDIO_LANG_PATH));
+        load_plugin_textdomain('pic-pilot-meta', false, basename(PIC_PILOT_META_LANG_PATH));
     }
 
     public static function register_admin_page() {
         add_menu_page(
-            'Pic Pilot Studio',
-            'Pic Pilot Studio',
+            'Pic Pilot Meta',
+            'Pic Pilot Meta',
             'manage_options',
-            'pic-pilot-studio',
+            'pic-pilot-meta',
             [Settings::class, 'render_settings_page'],
             'dashicons-format-image'
         );
@@ -76,7 +76,7 @@ class Plugin {
             return;
         }
 
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         $auto_generate_alt = $settings['auto_generate_metadata_on_upload'] ?? false;
         $auto_generate_title = $settings['auto_generate_title_on_upload'] ?? false;
 
@@ -136,7 +136,7 @@ class Plugin {
      * Initialize default advanced prompt settings if they don't exist
      */
     private static function init_default_prompt_settings() {
-        $existing_settings = get_option('picpilot_studio_settings', []);
+        $existing_settings = get_option('picpilot_meta_settings', []);
         $default_settings = PromptManager::getDefaultSettings();
         $needs_update = false;
         
@@ -148,7 +148,7 @@ class Plugin {
         }
         
         if ($needs_update) {
-            update_option('picpilot_studio_settings', $existing_settings);
+            update_option('picpilot_meta_settings', $existing_settings);
             Logger::log("[PLUGIN] Initialized default advanced prompt settings");
         }
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Helpers\Logger;
+use PicPilotMeta\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -17,7 +17,7 @@ class ExportController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-studio'));
+            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         $scan_id = sanitize_text_field($_POST['scan_id'] ?? '');
@@ -29,14 +29,14 @@ class ExportController {
         }
         
         if (empty($scan_id)) {
-            wp_send_json_error(['message' => __('No scan data available for export.', 'pic-pilot-studio')]);
+            wp_send_json_error(['message' => __('No scan data available for export.', 'pic-pilot-meta')]);
         }
         
         // Get all results (no pagination for export)
         $results = DatabaseManager::get_scan_results($scan_id, $filters, 1, 999999);
         
         if (empty($results['results'])) {
-            wp_send_json_error(['message' => __('No data found to export.', 'pic-pilot-studio')]);
+            wp_send_json_error(['message' => __('No data found to export.', 'pic-pilot-meta')]);
         }
         
         $csv_data = self::generate_csv_data($results['results']);
@@ -51,10 +51,10 @@ class ExportController {
             wp_send_json_success([
                 'download_url' => $file_url,
                 'filename' => $filename,
-                'message' => __('CSV export generated successfully.', 'pic-pilot-studio')
+                'message' => __('CSV export generated successfully.', 'pic-pilot-meta')
             ]);
         } else {
-            wp_send_json_error(['message' => __('Failed to generate CSV export.', 'pic-pilot-studio')]);
+            wp_send_json_error(['message' => __('Failed to generate CSV export.', 'pic-pilot-meta')]);
         }
     }
     
@@ -62,12 +62,12 @@ class ExportController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-studio'));
+            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         // PDF export is a pro feature placeholder
         wp_send_json_error([
-            'message' => __('PDF export is available in Pic Pilot Studio Pro.', 'pic-pilot-studio'),
+            'message' => __('PDF export is available in Pic Pilot Studio Pro.', 'pic-pilot-meta'),
             'pro_feature' => true
         ]);
     }

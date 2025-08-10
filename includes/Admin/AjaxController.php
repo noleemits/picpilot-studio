@@ -1,11 +1,11 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Services\ImageDuplicator;
-use PicPilotStudio\Helpers\Logger;
-use PicPilotStudio\Helpers\FilenameGenerator;
-use PicPilotStudio\Helpers\MetadataGenerator;
+use PicPilotMeta\Services\ImageDuplicator;
+use PicPilotMeta\Helpers\Logger;
+use PicPilotMeta\Helpers\FilenameGenerator;
+use PicPilotMeta\Helpers\MetadataGenerator;
 
 // Import WordPress functions
 use function add_action;
@@ -39,7 +39,7 @@ if (!defined('ABSPATH')) {
  * Handles all AJAX requests for the plugin.
  * This includes image duplication and metadata generation.
  * 
- * @package PicPilotStudio\Admin
+ * @package PicPilotMeta\Admin
  */
 
 // WordPress functions are in global namespace
@@ -158,7 +158,7 @@ class AjaxController {
         $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
 
         if (!$id || !\wp_attachment_is_image($id)) {
-            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-meta')]);
         }
 
         $result = FilenameGenerator::generate($id, $keywords);
@@ -216,7 +216,7 @@ class AjaxController {
             return self::log_and_fail($id, 'Invalid image ID');
         }
 
-        $settings = \get_option('picpilot_studio_settings', []);
+        $settings = \get_option('picpilot_meta_settings', []);
         $provider = $settings['ai_provider'] ?? 'openai';
         
         if ($provider === 'gemini') {
@@ -439,7 +439,7 @@ class AjaxController {
         $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
 
         if (!$id || !\wp_attachment_is_image($id)) {
-            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-meta')]);
         }
 
         if (!\current_user_can('upload_files')) {
@@ -447,7 +447,7 @@ class AjaxController {
         }
 
         // Check if both generation features are enabled
-        $settings = \get_option('picpilot_studio_settings', []);
+        $settings = \get_option('picpilot_meta_settings', []);
         $both_enabled = $settings['enable_auto_generate_both'] ?? false;
         // Smart generation features are now always enabled
         $alt_enabled = true;
@@ -510,7 +510,7 @@ class AjaxController {
 
         if (!$id || !\wp_attachment_is_image($id)) {
             Logger::log("[USAGE_CHECK] Invalid image ID: $id");
-            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-meta')]);
         }
 
         if (!\current_user_can('upload_files')) {
@@ -603,7 +603,7 @@ class AjaxController {
         $force_rename = $_POST['force_rename'] === 'true';
 
         if (!$id || !\wp_attachment_is_image($id)) {
-            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-studio')]);
+            \wp_send_json_error(['message' => \__('Invalid image ID.', 'pic-pilot-meta')]);
         }
 
         if (!\current_user_can('upload_files')) {
@@ -611,7 +611,7 @@ class AjaxController {
         }
 
         // Check if dangerous renaming is enabled
-        $settings = \get_option('picpilot_studio_settings', []);
+        $settings = \get_option('picpilot_meta_settings', []);
         $rename_enabled = $settings['enable_dangerous_filename_rename'] ?? false;
 
         if (!$rename_enabled) {
@@ -722,7 +722,7 @@ class AjaxController {
         $keywords = \sanitize_text_field($_POST['keywords'] ?? '');
 
         // Check if dangerous filename rename is enabled
-        $settings = \get_option('picpilot_studio_settings', []);
+        $settings = \get_option('picpilot_meta_settings', []);
         $rename_enabled = $settings['enable_dangerous_filename_rename'] ?? false;
 
         if (!$rename_enabled) {

@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
-use PicPilotStudio\Helpers\Logger;
+use PicPilotMeta\Helpers\Logger;
 
 defined('ABSPATH') || exit;
 
@@ -29,7 +29,7 @@ class DatabaseManager {
             // Also check if tables actually exist (in case they were dropped)
             global $wpdb;
             $table_name = $wpdb->prefix . 'picpilot_scan_history';
-            $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
+            $table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) === $table_name;
             
             if (!$table_exists) {
                 Logger::log("[DATABASE] Tables missing, recreating...");
@@ -248,11 +248,11 @@ class DatabaseManager {
         
         $table = $wpdb->prefix . 'picpilot_scan_history';
         
-        return $wpdb->get_row("
+        return $wpdb->get_row($wpdb->prepare("
             SELECT * FROM $table 
-            WHERE status = 'completed' 
+            WHERE status = %s 
             ORDER BY completed_at DESC 
             LIMIT 1
-        ", ARRAY_A);
+        ", 'completed'), ARRAY_A);
     }
 }

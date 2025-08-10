@@ -1,6 +1,6 @@
 <?php
 
-use PicPilotStudio\Admin\Settings;
+use PicPilotMeta\Admin\Settings;
 
 // System Messages Section
 echo '<tr><td colspan="2"><h2 style="margin: 30px 0 15px 0; padding: 0; color: #333;">🤖 System Messages</h2></td></tr>';
@@ -8,24 +8,24 @@ echo '<tr><td colspan="2"><h2 style="margin: 30px 0 15px 0; padding: 0; color: #
 $system_settings = [
     [
         'key' => 'system_message_alt',
-        'label' => __('Alt Text System Message', 'pic-pilot-studio'),
+        'label' => __('Alt Text System Message', 'pic-pilot-meta'),
         'type' => 'textarea',
         'default' => 'You are an accessibility expert. Create concise, descriptive alt text under 125 characters. Focus on what\'s meaningful about the image and its purpose. Be objective and specific.',
-        'description' => __('Instructions given to AI before generating alt text. Defines the role and format expectations.', 'pic-pilot-studio'),
+        'description' => __('Instructions given to AI before generating alt text. Defines the role and format expectations.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'system_message_title',
-        'label' => __('Title System Message', 'pic-pilot-studio'),
+        'label' => __('Title System Message', 'pic-pilot-meta'),
         'type' => 'textarea',
         'default' => 'You are a content writer. Create ONE SEO-friendly, descriptive title that captures the main subject and context of the image. Do not provide multiple options or explanations.',
-        'description' => __('Instructions given to AI before generating titles. Defines the role and format expectations.', 'pic-pilot-studio'),
+        'description' => __('Instructions given to AI before generating titles. Defines the role and format expectations.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'system_message_filename',
-        'label' => __('Filename System Message', 'pic-pilot-studio'),
+        'label' => __('Filename System Message', 'pic-pilot-meta'),
         'type' => 'textarea',
         'default' => 'You are a file naming expert. Generate concise, descriptive filenames without extensions. Use only alphanumeric characters and hyphens.',
-        'description' => __('Instructions given to AI before generating filenames. Defines the role and format expectations.', 'pic-pilot-studio'),
+        'description' => __('Instructions given to AI before generating filenames. Defines the role and format expectations.', 'pic-pilot-meta'),
     ],
 ];
 
@@ -39,45 +39,45 @@ echo '<tr><td colspan="2"><h2 style="margin: 30px 0 15px 0; padding: 0; color: #
 $context_settings = [
     [
         'key' => 'context_template_alt_prefix',
-        'label' => __('Alt Text Context Prefix', 'pic-pilot-studio'),
+        'label' => __('Alt Text Context Prefix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => 'Context: This image shows ',
-        'description' => __('Text added before keywords when enhancing alt text prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added before keywords when enhancing alt text prompts.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'context_template_alt_suffix',
-        'label' => __('Alt Text Context Suffix', 'pic-pilot-studio'),
+        'label' => __('Alt Text Context Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => '. Incorporate this context naturally into your description. ',
-        'description' => __('Text added after keywords when enhancing alt text prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added after keywords when enhancing alt text prompts.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'context_template_title_prefix',
-        'label' => __('Title Context Prefix', 'pic-pilot-studio'),
+        'label' => __('Title Context Prefix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => 'Context: This image shows ',
-        'description' => __('Text added before keywords when enhancing title prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added before keywords when enhancing title prompts.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'context_template_title_suffix',
-        'label' => __('Title Context Suffix', 'pic-pilot-studio'),
+        'label' => __('Title Context Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => '. Use this context to create a more specific and relevant title. ',
-        'description' => __('Text added after keywords when enhancing title prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added after keywords when enhancing title prompts.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'context_template_filename_prefix',
-        'label' => __('Filename Context Prefix', 'pic-pilot-studio'),
+        'label' => __('Filename Context Prefix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => 'Context: ',
-        'description' => __('Text added before keywords when enhancing filename prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added before keywords when enhancing filename prompts.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'context_template_filename_suffix',
-        'label' => __('Filename Context Suffix', 'pic-pilot-studio'),
+        'label' => __('Filename Context Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => '. Use this context for the filename but keep it concise.',
-        'description' => __('Text added after keywords when enhancing filename prompts.', 'pic-pilot-studio'),
+        'description' => __('Text added after keywords when enhancing filename prompts.', 'pic-pilot-meta'),
     ],
 ];
 
@@ -93,24 +93,24 @@ echo '<tr><td colspan="2"><h2 style="margin: 30px 0 15px 0; padding: 0; color: #
 $copy_settings = [
     [
         'key' => 'copy_suffix_title',
-        'label' => __('Title Copy Suffix', 'pic-pilot-studio'),
+        'label' => __('Title Copy Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => ' (Copy)',
-        'description' => __('Suffix added to duplicated image titles when not using AI generation.', 'pic-pilot-studio'),
+        'description' => __('Suffix added to duplicated image titles when not using AI generation.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'copy_suffix_alt',
-        'label' => __('Alt Text Copy Suffix', 'pic-pilot-studio'),
+        'label' => __('Alt Text Copy Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => ' (Copy)',
-        'description' => __('Suffix added to duplicated image alt text when not using AI generation.', 'pic-pilot-studio'),
+        'description' => __('Suffix added to duplicated image alt text when not using AI generation.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'copy_suffix_filename',
-        'label' => __('Filename Copy Suffix', 'pic-pilot-studio'),
+        'label' => __('Filename Copy Suffix', 'pic-pilot-meta'),
         'type' => 'text',
         'default' => '-copy',
-        'description' => __('Suffix added to duplicated filenames when not using AI generation.', 'pic-pilot-studio'),
+        'description' => __('Suffix added to duplicated filenames when not using AI generation.', 'pic-pilot-meta'),
     ],
 ];
 

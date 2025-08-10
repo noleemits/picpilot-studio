@@ -1,13 +1,13 @@
 <?php
 
-namespace PicPilotStudio\Helpers;
+namespace PicPilotMeta\Helpers;
 
 class Logger {
-    const LOG_FILE = \WP_CONTENT_DIR . '/uploads/pic-pilot-studio.log';
+    const LOG_FILE = \WP_CONTENT_DIR . '/uploads/pic-pilot-meta.log';
     const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
     public static function log($message) {
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         
         // For debugging purposes, temporarily force logging on debug messages
         $force_debug = strpos($message, '[DEBUG]') !== false || 

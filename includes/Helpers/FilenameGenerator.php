@@ -1,8 +1,8 @@
 <?php
 
-namespace PicPilotStudio\Helpers;
+namespace PicPilotMeta\Helpers;
 
-use PicPilotStudio\Admin\Settings;
+use PicPilotMeta\Admin\Settings;
 use WP_Error;
 
 class FilenameGenerator {

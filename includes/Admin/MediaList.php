@@ -1,6 +1,6 @@
 <?php
 
-namespace PicPilotStudio\Admin;
+namespace PicPilotMeta\Admin;
 
 defined('ABSPATH') || exit;
 
@@ -42,20 +42,20 @@ class MediaList {
         // Only output keyword input once
         $keywords_input = '';
         if ($show_keywords) {
-            $keywords_input = '<input type="text" class="picpilot-keywords" placeholder="' . esc_attr__('Optional keywords/context', 'pic-pilot-studio') . '" data-id="' . esc_attr($post->ID) . '" style="margin-right:6px;max-width:160px;" />';
+            $keywords_input = '<input type="text" class="picpilot-keywords" placeholder="' . esc_attr__('Optional keywords/context', 'pic-pilot-meta') . '" data-id="' . esc_attr($post->ID) . '" style="margin-right:6px;max-width:160px;" />';
         }
 
         // Check if alt text already exists
         $existing_alt = get_post_meta($post->ID, '_wp_attachment_image_alt', true);
         $alt_button_text = !empty($existing_alt) ? 
-            esc_html__('Regenerate Alt Text', 'pic-pilot-studio') : 
-            esc_html__('Generate Alt Text', 'pic-pilot-studio');
+            esc_html__('Regenerate Alt Text', 'pic-pilot-meta') : 
+            esc_html__('Generate Alt Text', 'pic-pilot-meta');
 
         // Check if title already exists
         $existing_title = get_the_title($post->ID);
         $title_button_text = !empty($existing_title) ? 
-            esc_html__('Regenerate Title', 'pic-pilot-studio') : 
-            esc_html__('Generate Title', 'pic-pilot-studio');
+            esc_html__('Regenerate Title', 'pic-pilot-meta') : 
+            esc_html__('Generate Title', 'pic-pilot-meta');
 
         $actions['generate_meta'] = $keywords_input
             . sprintf(
@@ -76,12 +76,12 @@ class MediaList {
 
     public static function add_duplicate_action($actions, $post) {
         if ($post->post_type === 'attachment' && current_user_can('upload_files')) {
-            $settings = get_option('picpilot_studio_settings', []);
+            $settings = get_option('picpilot_meta_settings', []);
             $show_in_column = !empty($settings['show_picpilot_in_column']);
             
             // If showing in column, don't add to row actions
             if (!$show_in_column) {
-                $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate', 'pic-pilot-studio') . '</a>';
+                $actions['duplicate_image_quick'] = '<a href="#" class="pic-pilot-duplicate-image" data-id="' . esc_attr($post->ID) . '">' . esc_html__('Duplicate', 'pic-pilot-meta') . '</a>';
             }
         }
 
@@ -97,24 +97,24 @@ class MediaList {
 
         // Enqueue CSS styles
         wp_enqueue_style(
-            'pic-pilot-studio-styles',
-            PIC_PILOT_STUDIO_URL . 'assets/css/pic-pilot-studio.css',
+            'pic-pilot-meta-styles',
+            PIC_PILOT_META_URL . 'assets/css/pic-pilot-meta.css',
             [],
             '1.0.0'
         );
 
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
 
         // Enqueue for duplicate logic (still uses jQuery)
         wp_enqueue_script(
-            'pic-pilot-studio-duplicate',
-            PIC_PILOT_STUDIO_URL . 'assets/js/duplicate-image.js',
+            'pic-pilot-meta-duplicate',
+            PIC_PILOT_META_URL . 'assets/js/duplicate-image.js',
             ['jquery'],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 
-        wp_localize_script('pic-pilot-studio-duplicate', 'PicPilotStudio', [
+        wp_localize_script('pic-pilot-meta-duplicate', 'PicPilotStudio', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('picpilot_studio_generate'),
             // Smart generation features are now always enabled
@@ -127,9 +127,9 @@ class MediaList {
         // Enqueue media list script (vanilla JS)
         wp_enqueue_script(
             'pic-pilot-media-list',
-            PIC_PILOT_STUDIO_URL . 'assets/js/media-list.js',
+            PIC_PILOT_META_URL . 'assets/js/media-list.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
         
@@ -146,9 +146,9 @@ class MediaList {
         //Enqueue smart duplication modal
         wp_enqueue_script(
             'picpilot-smart-duplication',
-            PIC_PILOT_STUDIO_URL . 'assets/js/smart-duplication-modal.js',
+            PIC_PILOT_META_URL . 'assets/js/smart-duplication-modal.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 
@@ -156,18 +156,18 @@ class MediaList {
         // Enqueue bulk operations script
         wp_enqueue_script(
             'pic-pilot-bulk-operations',
-            PIC_PILOT_STUDIO_URL . 'assets/js/bulk-operations.js',
+            PIC_PILOT_META_URL . 'assets/js/bulk-operations.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 
         // Enqueue image tags script
         wp_enqueue_script(
             'pic-pilot-image-tags',
-            PIC_PILOT_STUDIO_URL . 'assets/js/image-tags.js',
+            PIC_PILOT_META_URL . 'assets/js/image-tags.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 
@@ -196,7 +196,7 @@ class MediaList {
         $actions['picpilot_generate'] = sprintf(
             '<a href="#" class="pic-pilot-generate-metadata" data-id="%d">%s</a>',
             esc_attr($post->ID),
-            esc_html__('Generate Metadata', 'pic-pilot-studio')
+            esc_html__('Generate Metadata', 'pic-pilot-meta')
         );
 
         return $actions;
@@ -251,17 +251,17 @@ class MediaList {
         }
         
         echo '<select name="picpilot_filter" id="picpilot-comprehensive-filter">';
-        echo '<option value="">' . esc_html__('All Images', 'pic-pilot-studio') . '</option>';
+        echo '<option value="">' . esc_html__('All Images', 'pic-pilot-meta') . '</option>';
         
         // Alt text options
-        echo '<optgroup label="' . esc_attr__('By Alt Text', 'pic-pilot-studio') . '">';
-        echo '<option value="with_alt"' . selected($current_filter, 'with_alt', false) . '>' . esc_html__('Images with Alt Text', 'pic-pilot-studio') . '</option>';
-        echo '<option value="without_alt"' . selected($current_filter, 'without_alt', false) . '>' . esc_html__('Images without Alt Text', 'pic-pilot-studio') . '</option>';
+        echo '<optgroup label="' . esc_attr__('By Alt Text', 'pic-pilot-meta') . '">';
+        echo '<option value="with_alt"' . selected($current_filter, 'with_alt', false) . '>' . esc_html__('Images with Alt Text', 'pic-pilot-meta') . '</option>';
+        echo '<option value="without_alt"' . selected($current_filter, 'without_alt', false) . '>' . esc_html__('Images without Alt Text', 'pic-pilot-meta') . '</option>';
         echo '</optgroup>';
         
         // Tag options
         if (!empty($tag_options)) {
-            echo '<optgroup label="' . esc_attr__('By Tags', 'pic-pilot-studio') . '">';
+            echo '<optgroup label="' . esc_attr__('By Tags', 'pic-pilot-meta') . '">';
             foreach ($tag_options as $tag_option) {
                 echo sprintf(
                     '<option value="%s"%s>%s</option>',
@@ -371,29 +371,29 @@ class MediaList {
 
         $existing_alt = get_post_meta($post->ID, '_wp_attachment_image_alt', true);
         $alt_button_text = !empty($existing_alt) ? 
-            esc_html__('Regenerate Alt Text', 'pic-pilot-studio') : 
-            esc_html__('Generate Alt Text', 'pic-pilot-studio');
+            esc_html__('Regenerate Alt Text', 'pic-pilot-meta') : 
+            esc_html__('Generate Alt Text', 'pic-pilot-meta');
 
         // Check if title already exists
         $existing_title = get_the_title($post->ID);
         $title_button_text = !empty($existing_title) ? 
-            esc_html__('Regenerate Title', 'pic-pilot-studio') : 
-            esc_html__('Generate Title', 'pic-pilot-studio');
+            esc_html__('Regenerate Title', 'pic-pilot-meta') : 
+            esc_html__('Generate Title', 'pic-pilot-meta');
 
         ?>
         <div id="picpilot-edit-page-controls" style="margin: 20px 0; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">
             <h3 style="margin-top: 0; font-size: 14px; color: #333;">
-                🤖 <?php esc_html_e('AI Metadata Generation', 'pic-pilot-studio'); ?>
+                🤖 <?php esc_html_e('AI Metadata Generation', 'pic-pilot-meta'); ?>
             </h3>
             
             <div style="margin-bottom: 15px;">
                 <label for="picpilot-edit-keywords" style="display: block; margin-bottom: 5px; font-weight: 600;">
-                    <?php esc_html_e('Keywords (optional):', 'pic-pilot-studio'); ?>
+                    <?php esc_html_e('Keywords (optional):', 'pic-pilot-meta'); ?>
                 </label>
                 <input type="text" id="picpilot-edit-keywords" class="widefat" 
-                       placeholder="<?php esc_attr_e('Add context for better AI results (e.g., Business manager, construction site)', 'pic-pilot-studio'); ?>" />
+                       placeholder="<?php esc_attr_e('Add context for better AI results (e.g., Business manager, construction site)', 'pic-pilot-meta'); ?>" />
                 <p class="description">
-                    <?php esc_html_e('Provide context about the person, profession, or setting to help AI generate more accurate descriptions.', 'pic-pilot-studio'); ?>
+                    <?php esc_html_e('Provide context about the person, profession, or setting to help AI generate more accurate descriptions.', 'pic-pilot-meta'); ?>
                 </p>
             </div>
 
@@ -428,23 +428,23 @@ class MediaList {
 
         // Enqueue CSS
         wp_enqueue_style(
-            'pic-pilot-studio-edit-styles',
-            PIC_PILOT_STUDIO_URL . 'assets/css/pic-pilot-studio.css',
+            'pic-pilot-meta-edit-styles',
+            PIC_PILOT_META_URL . 'assets/css/pic-pilot-meta.css',
             [],
             '1.0.0'
         );
 
         // Enqueue JavaScript
         wp_enqueue_script(
-            'pic-pilot-studio-edit',
-            PIC_PILOT_STUDIO_URL . 'assets/js/attachment-edit.js',
+            'pic-pilot-meta-edit',
+            PIC_PILOT_META_URL . 'assets/js/attachment-edit.js',
             [],
-            PIC_PILOT_STUDIO_VERSION,
+            PIC_PILOT_META_VERSION,
             true
         );
 
         // Localize script
-        wp_localize_script('pic-pilot-studio-edit', 'PicPilotStudioEdit', [
+        wp_localize_script('pic-pilot-meta-edit', 'PicPilotStudioEdit', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('picpilot_studio_generate'),
             'attachment_id' => $post->ID,
@@ -455,7 +455,7 @@ class MediaList {
      * Add bulk actions to media library
      */
     public static function add_bulk_actions($actions) {
-        $actions['picpilot_bulk_generate'] = __('Generate AI Metadata', 'pic-pilot-studio');
+        $actions['picpilot_bulk_generate'] = __('Generate AI Metadata', 'pic-pilot-meta');
         return $actions;
     }
 
@@ -500,14 +500,14 @@ class MediaList {
     public static function bulk_action_notices() {
         if (isset($_GET['picpilot_bulk_error']) && $_GET['picpilot_bulk_error'] === 'no_images') {
             echo '<div class="notice notice-error is-dismissible"><p>' . 
-                 esc_html__('No image attachments were selected for AI metadata generation.', 'pic-pilot-studio') . 
+                 esc_html__('No image attachments were selected for AI metadata generation.', 'pic-pilot-meta') . 
                  '</p></div>';
         }
 
         if (isset($_GET['picpilot_bulk_success'])) {
             $count = intval($_GET['picpilot_bulk_success']);
             echo '<div class="notice notice-success is-dismissible"><p>' . 
-                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-studio'), $count) . 
+                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-meta'), $count) . 
                  '</p></div>';
         }
     }
@@ -517,7 +517,7 @@ class MediaList {
      */
     public static function add_picpilot_column($columns) {
         // Always show PicPilot tools column
-        $columns['picpilot_tools'] = __('PicPilot Tools', 'pic-pilot-studio');
+        $columns['picpilot_tools'] = __('PicPilot Tools', 'pic-pilot-meta');
         return $columns;
     }
 
@@ -529,7 +529,7 @@ class MediaList {
             return;
         }
 
-        $settings = get_option('picpilot_studio_settings', []);
+        $settings = get_option('picpilot_meta_settings', []);
         $show_keywords = !empty($settings['show_keywords_field']);
         $show_hover_info = !empty($settings['show_hover_info']);
         $auto_generate_both_enabled = !empty($settings['enable_auto_generate_both']);
@@ -549,14 +549,14 @@ class MediaList {
         
         // Keywords input
         if ($show_keywords) {
-            echo '<input type="text" class="picpilot-keywords" placeholder="' . esc_attr__('Keywords', 'pic-pilot-studio') . '" data-id="' . esc_attr($post_id) . '" style="width:100%;margin-bottom:5px;font-size:11px;" />';
+            echo '<input type="text" class="picpilot-keywords" placeholder="' . esc_attr__('Keywords', 'pic-pilot-meta') . '" data-id="' . esc_attr($post_id) . '" style="width:100%;margin-bottom:5px;font-size:11px;" />';
         }
         
         // Check if alt text already exists
         $existing_alt = get_post_meta($post_id, '_wp_attachment_image_alt', true);
         $alt_button_text = !empty($existing_alt) ? 
-            esc_html__('Regen Alt', 'pic-pilot-studio') : 
-            esc_html__('Gen Alt', 'pic-pilot-studio');
+            esc_html__('Regen Alt', 'pic-pilot-meta') : 
+            esc_html__('Gen Alt', 'pic-pilot-meta');
         
         // Prepare tooltips for each button if hover info is enabled
         $alt_tooltip = '';
@@ -580,7 +580,7 @@ class MediaList {
                 '<button type="button" class="button button-primary button-small picpilot-generate-both" data-id="%d"%s style="width:100%%;font-weight:600;">🪄 %s</button>',
                 esc_attr($post_id),
                 $both_tooltip ? ' title="' . $both_tooltip . '"' : '',
-                esc_html__('Generate Both', 'pic-pilot-studio')
+                esc_html__('Generate Both', 'pic-pilot-meta')
             );
             echo '</div>';
         }
@@ -601,7 +601,7 @@ class MediaList {
             '<button type="button" class="button button-small picpilot-generate-meta" data-id="%d" data-type="title"%s>%s</button>',
             esc_attr($post_id),
             $title_tooltip ? ' title="' . $title_tooltip . '"' : '',
-            esc_html__('Gen Title', 'pic-pilot-studio')
+            esc_html__('Gen Title', 'pic-pilot-meta')
         );
         
         // Duplicate button
@@ -609,7 +609,7 @@ class MediaList {
             '<button type="button" class="button button-small pic-pilot-duplicate-image" data-id="%d"%s>%s</button>',
             esc_attr($post_id),
             $duplicate_tooltip ? ' title="' . $duplicate_tooltip . '"' : '',
-            esc_html__('Duplicate', 'pic-pilot-studio')
+            esc_html__('Duplicate', 'pic-pilot-meta')
         );
         
         echo '</div>';
@@ -621,7 +621,7 @@ class MediaList {
                 '<button type="button" class="button button-small picpilot-rename-filename" data-id="%d"%s style="font-size:10px;color:#d63638;">⚠️ %s</button>',
                 esc_attr($post_id),
                 $rename_tooltip ? ' title="' . $rename_tooltip . '"' : '',
-                esc_html__('Rename', 'pic-pilot-studio')
+                esc_html__('Rename', 'pic-pilot-meta')
             );
             echo '</div>';
         }

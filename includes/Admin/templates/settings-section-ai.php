@@ -1,48 +1,48 @@
 <?php
 // settings-section-ai.php (refactored with API key obscured + toggle)
 
-use PicPilotStudio\Admin\Settings;
+use PicPilotMeta\Admin\Settings;
 
 $settings = [
     [
         'key' => 'ai_provider',
-        'label' => __('🤖 AI Provider', 'pic-pilot-studio'),
+        'label' => __('🤖 AI Provider', 'pic-pilot-meta'),
         'type' => 'select',
         'options' => [
-            'openai' => __('OpenAI (GPT-4 Vision)', 'pic-pilot-studio'),
-            'gemini' => __('Google Gemini Pro Vision', 'pic-pilot-studio'),
+            'openai' => __('OpenAI (GPT-4 Vision)', 'pic-pilot-meta'),
+            'gemini' => __('Google Gemini Pro Vision', 'pic-pilot-meta'),
         ],
-        'description' => __('Choose which AI service to use for generating metadata.', 'pic-pilot-studio'),
+        'description' => __('Choose which AI service to use for generating metadata.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'openai_api_key',
-        'label' => __('🔑 OpenAI API Key', 'pic-pilot-studio'),
+        'label' => __('🔑 OpenAI API Key', 'pic-pilot-meta'),
         'type' => 'password-toggle',
-        'description' => __('Required when using OpenAI provider. Get your API key from OpenAI dashboard.', 'pic-pilot-studio'),
+        'description' => __('Required when using OpenAI provider. Get your API key from OpenAI dashboard.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'gemini_api_key',
-        'label' => __('🔑 Gemini API Key', 'pic-pilot-studio'),
+        'label' => __('🔑 Gemini API Key', 'pic-pilot-meta'),
         'type' => 'password-toggle',
-        'description' => __('Required when using Gemini provider. Get your API key from Google AI Studio.', 'pic-pilot-studio'),
+        'description' => __('Required when using Gemini provider. Get your API key from Google AI Studio.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'default_prompt_alt',
-        'label' => __('✍️ Default Alt Text Prompt', 'pic-pilot-studio'),
+        'label' => __('✍️ Default Alt Text Prompt', 'pic-pilot-meta'),
         'type' => 'text',
-        'description' => __('Prompt used to generate descriptive alt text via AI.', 'pic-pilot-studio'),
+        'description' => __('Prompt used to generate descriptive alt text via AI.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'default_prompt_title',
-        'label' => __('🏷️ Default Title Prompt', 'pic-pilot-studio'),
+        'label' => __('🏷️ Default Title Prompt', 'pic-pilot-meta'),
         'type' => 'text',
-        'description' => __('Prompt used to generate a smart title for the image via AI.', 'pic-pilot-studio'),
+        'description' => __('Prompt used to generate a smart title for the image via AI.', 'pic-pilot-meta'),
     ],
     [
         'key' => 'default_prompt_filename',
-        'label' => __('🧾 Default Filename Prompt', 'pic-pilot-studio'),
+        'label' => __('🧾 Default Filename Prompt', 'pic-pilot-meta'),
         'type' => 'text',
-        'description' => __('Prompt used to suggest a file name during duplication.', 'pic-pilot-studio'),
+        'description' => __('Prompt used to suggest a file name during duplication.', 'pic-pilot-meta'),
     ],
 ];
 
