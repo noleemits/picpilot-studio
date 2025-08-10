@@ -266,18 +266,15 @@ class Settings {
         
         // Handle checkbox fields - if not present in input, they should be 0
         $checkbox_fields = [
-            'enable_filename_generation',
-            'enable_title_generation_on_duplicate',
-            'enable_alt_generation_on_duplicate',
             'auto_generate_metadata_on_upload',
             'auto_generate_title_on_upload',
             'show_keywords_field',
             'log_enabled',
-            'show_picpilot_in_column',
             'show_hover_info',
             'enable_media_modal_tools',
             'enable_auto_generate_both',
-            'enable_dangerous_filename_rename'
+            'enable_dangerous_filename_rename',
+            'remove_settings_on_uninstall'
         ];
         
         // Set checkbox fields to 0 if not present in input (unchecked)

@@ -11,10 +11,10 @@ window.PicPilotFilenameModal = {
             box-shadow: 0 0 10px rgba(0,0,0,0.3); border-radius: 6px; font-family: sans-serif;
         `;
 
-    // Check which features are enabled
-    const titleEnabled = PicPilotStudio.enable_title_generation_on_duplicate;
-    const altEnabled = PicPilotStudio.enable_alt_generation_on_duplicate;
-    const filenameEnabled = PicPilotStudio.enable_filename_generation;
+    // Smart generation features are now always enabled
+    const titleEnabled = true;
+    const altEnabled = true;
+    const filenameEnabled = true;
     
     // Build AI option HTML conditionally
     const buildSection = (name, label, enabled) => {

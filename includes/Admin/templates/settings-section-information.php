@@ -21,10 +21,12 @@ defined('ABSPATH') || exit;
             <ul style="line-height: 1.7;">
                 <li><strong>AI Alt Text Generation:</strong> Automatically create descriptive alt text for accessibility and SEO</li>
                 <li><strong>Smart Titles:</strong> Generate SEO-optimized image titles based on content</li>
-                <li><strong>Intelligent Duplication:</strong> Clone images with AI-generated metadata</li>
-                <li><strong>Upload Auto-Generation:</strong> Automatically process new uploads</li>
-                <li><strong>Media Library Integration:</strong> Generate metadata directly from the media library</li>
-                <li><strong>Attachment Edit Page:</strong> Full metadata generation from individual image edit pages</li>
+                <li><strong>Smart Filename Generation:</strong> Create SEO-friendly filenames during duplication</li>
+                <li><strong>Intelligent Duplication:</strong> Clone images with AI-generated metadata (always enabled)</li>
+                <li><strong>Upload Auto-Generation:</strong> Automatically process new uploads (configurable)</li>
+                <li><strong>Media Library Integration:</strong> Generate metadata directly from the PicPilot column (always visible)</li>
+                <li><strong>Universal Page Builder Support:</strong> Works seamlessly with Elementor, Beaver Builder, Visual Composer, Divi, and more</li>
+                <li><strong>Accessibility Dashboard:</strong> Comprehensive image audit and scanning capabilities</li>
             </ul>
         </div>
     </div>
@@ -39,10 +41,11 @@ defined('ABSPATH') || exit;
             <div style="margin-bottom: 20px;">
                 <h4 style="margin-bottom: 8px;">📚 Media Library (List View)</h4>
                 <p style="margin-left: 20px; color: #666;">
-                    • Generate/Regenerate alt text and titles<br>
+                    • Generate/Regenerate alt text and titles in dedicated PicPilot column<br>
                     • Filter images by alt text status<br>
-                    • Duplicate images with AI metadata<br>
-                    • Use keywords for better context
+                    • Duplicate images with AI metadata (smart duplication always available)<br>
+                    • Use keywords for better context<br>
+                    • Bulk generation with progress tracking
                 </p>
                 
                 <h4 style="margin-bottom: 8px;">✏️ Attachment Edit Page</h4>
@@ -59,17 +62,25 @@ defined('ABSPATH') || exit;
                     • Background processing for new images<br>
                     • Configurable in Settings tab
                 </p>
+                
+                <h4 style="margin-bottom: 8px;">🏗️ Page Builder Modals</h4>
+                <p style="margin-left: 20px; color: #666;">
+                    • Universal modal system works with Elementor, Beaver Builder, Visual Composer, Divi<br>
+                    • Full AI generation capabilities in modal interfaces<br>
+                    • Automatic detection and button injection<br>
+                    • Complete metadata generation without leaving the builder
+                </p>
+                
+                <h4 style="margin-bottom: 8px;">📊 Accessibility Dashboard</h4>
+                <p style="margin-left: 20px; color: #666;">
+                    • Comprehensive image accessibility scanning<br>
+                    • Professional reports and export capabilities<br>
+                    • Priority-based issue identification<br>
+                    • Works with any WordPress theme or page builder
+                </p>
             </div>
 
             <h3 style="color: #d63638;">⚠️ Current Limitations</h3>
-            <div style="background: #fff2cd; padding: 15px; border-left: 4px solid #ffb900; margin-bottom: 15px;">
-                <h4 style="margin-top: 0; color: #8a6914;">📝 Page Builder Modals</h4>
-                <p style="margin-bottom: 0; color: #8a6914;">
-                    <strong>Limited support in Elementor, Gutenberg, and other page builder media modals.</strong><br>
-                    We provide an "Edit with AI" link that opens the attachment edit page in a new tab for full functionality.
-                </p>
-            </div>
-            
             <div style="background: #fff2cd; padding: 15px; border-left: 4px solid #ffb900; margin-bottom: 20px;">
                 <h4 style="margin-top: 0; color: #8a6914;">📁 Bulk Filename Generation</h4>
                 <p style="margin-bottom: 0; color: #8a6914;">
@@ -90,6 +101,7 @@ defined('ABSPATH') || exit;
             <ol style="line-height: 1.7;">
                 <li>Go to <strong>Media → Library</strong></li>
                 <li>Switch to <strong>List View</strong> (if in grid view)</li>
+                <li>Use the <strong>PicPilot Tools</strong> column (always visible)</li>
                 <li>Use the filter dropdown to show "Images without Alt Text"</li>
                 <li>Click <strong>"Generate Alt Text"</strong> or <strong>"Generate Title"</strong> buttons</li>
                 <li>Optionally add keywords in the input field for better context</li>
@@ -104,9 +116,10 @@ defined('ABSPATH') || exit;
                 <li>Click generate buttons and watch fields populate automatically</li>
             </ol>
 
-            <h3 style="color: #2271b1;">3️⃣ Smart Duplication</h3>
+            <h3 style="color: #2271b1;">3️⃣ Smart Duplication (Always Available)</h3>
             <ol style="line-height: 1.7;">
                 <li>From media library list view, click <strong>"Duplicate"</strong></li>
+                <li>Smart duplication modal opens with AI generation options</li>
                 <li>Choose manual entry or AI generation for title, alt text, and filename</li>
                 <li>Use keywords to provide context for AI generation</li>
                 <li>The new image copy will have the generated metadata</li>
@@ -127,6 +140,24 @@ defined('ABSPATH') || exit;
                 <li><strong>"🤖 Generate for Missing Alt Text"</strong> - Finds and processes all images without alt text</li>
                 <li><strong>"🤖 Generate for Missing Titles"</strong> - Finds and processes all images with default or generic titles</li>
                 <li>Monitor the progress as each image is processed automatically</li>
+            </ol>
+            
+            <h3 style="color: #2271b1;">6️⃣ Page Builder Usage</h3>
+            <ol style="line-height: 1.7;">
+                <li>Open any page builder (Elementor, Beaver Builder, Visual Composer, Divi)</li>
+                <li>Access media selection in any widget or element</li>
+                <li>Look for the blue <strong>"Pic Pilot"</strong> button in the media modal</li>
+                <li>Click to open the full AI generation modal</li>
+                <li>Generate alt text, titles, and duplicate images without leaving the builder</li>
+            </ol>
+            
+            <h3 style="color: #2271b1;">7️⃣ Accessibility Dashboard</h3>
+            <ol style="line-height: 1.7;">
+                <li>Go to <strong>Pic Pilot Studio → Dashboard</strong></li>
+                <li>Click <strong>"Start New Scan"</strong> to begin accessibility audit</li>
+                <li>Review scan results with priority-based filtering</li>
+                <li>Use <strong>"Fix Now"</strong> buttons for quick repairs</li>
+                <li>Export comprehensive reports as CSV</li>
             </ol>
         </div>
     </div>
@@ -191,9 +222,9 @@ defined('ABSPATH') || exit;
                 <li>Enable logging in Settings to see detailed error messages</li>
             </ul>
 
-            <h4>🔍 Can't find generate buttons in page builders</h4>
+            <h4>🔍 Can't find Pic Pilot button in page builders</h4>
             <p style="margin-left: 20px; color: #666; line-height: 1.6;">
-                Look for the "Edit with AI" link in media modals, which opens the full attachment edit page where all features work perfectly.
+                The blue "Pic Pilot" button should appear automatically in media modals. If not visible, check that your browser allows JavaScript and try refreshing the page builder interface.
             </p>
 
             <h3 style="color: #2271b1;">📞 Need Help?</h3>

@@ -68,9 +68,10 @@ class DashboardController {
             'ai_features_enabled' => !empty($settings['openai_api_key']) || !empty($settings['gemini_api_key']),
             'auto_generate_both_enabled' => !empty($settings['enable_auto_generate_both']),
             'dangerous_rename_enabled' => !empty($settings['enable_dangerous_filename_rename']),
-            'alt_generation_enabled' => !empty($settings['enable_alt_generation_on_duplicate']),
-            'title_generation_enabled' => !empty($settings['enable_title_generation_on_duplicate']),
-            'filename_generation_enabled' => !empty($settings['enable_filename_generation']),
+            // Smart generation features are now always enabled
+            'alt_generation_enabled' => true,
+            'title_generation_enabled' => true,
+            'filename_generation_enabled' => true,
             'generate_nonce' => wp_create_nonce('picpilot_studio_generate')
         ]);
     }

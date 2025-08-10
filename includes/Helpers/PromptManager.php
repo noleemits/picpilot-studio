@@ -36,9 +36,9 @@ class PromptManager {
         $mode_key = $key . '_mode';
         
         $defaults = [
-            'alt' => 'Describe what you see in this image in a clear, concise way (under 125 characters). Focus on the main subject, important details, and context. Don\'t use "image of" or "picture of". Be specific and objective.',
-            'title' => 'Create ONE descriptive, SEO-friendly title for this image. Focus on the main subject and key elements. Respond with ONLY the title, no explanations, options, or multiple choices.',
-            'filename' => 'Generate a short, descriptive filename for this image (without file extension). Respond with ONLY the filename, no explanations or quotes.'
+            'alt' => 'Describe this image for alt text in one short sentence.',
+            'title' => 'Suggest a short SEO-friendly title for this image.',
+            'filename' => 'Generate a short, SEO-friendly filename based on this image.'
         ];
 
         // Check if user wants default or custom

@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const id = button.dataset.id;
       if (!id) return;
 
-      if (PicPilotStudio.enable_filename_generation || PicPilotStudio.enable_title_generation_on_duplicate || PicPilotStudio.enable_alt_generation_on_duplicate) {
+      // Smart generation is now always enabled
+      if (true) {
         window.PicPilotFilenameModal?.open(id, (data, modal, statusEl) => {
           sendDuplicateRequest(id, data.title, data.filename, data.alt, button, data.keywords, modal, statusEl);
         });

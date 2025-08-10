@@ -4,24 +4,6 @@ use PicPilotStudio\Admin\Settings;
 
 $settings = [
     [
-        'key' => 'enable_filename_generation',
-        'label' => __('🧠 Enable Smart Filename Generation', 'pic-pilot-studio'),
-        'type' => 'checkbox',
-        'description' => __('When duplicating images, shows a modal with options to manually enter, auto-generate with AI, or keep the original filename. When disabled, duplicates use simple "-copy" suffix.', 'pic-pilot-studio'),
-    ],
-    [
-        'key' => 'enable_title_generation_on_duplicate',
-        'label' => __('🧠 Enable Smart Title Generation', 'pic-pilot-studio'),
-        'type' => 'checkbox',
-        'description' => __('When duplicating images, allows you to manually enter a new title, generate one with AI using keywords, or copy the original title. When disabled, duplicates get "(Copy)" suffix.', 'pic-pilot-studio'),
-    ],
-    [
-        'key' => 'enable_alt_generation_on_duplicate',
-        'label' => __('🧠 Enable Smart Alt Text Generation', 'pic-pilot-studio'),
-        'type' => 'checkbox',
-        'description' => __('When duplicating images, allows you to manually enter new alt text, generate descriptive alt text with AI using keywords, or copy the original alt text.', 'pic-pilot-studio'),
-    ],
-    [
         'key' => 'auto_generate_metadata_on_upload',
         'label' => __('🪄 Auto-Generate Alt Text on Upload', 'pic-pilot-studio'),
         'type' => 'checkbox',
@@ -46,16 +28,10 @@ $settings = [
         'description' => __('Logs all metadata generation attempts, results, and errors for debugging.', 'pic-pilot-studio'),
     ],
     [
-        'key' => 'show_picpilot_in_column',
-        'label' => __('📋 Show PicPilot Tools in Column', 'pic-pilot-studio'),
-        'type' => 'checkbox',
-        'description' => __('Display PicPilot tools in a dedicated column instead of hover row actions. More comfortable for frequent use.', 'pic-pilot-studio'),
-    ],
-    [
         'key' => 'show_hover_info',
         'label' => __('ℹ️ Show Metadata on Hover', 'pic-pilot-studio'),
         'type' => 'checkbox',
-        'description' => __('Display alt text, title, and filename on hover when using the PicPilot column. Requires "Show PicPilot Tools in Column" to be enabled.', 'pic-pilot-studio'),
+        'description' => __('Display alt text, title, and filename on hover when using the PicPilot column.', 'pic-pilot-studio'),
     ],
     [
         'key' => 'enable_media_modal_tools',
@@ -74,6 +50,12 @@ $settings = [
         'label' => __('⚠️ Enable Dangerous Filename Renaming', 'pic-pilot-studio'),
         'type' => 'checkbox',
         'description' => __('DANGEROUS: Allows renaming image filenames which may break existing references. The system will detect image usage and warn you, but proceed with extreme caution. Only enable if you understand the risks.', 'pic-pilot-studio'),
+    ],
+    [
+        'key' => 'remove_settings_on_uninstall',
+        'label' => __('🗑️ Remove Settings on Uninstall', 'pic-pilot-studio'),
+        'type' => 'checkbox',
+        'description' => __('When enabled, all plugin settings and data will be completely removed when the plugin is uninstalled. This includes all settings, scan results, and database tables. Leave unchecked to preserve settings for future reinstallation.', 'pic-pilot-studio'),
     ],
 ];
 

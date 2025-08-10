@@ -78,11 +78,10 @@ class AjaxController {
         try {
             $_POST['update_original'] = 'false'; // Prevent updating original image
 
-            // Get settings to check if features are enabled
-            $settings = \get_option('picpilot_studio_settings', []);
-            $title_enabled = $settings['enable_title_generation_on_duplicate'] ?? false;
-            $alt_enabled = $settings['enable_alt_generation_on_duplicate'] ?? false;
-            $filename_enabled = $settings['enable_filename_generation'] ?? false;
+            // Smart generation features are now always enabled
+            $title_enabled = true;
+            $alt_enabled = true;
+            $filename_enabled = true;
 
             if ($new_title === 'generate' && $title_enabled) {
                 $title_result = MetadataGenerator::generate($id, 'title', $keywords);
@@ -450,8 +449,9 @@ class AjaxController {
         // Check if both generation features are enabled
         $settings = \get_option('picpilot_studio_settings', []);
         $both_enabled = $settings['enable_auto_generate_both'] ?? false;
-        $alt_enabled = $settings['enable_alt_generation_on_duplicate'] ?? false;
-        $title_enabled = $settings['enable_title_generation_on_duplicate'] ?? false;
+        // Smart generation features are now always enabled
+        $alt_enabled = true;
+        $title_enabled = true;
 
         if (!$both_enabled) {
             \wp_send_json_error(['message' => 'Auto-generate both feature is disabled in settings']);

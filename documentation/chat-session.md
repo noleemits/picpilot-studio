@@ -904,12 +904,150 @@ Added multiple Beaver Builder specific hooks with debugging:
 
 ---
 
+---
+
+## 🧹 **NEW SESSION - August 10, 2025: Settings Cleanup and Streamlining**
+
+### **Session Focus**: User Experience Optimization and Settings Simplification
+
+**Branch**: `Dashboard` - Continued development with UX improvements and cleanup  
+**Objective**: Streamline settings interface and make smart features default behavior
+
+### **🎯 Major Cleanup Tasks Completed**
+
+#### **1. Added Complete Plugin Data Removal Option**
+**New Feature**: "🗑️ Remove Settings on Uninstall" setting
+- **Location**: Settings → Behavior section
+- **Functionality**: When enabled, completely removes all plugin data on uninstall
+- **Includes**: Settings, database tables, transients, user meta, cached data
+- **Implementation**: New `uninstall.php` file with comprehensive cleanup
+
+#### **2. Simplified Default Prompt Instructions**
+**Updated Default Prompts** to be more concise and user-friendly:
+- **Alt Text**: `"Describe this image for alt text in one short sentence."`
+- **Title**: `"Suggest a short SEO-friendly title for this image."`  
+- **Filename**: `"Generate a short, SEO-friendly filename based on this image."`
+
+**Previous prompts** were verbose and technical - new ones are clear and actionable.
+
+#### **3. Made PicPilot Tools Column Always Visible**
+**Removed Setting**: "📋 Show PicPilot Tools in Column"
+- **New Behavior**: PicPilot column always shows in media library list view
+- **User Benefit**: Consistent interface, no confusion about where tools are located
+- **Updated**: "Show Metadata on Hover" description no longer references column setting
+
+#### **4. Made Smart Generation Features Always Available**
+**Removed Three Settings**:
+- ❌ "🧠 Enable Smart Filename Generation"
+- ❌ "🧠 Enable Smart Title Generation" 
+- ❌ "🧠 Enable Smart Alt Text Generation"
+
+**New Behavior**: All smart generation features always enabled
+- **Duplication Modal**: Always shows AI generation options
+- **User Experience**: No confusion about why features are missing
+- **Code Simplification**: Removed conditional logic throughout codebase
+
+### **🛠️ Technical Implementation Details**
+
+#### **Files Modified for Settings Cleanup**:
+- `uninstall.php` - **Created**: Complete data removal on uninstall
+- `settings-section-behavior.php` - **Updated**: Added uninstall option, removed 4 settings
+- `Settings.php` - **Updated**: Sanitization array cleanup
+- `PromptManager.php` - **Updated**: Simplified default prompts
+
+#### **Files Modified for Always-Enabled Features**:
+- `duplicate-image.js` - **Updated**: Always show smart duplication modal
+- `smart-duplication-modal.js` - **Updated**: Always enable all generation options
+- `AjaxController.php` - **Updated**: Removed conditional feature checks (2 locations)
+- `MediaList.php` - **Updated**: Always show column, always enable smart features
+- `DashboardController.php` - **Updated**: Always pass enabled flags to JavaScript
+
+#### **Code Pattern Changes**:
+```php
+// Before: Conditional logic
+$title_enabled = $settings['enable_title_generation_on_duplicate'] ?? false;
+if ($title_enabled) { /* feature code */ }
+
+// After: Always enabled
+$title_enabled = true; // Smart generation always enabled
+// Feature code always runs
+```
+
+### **📖 Documentation Comprehensive Update**
+
+#### **Information Guide Tab Complete Overhaul**:
+
+**Core Features Section**:
+- ✅ Added "Smart Filename Generation"
+- ✅ Added "Universal Page Builder Support"  
+- ✅ Added "Accessibility Dashboard"
+- ✅ Updated descriptions to reflect "always enabled" features
+
+**Supported Locations Section**:
+- ✅ **Added**: Page Builder Modals section
+- ✅ **Added**: Accessibility Dashboard section
+- ✅ **Updated**: Media Library section reflects dedicated PicPilot column
+
+**Limitations Section**:
+- ❌ **Removed**: Outdated page builder compatibility warning
+- ✅ **Kept**: Bulk filename generation limitation (still relevant)
+
+**How to Use Section**:
+- ✅ **Added**: Page Builder Usage workflow (6️⃣)
+- ✅ **Added**: Accessibility Dashboard workflow (7️⃣)  
+- ✅ **Updated**: Media Library workflow mentions always-visible PicPilot column
+- ✅ **Updated**: Smart Duplication section notes "Always Available"
+
+**Troubleshooting Section**:
+- ✅ **Updated**: Page builder guidance reflects universal modal system
+- ❌ **Removed**: Outdated "Edit with AI" link references
+
+### **🎨 User Experience Improvements Achieved**
+
+#### **Settings Interface**:
+- **Simplified**: Removed 4 redundant settings
+- **Streamlined**: Core features work out-of-the-box  
+- **Professional**: Added proper data cleanup option
+- **Clear**: Updated all descriptions to reflect current behavior
+
+#### **Feature Availability**:
+- **Consistent**: Smart generation always available in duplication
+- **Predictable**: PicPilot column always visible in media library
+- **Universal**: Page builder compatibility documented and supported
+- **Professional**: Accessibility dashboard properly featured
+
+#### **Documentation Quality**:
+- **Current**: All information reflects actual plugin behavior
+- **Comprehensive**: Added workflows for all major features
+- **Professional**: Proper feature highlighting and positioning
+
+### **🏆 Key Accomplishments - Cleanup Session**
+
+1. **🎯 Streamlined UX**: Removed decision fatigue from settings interface
+2. **⚡ Always-Available Features**: Core smart generation works out-of-the-box  
+3. **📋 Consistent Interface**: PicPilot column always visible for predictable workflow
+4. **🗑️ Professional Data Handling**: Complete uninstall option for enterprise compliance
+5. **📖 Documentation Excellence**: Information guide reflects all current capabilities
+6. **🛠️ Code Simplification**: Removed conditional logic throughout codebase
+7. **🎨 User-Friendly Prompts**: Simplified AI instructions for better user understanding
+
+### **📊 Development Statistics**
+
+**Settings Removed**: 4 settings (3 smart generation + 1 column visibility)  
+**Settings Added**: 1 setting (uninstall data removal)  
+**Files Modified**: 9 files updated across PHP, JavaScript, and documentation  
+**Code Simplification**: ~50 lines of conditional logic removed  
+**Documentation Update**: Complete information guide overhaul with 7 workflow sections
+
+---
+
 **Combined Session Results**: 
 - **Phase 1** (July 31): High-performance optimization and documentation overhaul
 - **Phase 2** (August 4): Enterprise-ready accessibility dashboard with pro version foundation
 - **Phase 3** (August 5): Page builder compatibility and user control enhancements
 - **Phase 4** (August 8): Critical AI generation bug fixes and UX improvements
 - **Phase 5** (August 8): Universal modal system with complete page builder compatibility
-- **Phase 6** (August 9): **ONGOING** - Beaver Builder integration debugging and resolution
+- **Phase 6** (August 9): Beaver Builder integration debugging and resolution
+- **Phase 7** (August 10): **Settings cleanup and user experience streamlining**
 
-**Plugin Evolution**: From basic AI assistant → High-performance accessibility solution → Professional enterprise tool with comprehensive audit capabilities → Fully compatible multi-environment solution → Bulletproof AI generation with enterprise-grade error handling → Universal page builder compatible AI modal system → **Advanced cross-builder compatibility investigation**
+**Plugin Evolution**: From basic AI assistant → High-performance accessibility solution → Professional enterprise tool with comprehensive audit capabilities → Fully compatible multi-environment solution → Bulletproof AI generation with enterprise-grade error handling → Universal page builder compatible AI modal system → Advanced cross-builder compatibility investigation → **Professional-grade user experience with streamlined interface**

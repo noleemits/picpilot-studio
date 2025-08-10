@@ -34,13 +34,8 @@ class MediaList {
     public static function add_generate_button($actions, $post) {
         if ($post->post_type !== 'attachment' || !wp_attachment_is_image($post->ID)) return $actions;
 
-        $settings = get_option('picpilot_studio_settings', []);
-        $show_in_column = !empty($settings['show_picpilot_in_column']);
-        
-        // If showing in column, don't add to row actions
-        if ($show_in_column) {
-            return $actions;
-        }
+        // PicPilot tools are now shown in column by default, so don't add to row actions
+        return $actions;
 
         $show_keywords = !empty($settings['show_keywords_field']);
 
@@ -122,9 +117,10 @@ class MediaList {
         wp_localize_script('pic-pilot-studio-duplicate', 'PicPilotStudio', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('picpilot_studio_generate'),
-            'enable_filename_generation' => $settings['enable_filename_generation'] ?? false,
-            'enable_title_generation_on_duplicate' => $settings['enable_title_generation_on_duplicate'] ?? false,
-            'enable_alt_generation_on_duplicate' => $settings['enable_alt_generation_on_duplicate'] ?? false,
+            // Smart generation features are now always enabled
+            'enable_filename_generation' => true,
+            'enable_title_generation_on_duplicate' => true,
+            'enable_alt_generation_on_duplicate' => true,
         ]);
 
 
@@ -520,13 +516,8 @@ class MediaList {
      * Add PicPilot column to media list
      */
     public static function add_picpilot_column($columns) {
-        $settings = get_option('picpilot_studio_settings', []);
-        $show_in_column = !empty($settings['show_picpilot_in_column']);
-        
-        if ($show_in_column) {
-            $columns['picpilot_tools'] = __('PicPilot Tools', 'pic-pilot-studio');
-        }
-        
+        // Always show PicPilot tools column
+        $columns['picpilot_tools'] = __('PicPilot Tools', 'pic-pilot-studio');
         return $columns;
     }
 
