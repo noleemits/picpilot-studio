@@ -55,7 +55,7 @@ class MetadataGenerator {
             return new WP_Error('image_error', 'Failed to load image file.');
         }
 
-        $mime_type = mime_content_type($image_path);
+        $mime_type = self::getMimeType($image_path);
         $base64 = base64_encode($image_data);
         Logger::log("[{$type}] Image processed - MIME: $mime_type, Base64 length: " . strlen($base64));
 
@@ -221,7 +221,7 @@ class MetadataGenerator {
             return new WP_Error('image_error', 'Failed to load image file.');
         }
 
-        $mime_type = mime_content_type($image_path);
+        $mime_type = self::getMimeType($image_path);
         $base64 = base64_encode($image_data);
         Logger::log("[{$type}] Image processed - MIME: $mime_type, Base64 length: " . strlen($base64));
 
@@ -351,6 +351,70 @@ class MetadataGenerator {
         Logger::log("[{$type}] Final cleaned result: " . $content);
         Logger::log("[{$type}] === GEMINI METADATA GENERATION END ===");
         return $content;
+    }
+
+    /**
+     * Get MIME type with multiple fallback methods
+     */
+    private static function getMimeType($file_path) {
+        // First try WordPress's wp_check_filetype function
+        $file_type = wp_check_filetype($file_path);
+        if (!empty($file_type['type'])) {
+            Logger::log("[MIME] WordPress wp_check_filetype detected: " . $file_type['type']);
+            return $file_type['type'];
+        }
+
+        // Second try PHP's finfo_file (most reliable if available)
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            if ($finfo !== false) {
+                $mime_type = finfo_file($finfo, $file_path);
+                finfo_close($finfo);
+                if ($mime_type !== false) {
+                    Logger::log("[MIME] finfo_file detected: " . $mime_type);
+                    return $mime_type;
+                }
+            }
+        }
+
+        // Third try mime_content_type if available
+        if (function_exists('mime_content_type')) {
+            $mime_type = mime_content_type($file_path);
+            if ($mime_type !== false) {
+                Logger::log("[MIME] mime_content_type detected: " . $mime_type);
+                return $mime_type;
+            }
+        }
+
+        // Fourth try getimagesize for images
+        $image_info = getimagesize($file_path);
+        if ($image_info !== false && !empty($image_info['mime'])) {
+            Logger::log("[MIME] getimagesize detected: " . $image_info['mime']);
+            return $image_info['mime'];
+        }
+
+        // Final fallback based on file extension
+        $extension = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
+        $extension_to_mime = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'svg' => 'image/svg+xml',
+            'bmp' => 'image/bmp',
+            'tiff' => 'image/tiff',
+            'ico' => 'image/x-icon'
+        ];
+
+        if (isset($extension_to_mime[$extension])) {
+            Logger::log("[MIME] Extension fallback detected: " . $extension_to_mime[$extension]);
+            return $extension_to_mime[$extension];
+        }
+
+        // Ultimate fallback
+        Logger::log("[MIME] WARNING: Could not detect MIME type, using jpeg fallback");
+        return 'image/jpeg';
     }
 
     /**

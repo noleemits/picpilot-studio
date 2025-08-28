@@ -38,7 +38,14 @@ class FilenameGenerator {
             return new WP_Error('image_error', 'Failed to read image file.');
         }
 
-        $mime_type = mime_content_type($image_path);
+        // Get MIME type with fallbacks
+        $mime_type = wp_check_filetype($image_path)['type'];
+        if (!$mime_type && function_exists('mime_content_type')) {
+            $mime_type = mime_content_type($image_path);
+        }
+        if (!$mime_type) {
+            $mime_type = 'application/octet-stream'; // fallback
+        }
         $base64 = base64_encode($image_data);
         $image_url = "data:$mime_type;base64,$base64";
 
@@ -150,7 +157,14 @@ class FilenameGenerator {
             return new WP_Error('image_error', 'Failed to read image file.');
         }
 
-        $mime_type = mime_content_type($image_path);
+        // Get MIME type with fallbacks
+        $mime_type = wp_check_filetype($image_path)['type'];
+        if (!$mime_type && function_exists('mime_content_type')) {
+            $mime_type = mime_content_type($image_path);
+        }
+        if (!$mime_type) {
+            $mime_type = 'application/octet-stream'; // fallback
+        }
         $base64 = base64_encode($image_data);
 
         // Gemini API request structure
