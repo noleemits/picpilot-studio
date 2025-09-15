@@ -52,6 +52,18 @@ $settings = [
         'description' => __('DANGEROUS: Allows renaming image filenames which may break existing references. The system will detect image usage and warn you, but proceed with extreme caution. Only enable if you understand the risks.', 'pic-pilot-meta'),
     ],
     [
+        'key' => 'enable_selective_upload_area',
+        'label' => __('📤 Enable Selective AI Upload Area', 'pic-pilot-meta'),
+        'type' => 'checkbox',
+        'description' => __('Adds a dedicated upload area where you can upload images and selectively apply AI generation for alt text, title, and filename. This allows you to use AI tokens only when needed, instead of automatic generation on all uploads.', 'pic-pilot-meta'),
+    ],
+    [
+        'key' => 'enable_optimization_compatibility',
+        'label' => __('🔧 Enable Optimization Plugin Compatibility', 'pic-pilot-meta'),
+        'type' => 'checkbox',
+        'description' => __('Improves compatibility with WebP optimization plugins (Smush, Imagify, EWWW, etc.) by temporarily disabling them during file renaming operations. Enable this if you experience file renaming failures with optimization plugins active.', 'pic-pilot-meta'),
+    ],
+    [
         'key' => 'remove_settings_on_uninstall',
         'label' => __('🗑️ Remove Settings on Uninstall', 'pic-pilot-meta'),
         'type' => 'checkbox',

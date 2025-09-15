@@ -274,6 +274,8 @@ class Settings {
             'enable_media_modal_tools',
             'enable_auto_generate_both',
             'enable_dangerous_filename_rename',
+            'enable_selective_upload_area',
+            'enable_optimization_compatibility',
             'remove_settings_on_uninstall'
         ];
         

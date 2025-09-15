@@ -87,11 +87,41 @@ pic-pilot-meta/
 - Updated all settings option names
 - Fixed CSS class references
 
+### 🔧 Optimization Plugin Compatibility Fix (September 2025)
+
+**Issue Identified:** File renaming operations in the SelectiveUpload feature were failing when optimization plugins (WebP converters like Smush, Imagify, EWWW) were active. These plugins run during `wp_generate_attachment_metadata()` and create file locks that interfere with renaming.
+
+**Solution Implemented:**
+- **Pre-rename Strategy**: Moved file renaming to occur BEFORE `wp_generate_attachment_metadata()` instead of after
+- **New Helper Class**: Created `OptimizationCompatibility.php` with advanced conflict handling:
+  - File lock detection and waiting mechanisms
+  - Temporary optimization plugin disabling
+  - Retry logic with exponential backoff (3 attempts)
+  - Deferred WebP processing after rename completion
+- **Settings Integration**: Added "Enable Optimization Plugin Compatibility" checkbox in Behavior settings
+- **Graceful Degradation**: Feature is optional and falls back to standard behavior when disabled
+
+**Files Modified:**
+- `includes/Admin/SelectiveUpload.php` - Main upload logic with pre-rename strategy
+- `includes/Helpers/OptimizationCompatibility.php` - New compatibility helper (created)
+- `includes/Admin/templates/settings-section-behavior.php` - Added new setting
+- `includes/Admin/Settings.php` - Added checkbox field support
+
+**Technical Details:**
+1. Upload → Create attachment record
+2. Pre-process → Generate AI content (alt, title, filename)
+3. Pre-rename → Rename file BEFORE metadata generation
+4. Optimize → Run `wp_generate_attachment_metadata()` with correct filename
+5. Complete → Optimization plugins work with properly named file
+
+This ensures zero conflicts between file renaming and optimization plugins while maintaining full functionality.
+
 ### 📝 Next Session Priorities
-1. Verify default prompts are working after reactivation
-2. Test all major functionality after rebranding
-3. Create visual assets for WordPress.org submission
-4. Final testing before WordPress.org submission
+1. Test optimization plugin compatibility with various WebP plugins
+2. Verify default prompts are working after reactivation
+3. Test all major functionality after rebranding
+4. Create visual assets for WordPress.org submission
+5. Final testing before WordPress.org submission
 
 ### 🗂️ Important File Locations
 - Settings: `includes/Admin/Settings.php`
