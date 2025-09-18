@@ -49,3 +49,47 @@
 
 ### Summary
 Today's work transformed the plugin from a basic accessibility scanner into a comprehensive SEO tool with advanced broken images detection. The focus remained on identification and navigation rather than destructive operations, making it perfect for an SEO plugin that helps users find and fix issues without automatically modifying their content.
+
+## 2025-01-18 - Filter Improvements & WordPress Submission Preparation
+
+### Filter System Enhancements
+- **Updated Dashboard Filters**: Changed filter options from generic terms to user-friendly "Missing Alt tag", "Missing title", "Missing alt tag and title"
+- **Enhanced Media Library Filters**: Synchronized filter options between dashboard and media library for consistent user experience
+- **Smart Title Detection**: Added intelligent regex-based filtering to detect filename-like titles (IMG_, DSC_, etc.)
+- **Improved Filter Logic**: Enhanced database queries to properly handle both alt text and title attribute filtering
+
+### Dashboard Modal Improvements
+- **Fixed Generate Buttons**: Resolved nonce inconsistency that prevented "Generate Both" functionality with keywords
+- **Image URL Display**: Confirmed and documented existing image URL display feature in accessibility fix modal
+- **Enhanced User Experience**: Modal already shows image ID, URL, and preview thumbnail for better context
+
+### Documentation & User Experience
+- **Comprehensive Information Updates**: Updated plugin information tab with all current features and limitations
+- **SVG Limitation Documentation**: Added clear explanation of current SVG file support limitations
+- **Feature Documentation**: Added instructions for broken images scanner and upload auto-generation setup
+- **WordPress Submission Preparation**: Prepared plugin structure and documentation for WordPress.org submission
+
+### Technical Improvements
+- **Code Cleanup**: Fixed JavaScript nonce inconsistencies for better reliability
+- **Filter Architecture**: Enhanced both frontend filters and backend query logic
+- **Database Optimization**: Improved WHERE clause handling for title filtering
+- **WordPress Standards**: Ensured all code follows WordPress coding standards and security practices
+
+### SVG Support Investigation
+- **Market Research**: Analyzed competitor plugins and industry approaches to SVG accessibility
+- **Technical Assessment**: Evaluated implementation complexity (estimated 2-3 days development)
+- **Future Planning**: Documented SVG support as planned feature for future release
+
+### Files Modified
+- `includes/Admin/MediaList.php` - Enhanced filter system and query logic
+- `includes/Admin/templates/dashboard.php` - Updated filter options
+- `assets/js/dashboard.js` - Fixed nonce handling for generate buttons
+- `includes/Admin/templates/settings-section-information.php` - Comprehensive documentation updates
+- `HISTORY.md` - This file
+
+### WordPress Submission Readiness
+- **Code Quality**: All functionality tested and working properly
+- **Documentation**: Comprehensive user guides and feature documentation complete
+- **Security**: Proper nonce verification, capability checks, and input sanitization throughout
+- **Standards Compliance**: Following WordPress coding standards and best practices
+- **User Experience**: Intuitive interface with clear instructions and help documentation
