@@ -182,9 +182,9 @@ $scanned_post_types = ScanController::get_scanned_post_types();
                 
                 <select id="filter-attribute">
                     <option value=""><?php _e('All Issues', 'pic-pilot-meta'); ?></option>
-                    <option value="missing-both"><?php _e('Missing Both', 'pic-pilot-meta'); ?></option>
-                    <option value="missing-alt"><?php _e('Missing Alt Text', 'pic-pilot-meta'); ?></option>
-                    <option value="missing-title"><?php _e('Missing Title', 'pic-pilot-meta'); ?></option>
+                    <option value="missing-alt"><?php _e('Missing Alt tag', 'pic-pilot-meta'); ?></option>
+                    <option value="missing-title"><?php _e('Missing title', 'pic-pilot-meta'); ?></option>
+                    <option value="missing-both"><?php _e('Missing alt tag and title', 'pic-pilot-meta'); ?></option>
                 </select>
                 
                 <select id="filter-page-type">

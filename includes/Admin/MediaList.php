@@ -254,9 +254,10 @@ class MediaList {
         echo '<option value="">' . esc_html__('All Images', 'pic-pilot-meta') . '</option>';
         
         // Alt text options
-        echo '<optgroup label="' . esc_attr__('By Alt Text', 'pic-pilot-meta') . '">';
-        echo '<option value="with_alt"' . selected($current_filter, 'with_alt', false) . '>' . esc_html__('Images with Alt Text', 'pic-pilot-meta') . '</option>';
-        echo '<option value="without_alt"' . selected($current_filter, 'without_alt', false) . '>' . esc_html__('Images without Alt Text', 'pic-pilot-meta') . '</option>';
+        echo '<optgroup label="' . esc_attr__('By Missing Attributes', 'pic-pilot-meta') . '">';
+        echo '<option value="missing_alt"' . selected($current_filter, 'missing_alt', false) . '>' . esc_html__('Missing Alt tag', 'pic-pilot-meta') . '</option>';
+        echo '<option value="missing_title"' . selected($current_filter, 'missing_title', false) . '>' . esc_html__('Missing title', 'pic-pilot-meta') . '</option>';
+        echo '<option value="missing_both"' . selected($current_filter, 'missing_both', false) . '>' . esc_html__('Missing alt tag and title', 'pic-pilot-meta') . '</option>';
         echo '</optgroup>';
         
         // Tag options
@@ -329,17 +330,8 @@ class MediaList {
         }
 
         $filter = sanitize_text_field($_GET['picpilot_alt_filter']);
-        
-        if ($filter === 'with_alt') {
-            // Images with alt text
-            $query->set('meta_query', [
-                [
-                    'key' => '_wp_attachment_image_alt',
-                    'value' => '',
-                    'compare' => '!='
-                ]
-            ]);
-        } elseif ($filter === 'without_alt') {
+
+        if ($filter === 'missing_alt') {
             // Images without alt text
             $query->set('meta_query', [
                 'relation' => 'OR',
@@ -353,12 +345,56 @@ class MediaList {
                     'compare' => 'NOT EXISTS'
                 ]
             ]);
+        } elseif ($filter === 'missing_title') {
+            // Images with default/empty titles - handled in posts_where filter
+            add_filter('posts_where', [__CLASS__, 'filter_missing_title_where'], 10, 2);
+        } elseif ($filter === 'missing_both') {
+            // Images missing both alt text and meaningful titles
+            $query->set('meta_query', [
+                'relation' => 'OR',
+                [
+                    'key' => '_wp_attachment_image_alt',
+                    'value' => '',
+                    'compare' => '='
+                ],
+                [
+                    'key' => '_wp_attachment_image_alt',
+                    'compare' => 'NOT EXISTS'
+                ]
+            ]);
+            // Also filter by title
+            add_filter('posts_where', [__CLASS__, 'filter_missing_title_where'], 10, 2);
         }
 
         // Ensure we only get image attachments
         $query->set('post_type', 'attachment');
         $query->set('post_status', 'inherit');
         $query->set('post_mime_type', 'image');
+    }
+
+    /**
+     * Filter posts WHERE clause for missing titles
+     */
+    public static function filter_missing_title_where($where, $query) {
+        global $wpdb;
+
+        // Only apply to our specific query
+        if (!is_admin() || !isset($_GET['picpilot_alt_filter'])) {
+            return $where;
+        }
+
+        $filter = sanitize_text_field($_GET['picpilot_alt_filter']);
+        if ($filter !== 'missing_title' && $filter !== 'missing_both') {
+            return $where;
+        }
+
+        // Add condition for empty titles or titles that look like filenames
+        $where .= $wpdb->prepare(" AND ({$wpdb->posts}.post_title = '' OR {$wpdb->posts}.post_title IS NULL OR {$wpdb->posts}.post_title REGEXP %s)", '^(IMG_|DSC_|P[0-9]{8}|[0-9]{8}_|[a-zA-Z0-9_-]+\\.(jpg|jpeg|png|gif|webp))$');
+
+        // Remove this filter after use to prevent affecting other queries
+        remove_filter('posts_where', [__CLASS__, 'filter_missing_title_where'], 10);
+
+        return $where;
     }
 
     /**
