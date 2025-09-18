@@ -23,10 +23,11 @@ defined('ABSPATH') || exit;
                 <li><strong>Smart Titles:</strong> Generate SEO-optimized image titles based on content</li>
                 <li><strong>Smart Filename Generation:</strong> Create SEO-friendly filenames during duplication</li>
                 <li><strong>Intelligent Duplication:</strong> Clone images with AI-generated metadata (always enabled)</li>
-                <li><strong>Upload Auto-Generation:</strong> Automatically process new uploads (configurable)</li>
+                <li><strong>Upload Auto-Generation:</strong> Automatically process new uploads with alt text, title, and filename (configurable in Settings)</li>
                 <li><strong>Media Library Integration:</strong> Generate metadata directly from the PicPilot column (always visible)</li>
                 <li><strong>Universal Page Builder Support:</strong> Works seamlessly with Elementor, Beaver Builder, Visual Composer, Divi, and more</li>
                 <li><strong>Accessibility Dashboard:</strong> Comprehensive image audit and scanning capabilities</li>
+                <li><strong>Broken Images Scanner:</strong> Detect and manage broken image links, missing files, and external images</li>
             </ul>
         </div>
     </div>
@@ -58,9 +59,10 @@ defined('ABSPATH') || exit;
                 
                 <h4 style="margin-bottom: 8px;">📤 Upload Processing</h4>
                 <p style="margin-left: 20px; color: #666;">
-                    • Automatic metadata generation on image upload<br>
+                    • Automatic metadata generation on image upload (alt text, title, and filename)<br>
                     • Background processing for new images<br>
-                    • Configurable in Settings tab
+                    • Must be enabled in Settings → Behavior tab<br>
+                    • Works during media upload and drag-and-drop
                 </p>
                 
                 <h4 style="margin-bottom: 8px;">🏗️ Page Builder Modals</h4>
@@ -78,14 +80,29 @@ defined('ABSPATH') || exit;
                     • Priority-based issue identification<br>
                     • Works with any WordPress theme or page builder
                 </p>
+
+                <h4 style="margin-bottom: 8px;">🔍 Broken Images Scanner</h4>
+                <p style="margin-left: 20px; color: #666;">
+                    • Dedicated tab for broken image detection<br>
+                    • Finds missing files, broken links, and external images<br>
+                    • Real-time progress tracking with batch processing<br>
+                    • CSV export for reporting and management
+                </p>
             </div>
 
             <h3 style="color: #d63638;">⚠️ Current Limitations</h3>
-            <div style="background: #fff2cd; padding: 15px; border-left: 4px solid #ffb900; margin-bottom: 20px;">
+            <div style="background: #fff2cd; padding: 15px; border-left: 4px solid #ffb900; margin-bottom: 15px;">
                 <h4 style="margin-top: 0; color: #8a6914;">📁 Bulk Filename Generation</h4>
                 <p style="margin-bottom: 0; color: #8a6914;">
                     <strong>Filename generation is not available in bulk operations.</strong><br>
                     Changing filenames in bulk could disconnect images from their references in posts, pages, and other content. Filename generation is only available for individual images and duplication operations.
+                </p>
+            </div>
+            <div style="background: #fff2cd; padding: 15px; border-left: 4px solid #ffb900; margin-bottom: 20px;">
+                <h4 style="margin-top: 0; color: #8a6914;">🎨 SVG File Support</h4>
+                <p style="margin-bottom: 0; color: #8a6914;">
+                    <strong>SVG files are not currently supported for accessibility scanning or AI generation.</strong><br>
+                    WordPress's core image detection excludes SVG files by default, requiring significant custom implementation. SVG support is planned for a future update.
                 </p>
             </div>
         </div>
@@ -158,6 +175,24 @@ defined('ABSPATH') || exit;
                 <li>Review scan results with priority-based filtering</li>
                 <li>Use <strong>"Fix Now"</strong> buttons for quick repairs</li>
                 <li>Export comprehensive reports as CSV</li>
+            </ol>
+
+            <h3 style="color: #2271b1;">8️⃣ Broken Images Scanner</h3>
+            <ol style="line-height: 1.7;">
+                <li>Go to <strong>Pic Pilot Studio → Dashboard</strong></li>
+                <li>Click the <strong>"Broken Images"</strong> tab</li>
+                <li>Click <strong>"Start Broken Images Scan"</strong> to begin detection</li>
+                <li>Review results: missing files, broken links, external images</li>
+                <li>Use action buttons to edit posts/media or export CSV reports</li>
+            </ol>
+
+            <h3 style="color: #2271b1;">9️⃣ Upload Auto-Generation Setup</h3>
+            <ol style="line-height: 1.7;">
+                <li>Go to <strong>Pic Pilot Studio → Settings</strong></li>
+                <li>Click the <strong>"Behavior"</strong> tab</li>
+                <li>Enable <strong>"Auto-generate on Upload"</strong></li>
+                <li>Select which metadata to generate: alt text, title, and/or filename</li>
+                <li>Now all new image uploads will automatically get AI-generated metadata</li>
             </ol>
         </div>
     </div>

@@ -741,7 +741,7 @@
             
             const data = {
                 action: 'picpilot_generate_both',
-                nonce: picPilotDashboard.nonce,
+                nonce: picPilotSettings.generate_nonce,
                 attachment_id: imageId,
                 keywords: keywords
             };
