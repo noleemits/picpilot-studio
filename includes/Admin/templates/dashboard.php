@@ -102,15 +102,31 @@ $scanned_post_types = ScanController::get_scanned_post_types();
                     </div>
                 </div>
             </div>
+
+            <!-- Priority System Explanation Link -->
+            <div class="priority-help-link">
+                <a href="#priority-explanation" class="button button-link">
+                    <span class="dashicons dashicons-info"></span>
+                    <?php _e('Understanding Priority Levels', 'pic-pilot-meta'); ?>
+                </a>
+            </div>
         <?php else: ?>
             <div class="no-scan-message">
                 <div class="no-scan-icon">📊</div>
                 <h2><?php _e('Welcome to Pic Pilot Dashboard', 'pic-pilot-meta'); ?></h2>
                 <p><?php echo $stats['message']; ?></p>
+
+                <!-- Priority System Explanation Link for No Scan State -->
+                <div class="priority-help-link">
+                    <a href="#priority-explanation" class="button button-link">
+                        <span class="dashicons dashicons-info"></span>
+                        <?php _e('Understanding Priority Levels', 'pic-pilot-meta'); ?>
+                    </a>
+                </div>
             </div>
         <?php endif; ?>
     </div>
-    
+
     <!-- Action Buttons -->
     <div class="dashboard-actions">
         <button type="button" class="button button-primary button-hero" id="start-scan">
@@ -215,7 +231,88 @@ $scanned_post_types = ScanController::get_scanned_post_types();
             <div class="pagination-controls"></div>
         </div>
     </div>
-    
+
+    <!-- Priority System Explanation -->
+    <div class="priority-explanation-section" id="priority-explanation">
+        <h2><?php _e('Understanding Priority Levels', 'pic-pilot-meta'); ?></h2>
+
+        <div class="explanation-content">
+            <p><?php _e('The dashboard uses a priority scoring system (0-10) that categorizes accessibility issues to help you focus on the most important images first:', 'pic-pilot-meta'); ?></p>
+
+            <div class="priority-definitions">
+                <div class="priority-definition">
+                    <div class="priority-header">
+                        <span class="priority-badge priority-critical">Critical</span>
+                        <span class="priority-range">(8-10 points)</span>
+                    </div>
+                    <p><?php _e('Missing both alt text and title attributes', 'pic-pilot-meta'); ?></p>
+                </div>
+
+                <div class="priority-definition">
+                    <div class="priority-header">
+                        <span class="priority-badge priority-high">High</span>
+                        <span class="priority-range">(6-7 points)</span>
+                    </div>
+                    <p><?php _e('Important content images', 'pic-pilot-meta'); ?></p>
+                    <ul>
+                        <li><?php _e('Featured images (homepage heroes, key visuals)', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('First/second images in content', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('Images missing alt text', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('Images on pages rather than posts', 'pic-pilot-meta'); ?></li>
+                    </ul>
+                </div>
+
+                <div class="priority-definition">
+                    <div class="priority-header">
+                        <span class="priority-badge priority-medium">Medium</span>
+                        <span class="priority-range">(4-5 points)</span>
+                    </div>
+                    <p><?php _e('Standard content images', 'pic-pilot-meta'); ?></p>
+                    <ul>
+                        <li><?php _e('Supporting images later in articles', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('Decorative images', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('Secondary product shots', 'pic-pilot-meta'); ?></li>
+                        <li><?php _e('Blog post inline images beyond the first two', 'pic-pilot-meta'); ?></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="scoring-factors">
+                <h3><?php _e('How Priority Scores Are Calculated', 'pic-pilot-meta'); ?></h3>
+                <div class="factors-grid">
+                    <div class="factor">
+                        <strong><?php _e('Base Score:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('5 points', 'pic-pilot-meta'); ?></span>
+                    </div>
+                    <div class="factor">
+                        <strong><?php _e('Featured Image:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('+3 points', 'pic-pilot-meta'); ?></span>
+                    </div>
+                    <div class="factor">
+                        <strong><?php _e('First/Second Image:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('+2 points', 'pic-pilot-meta'); ?></span>
+                    </div>
+                    <div class="factor">
+                        <strong><?php _e('Missing Both Attributes:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('+3 points', 'pic-pilot-meta'); ?></span>
+                    </div>
+                    <div class="factor">
+                        <strong><?php _e('Missing Alt Text:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('+2 points', 'pic-pilot-meta'); ?></span>
+                    </div>
+                    <div class="factor">
+                        <strong><?php _e('Page vs Post:', 'pic-pilot-meta'); ?></strong>
+                        <span><?php _e('+1 point', 'pic-pilot-meta'); ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <p><strong><?php _e('Recommendation:', 'pic-pilot-meta'); ?></strong> <?php _e('Start with Critical and High priority images to maximize accessibility impact with minimal effort.', 'pic-pilot-meta'); ?></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Scans -->
     <?php if (!empty($recent_scans)): ?>
         <div class="recent-scans">
@@ -228,6 +325,7 @@ $scanned_post_types = ScanController::get_scanned_post_types();
                         <th><?php _e('Pages', 'pic-pilot-meta'); ?></th>
                         <th><?php _e('Issues', 'pic-pilot-meta'); ?></th>
                         <th><?php _e('Status', 'pic-pilot-meta'); ?></th>
+                        <th><?php _e('Actions', 'pic-pilot-meta'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -241,6 +339,11 @@ $scanned_post_types = ScanController::get_scanned_post_types();
                                 <span class="status-badge status-<?php echo esc_attr($scan['status']); ?>">
                                     <?php echo esc_html(ucfirst($scan['status'])); ?>
                                 </span>
+                            </td>
+                            <td>
+                                <button type="button" class="button button-small remove-scan" data-scan-id="<?php echo esc_attr($scan['scan_id']); ?>" title="<?php _e('Remove this scan', 'pic-pilot-meta'); ?>">
+                                    <span class="dashicons dashicons-trash"></span>
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>

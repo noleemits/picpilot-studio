@@ -31,6 +31,18 @@
             
             // Fix button handler (delegated for dynamically added buttons)
             $(document).on('click', '.fix-issue-btn', this.showFixModal.bind(this));
+
+            // Remove scan handler
+            $(document).on('click', '.remove-scan', this.removeScan.bind(this));
+
+            // Broken images scan handlers
+            $('#start-broken-scan').on('click', this.startBrokenScan.bind(this));
+            $('#cancel-broken-scan').on('click', this.cancelBrokenScan.bind(this));
+            $('#apply-broken-filters').on('click', this.applyBrokenFilters.bind(this));
+            $('#clear-broken-results').on('click', this.clearBrokenResults.bind(this));
+
+            // Broken images action handlers
+            $('#export-broken-report').on('click', this.exportBrokenReport.bind(this));
         },
         
         checkForExistingData: function() {
@@ -484,12 +496,20 @@
             const isMissingTitle = statusBadges.includes('Missing Title');
             const isMissingBoth = isMissingAlt && isMissingTitle;
             
+            // Get image URL
+            const $imageCell = $row.find('.column-image img');
+            const imageUrl = $imageCell.length ? $imageCell.attr('src') : '';
+
             let fixContent = `
                 <div class="fix-issue-form">
                     <h4>Fix Accessibility Issue</h4>
-                    <p><strong>Image ID:</strong> ${imageId}</p>
+                    <div class="image-info">
+                        <p><strong>Image ID:</strong> ${imageId}</p>
+                        ${imageUrl ? `<p><strong>Image URL:</strong> <a href="${imageUrl}" target="_blank">${imageUrl}</a></p>` : ''}
+                        ${imageUrl ? `<div class="image-preview"><img src="${imageUrl}" alt="" style="max-width: 200px; max-height: 150px; border: 1px solid #ddd; padding: 5px;"></div>` : ''}
+                    </div>
                     <div class="issue-status">
-                        <p><strong>Missing:</strong> 
+                        <p><strong>Missing:</strong>
                         ${isMissingAlt ? '<span class="missing-badge">Alt Text</span>' : ''}
                         ${isMissingTitle ? '<span class="missing-badge">Title</span>' : ''}
                         </p>
@@ -517,15 +537,29 @@
                             </div>
                             <div class="generation-buttons">
                 `;
-                
+
+                // Add option to generate both together if both are missing
+                if (isMissingBoth) {
+                    fixContent += `
+                        <button type="button" class="button button-primary generate-both-btn" data-image-id="${imageId}" style="margin-bottom: 8px;">
+                            🚀 Generate Both Alt Text & Title
+                        </button>
+                        <p style="font-size: 12px; color: #666; margin: 0 0 10px 0;">Recommended: Generate both attributes together for best results</p>
+                    `;
+                }
+
+                // Individual generation options
+                fixContent += `<div class="individual-options">`;
                 if (isMissingAlt) {
-                    fixContent += `<button type="button" class="button button-secondary generate-single-btn" data-type="alt" data-image-id="${imageId}">Generate Alt Text</button>`;
+                    fixContent += `<button type="button" class="button button-secondary generate-single-btn" data-type="alt" data-image-id="${imageId}">Generate Alt Text Only</button>`;
                 }
-                
+
                 if (isMissingTitle) {
-                    fixContent += `<button type="button" class="button button-secondary generate-single-btn" data-type="title" data-image-id="${imageId}">Generate Title</button>`;
+                    fixContent += `<button type="button" class="button button-secondary generate-single-btn" data-type="title" data-image-id="${imageId}">Generate Title Only</button>`;
                 }
-                
+
+                fixContent += `</div>`; // Close individual-options
+
                 // Show "Generate Both" button if both are missing and feature is enabled
                 if (isMissingBoth && window.picPilotSettings && window.picPilotSettings.auto_generate_both_enabled) {
                     fixContent += `<button type="button" class="button button-primary generate-both-btn" data-image-id="${imageId}">🪄 Generate Both</button>`;
@@ -549,6 +583,9 @@
                                 Check Image Usage
                             </button>
                             <div class="filename-rename-section" style="display: none;">
+                                <div class="rename-disclaimer" style="margin: 8px 0; padding: 8px; background: #fef7e6; border: 1px solid #f0c33c; color: #8a6914; font-size: 12px;">
+                                    ⚠️ <strong>Warning:</strong> File renaming may break images that are directly referenced in page content or page builders. Use with caution.
+                                </div>
                                 <div class="filename-input-group" style="margin: 10px 0;">
                                     <input type="text" id="new-filename" placeholder="Enter new filename" class="regular-text">
                                     <button type="button" class="button button-secondary generate-filename-btn" data-image-id="${imageId}">Generate with AI</button>
@@ -867,7 +904,7 @@
             $.post(picPilotDashboard.ajax_url, data)
                 .done((response) => {
                     if (response.success) {
-                        this.showNotification(`Filename renamed to "${response.data.new_filename}"`, 'success');
+                        this.showNotification(`Filename renamed to "${response.data.new_filename}". Please manually update any content references.`, 'success');
                         // Close modal after short delay
                         setTimeout(() => {
                             this.closeFixModal({preventDefault: () => {}});
@@ -886,6 +923,320 @@
                 .always(() => {
                     $btn.text(originalText).prop('disabled', false);
                 });
+        },
+
+        removeScan: function(e) {
+            e.preventDefault();
+
+            const $button = $(e.target).closest('.remove-scan');
+            const scanId = $button.data('scan-id');
+
+            if (!scanId) {
+                this.showNotification('Invalid scan ID', 'error');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to remove this scan? This action cannot be undone.')) {
+                return;
+            }
+
+            const originalHtml = $button.html();
+            $button.html('<span class="dashicons dashicons-update spin"></span>').prop('disabled', true);
+
+            $.post(picPilotDashboard.ajax_url, {
+                action: 'pic_pilot_remove_scan',
+                nonce: picPilotDashboard.nonce,
+                scan_id: scanId
+            })
+            .done((response) => {
+                if (response.success) {
+                    // Remove the row from the table
+                    $button.closest('tr').fadeOut(() => {
+                        $button.closest('tr').remove();
+                    });
+
+                    this.showNotification('Scan removed successfully', 'success');
+                } else {
+                    this.showNotification(response.data?.message || 'Failed to remove scan', 'error');
+                }
+            })
+            .fail(() => {
+                this.showNotification('Failed to remove scan. Please try again.', 'error');
+            })
+            .always(() => {
+                $button.html(originalHtml).prop('disabled', false);
+            });
+        },
+
+        // Broken Images Scan Methods
+        startBrokenScan: function(e) {
+            e.preventDefault();
+
+            if (this.brokenScanInProgress) {
+                return;
+            }
+
+            const options = {
+                check_media_library: $('#check-media-library').is(':checked'),
+                check_content_images: $('#check-content-images').is(':checked'),
+                check_featured_images: $('#check-featured-images').is(':checked'),
+                check_external_images: $('#check-external-images').is(':checked')
+            };
+
+            // Validate at least one option is selected
+            if (!Object.values(options).some(v => v)) {
+                this.showNotification('Please select at least one scan option.', 'error');
+                return;
+            }
+
+            this.brokenScanInProgress = true;
+            this.currentBrokenScanId = null;
+
+            const $button = $('#start-broken-scan');
+            const originalText = $button.text();
+
+            $button.text('Starting scan...').prop('disabled', true);
+            $('#clear-broken-results').hide();
+
+            $.post(picPilotDashboard.ajax_url, {
+                action: 'pic_pilot_start_broken_scan',
+                nonce: picPilotDashboard.nonce,
+                ...options
+            })
+            .done((response) => {
+                if (response.success) {
+                    this.currentBrokenScanId = response.data.scan_id;
+                    this.showBrokenScanProgress(true);
+                    this.processBrokenScanBatches(response.data.scan_id, response.data.total_items);
+                } else {
+                    this.showNotification(response.data?.message || 'Failed to start scan', 'error');
+                    this.brokenScanInProgress = false;
+                }
+            })
+            .fail(() => {
+                this.showNotification('Failed to start scan. Please try again.', 'error');
+                this.brokenScanInProgress = false;
+            })
+            .always(() => {
+                $button.text(originalText).prop('disabled', false);
+            });
+        },
+
+        processBrokenScanBatches: function(scanId, totalItems) {
+            let processedItems = 0;
+            const batchSize = 10;
+            const allResults = [];
+
+            const processBatch = () => {
+                if (!this.brokenScanInProgress || processedItems >= totalItems) {
+                    this.completeBrokenScan(allResults);
+                    return;
+                }
+
+                $.post(picPilotDashboard.ajax_url, {
+                    action: 'pic_pilot_broken_scan_batch',
+                    nonce: picPilotDashboard.nonce,
+                    scan_id: scanId,
+                    batch_start: processedItems,
+                    batch_size: batchSize
+                })
+                .done((response) => {
+                    if (response.success && this.brokenScanInProgress) {
+                        const data = response.data;
+                        processedItems = data.processed_items;
+                        allResults.push(...data.results);
+
+                        this.updateBrokenScanProgress(
+                            data.progress_percentage,
+                            `Scanning... ${processedItems}/${totalItems} items checked`,
+                            `Found ${data.total_broken} broken images`
+                        );
+
+                        if (data.is_complete) {
+                            this.completeBrokenScan(allResults, data.total_broken);
+                        } else {
+                            setTimeout(processBatch, 1000);
+                        }
+                    } else {
+                        this.showNotification(response.data?.message || 'Scan batch failed', 'error');
+                        this.brokenScanInProgress = false;
+                        this.showBrokenScanProgress(false);
+                    }
+                })
+                .fail(() => {
+                    this.showNotification('Scan batch failed. Please try again.', 'error');
+                    this.brokenScanInProgress = false;
+                    this.showBrokenScanProgress(false);
+                });
+            };
+
+            processBatch();
+        },
+
+        showBrokenScanProgress: function(show) {
+            if (show) {
+                $('#broken-scan-progress').fadeIn();
+                $('#broken-results-section').hide();
+            } else {
+                $('#broken-scan-progress').fadeOut();
+            }
+        },
+
+        updateBrokenScanProgress: function(percentage, message, details) {
+            $('.scan-progress-fill').css('width', percentage + '%');
+            $('.scan-message').text(message);
+            $('.scan-details').text(details);
+        },
+
+        completeBrokenScan: function(results, totalBroken) {
+            this.brokenScanInProgress = false;
+            this.showBrokenScanProgress(false);
+
+            // Store current scan ID for bulk actions
+            this.currentBrokenScanResults = results;
+
+            // Update stats
+            $('#broken-stats').show();
+            $('#total-checked').text(this.formatNumber(results.length));
+            $('#broken-count').text(this.formatNumber(totalBroken || results.length));
+
+            // Count different types
+            const missingFiles = results.filter(r => r.issue_type === 'missing-file').length;
+            const externalLinks = results.filter(r => r.issue_type === 'external-link').length;
+
+            $('#missing-count').text(this.formatNumber(missingFiles));
+            $('#external-count').text(this.formatNumber(externalLinks));
+
+            // Show results
+            if (results.length > 0) {
+                this.displayBrokenResults(results);
+                $('#clear-broken-results').show();
+            } else {
+                this.showNotification('Great! No broken images found.', 'success');
+            }
+        },
+
+        displayBrokenResults: function(results) {
+            $('#broken-results-section').show();
+
+            const tbody = $('#broken-results-body');
+            tbody.empty();
+
+            if (results.length === 0) {
+                tbody.append('<tr><td colspan="5" class="loading-row">No broken images found.</td></tr>');
+                return;
+            }
+
+            results.forEach(result => {
+                const row = $(`
+                    <tr>
+                        <td class="column-image">
+                            ${result.image_url ? `<img src="${result.image_url}" alt="" style="max-width: 50px; max-height: 50px;">` : '<span class="dashicons dashicons-format-image"></span>'}
+                        </td>
+                        <td class="column-location">
+                            <strong>${result.location}</strong>
+                            ${result.post_title ? `<br><small>${result.post_title}</small>` : ''}
+                        </td>
+                        <td class="column-issue">
+                            <span class="issue-badge issue-${result.issue_type}">${this.formatIssueType(result.issue_type)}</span>
+                        </td>
+                        <td class="column-details">${result.details}</td>
+                        <td class="column-actions">
+                            <div class="action-buttons">
+                                ${result.post_id ? `<a href="/wp-admin/post.php?post=${result.post_id}&action=edit" class="button button-small button-primary" target="_blank"><span class="dashicons dashicons-edit"></span> Edit Post</a>` : ''}
+                                ${result.id ? `<a href="/wp-admin/post.php?post=${result.id}&action=edit" class="button button-small button-secondary" target="_blank"><span class="dashicons dashicons-admin-media"></span> Edit Media</a>` : ''}
+                                ${!result.post_id && !result.id ? '<span class="no-actions">No direct edit available</span>' : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `);
+                tbody.append(row);
+            });
+
+            $('#export-actions-section').show();
+        },
+
+        cancelBrokenScan: function(e) {
+            e.preventDefault();
+            this.brokenScanInProgress = false;
+            this.showBrokenScanProgress(false);
+            this.showNotification('Broken images scan cancelled.', 'info');
+        },
+
+        clearBrokenResults: function(e) {
+            e.preventDefault();
+
+            if (!confirm('Are you sure you want to clear the broken images results?')) {
+                return;
+            }
+
+            $('#broken-results-section').hide();
+            $('#broken-stats').hide();
+            $('#clear-broken-results').hide();
+            this.showNotification('Results cleared.', 'success');
+        },
+
+        applyBrokenFilters: function(e) {
+            e.preventDefault();
+            // This would filter the displayed results
+            this.showNotification('Filtering functionality would be implemented here', 'info');
+        },
+
+        formatIssueType: function(type) {
+            const types = {
+                'missing-file': 'Missing File',
+                'broken-link': 'Broken Link',
+                'external-link': 'External Link',
+                'orphaned-attachment': 'Orphaned'
+            };
+            return types[type] || type;
+        },
+
+        formatNumber: function(num) {
+            return num.toLocaleString();
+        },
+
+        // Broken Images Action Methods
+
+        exportBrokenReport: function(e) {
+            e.preventDefault();
+
+            if (!this.currentBrokenScanId) {
+                this.showNotification('No scan data available. Please run a scan first.', 'error');
+                return;
+            }
+
+            const $button = $(e.target);
+            const originalText = $button.text();
+
+            $button.text('Generating report...').prop('disabled', true);
+
+            $.post(picPilotDashboard.ajax_url, {
+                action: 'pic_pilot_export_broken_report',
+                nonce: picPilotDashboard.nonce,
+                scan_id: this.currentBrokenScanId
+            })
+            .done((response) => {
+                if (response.success) {
+                    // Create download link and trigger download
+                    const link = document.createElement('a');
+                    link.href = response.data.download_url;
+                    link.download = response.data.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    this.showNotification(response.data.message, 'success');
+                } else {
+                    this.showNotification(response.data?.message || 'Failed to export report', 'error');
+                }
+            })
+            .fail(() => {
+                this.showNotification('Failed to export report. Please try again.', 'error');
+            })
+            .always(() => {
+                $button.text(originalText).prop('disabled', false);
+            });
         }
     };
     

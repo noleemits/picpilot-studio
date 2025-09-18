@@ -11,6 +11,7 @@ use PicPilotMeta\Admin\DashboardController;
 use PicPilotMeta\Admin\ScanController;
 use PicPilotMeta\Admin\ExportController;
 use PicPilotMeta\Admin\DatabaseManager;
+use PicPilotMeta\Admin\SelectiveUpload;
 use PicPilotMeta\Helpers\Logger;
 use PicPilotMeta\Helpers\MetadataGenerator;
 use PicPilotMeta\Helpers\PromptManager;
@@ -37,6 +38,7 @@ class Plugin {
             DashboardController::init(); // Initialize dashboard functionality
             ScanController::init(); // Initialize scanning functionality
             ExportController::init(); // Initialize export functionality
+            SelectiveUpload::init(); // Initialize selective upload functionality
             
             // Initialize default advanced prompt settings
             self::init_default_prompt_settings();

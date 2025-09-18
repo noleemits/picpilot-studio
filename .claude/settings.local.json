@@ -14,7 +14,8 @@
       "Bash(for file in ExportController.php ImageTags.php MediaList.php ScanController.php Settings.php)",
       "Bash(do echo \"Processing $file...\")",
       "Bash(sed:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

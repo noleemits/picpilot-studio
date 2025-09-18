@@ -394,7 +394,7 @@ function performRename(attachmentId, newFilename, btn, originalText) {
                         .then(response => response.json())
                         .then(renameResult => {
                             if (renameResult.success) {
-                                showToast(`✔ Filename renamed to: ${renameResult.data.new_filename}`);
+                                showToast(`✔ Filename renamed to: ${renameResult.data.new_filename}. Note: Please manually update any content that references this image.`);
                                 // Refresh the page to update the UI
                                 setTimeout(() => {
                                     window.location.reload();

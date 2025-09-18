@@ -60,6 +60,7 @@ class AjaxController {
         add_action('wp_ajax_picpilot_check_image_usage', [__CLASS__, 'check_image_usage']);
         add_action('wp_ajax_picpilot_rename_filename', [__CLASS__, 'rename_filename']);
         add_action('wp_ajax_picpilot_generate_ai_filename', [__CLASS__, 'generate_ai_filename']);
+        add_action('wp_ajax_picpilot_update_attachment_metadata', [__CLASS__, 'update_attachment_metadata']);
     }
 
     public static function duplicate_image() {
@@ -750,6 +751,44 @@ class AjaxController {
             ]);
         } catch (\Throwable $e) {
             Logger::log('[AI_FILENAME] Error: ' . $e->getMessage());
+            \wp_send_json_error(['message' => $e->getMessage()]);
+        }
+    }
+    
+    /**
+     * Update attachment metadata (for selective upload manual edits)
+     */
+    public static function update_attachment_metadata() {
+        \check_ajax_referer('picpilot_selective_upload', 'nonce');
+        
+        if (!\current_user_can('upload_files')) {
+            \wp_send_json_error(['message' => 'Permission denied']);
+        }
+        
+        $attachment_id = \absint($_POST['attachment_id'] ?? 0);
+        $type = \sanitize_text_field($_POST['type'] ?? '');
+        $value = \sanitize_text_field($_POST['value'] ?? '');
+        
+        if (!$attachment_id || !\wp_attachment_is_image($attachment_id)) {
+            \wp_send_json_error(['message' => 'Invalid attachment ID']);
+        }
+        
+        if (!in_array($type, ['alt', 'title'])) {
+            \wp_send_json_error(['message' => 'Invalid metadata type']);
+        }
+        
+        try {
+            if ($type === 'alt') {
+                \update_post_meta($attachment_id, '_wp_attachment_image_alt', $value);
+            } elseif ($type === 'title') {
+                \wp_update_post(['ID' => $attachment_id, 'post_title' => $value]);
+            }
+            
+            Logger::log("[SELECTIVE_UPDATE] Updated {$type} for attachment #{$attachment_id}: '{$value}'");
+            \wp_send_json_success(['message' => 'Metadata updated successfully']);
+            
+        } catch (\Throwable $e) {
+            Logger::log('[SELECTIVE_UPDATE] Error: ' . $e->getMessage());
             \wp_send_json_error(['message' => $e->getMessage()]);
         }
     }

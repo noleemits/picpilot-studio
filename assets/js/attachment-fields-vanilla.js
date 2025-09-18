@@ -913,7 +913,7 @@ function $1(selector, context = document) {
                     });
 
                     if (renameResponse.success) {
-                        showToast(`✔ Filename renamed to: ${renameResponse.data.new_filename}`);
+                        showToast(`✔ Filename renamed to: ${renameResponse.data.new_filename}. Please manually update any content references.`);
                         // Close the main modal after a delay
                         setTimeout(() => {
                             const mainModal = $1('#pic-pilot-ai-modal');

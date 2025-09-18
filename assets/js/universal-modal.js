@@ -756,9 +756,9 @@
                 if (renameResult.success) {
                     showUniversalStatus(statusEl, `✅ File renamed successfully to: <strong>${renameResult.data.new_filename}</strong>`, 'success');
                     
-                    // Show reload suggestion after 2 seconds
+                    // Show additional info after 2 seconds
                     setTimeout(() => {
-                        showUniversalStatus(statusEl, `✅ File renamed to: <strong>${renameResult.data.new_filename}</strong><br><small>Consider refreshing the page to see updated filename.</small>`, 'success');
+                        showUniversalStatus(statusEl, `✅ File renamed to: <strong>${renameResult.data.new_filename}</strong><br><small style="color: #d97706;">⚠️ The plugin does not automatically replace image references in your content. Please manually update any posts, pages, or widgets that reference this image.</small>`, 'success');
                     }, 2000);
                 } else {
                     const errorMessage = renameResult.data?.message || renameResult.data || 'Unknown error';
