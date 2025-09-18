@@ -48,3 +48,33 @@ wp-config.php
 /tests/
 phpunit.xml
 .phpunit.result.cache
+
+# Development and submission preparation files
+HISTORY.md
+development-notes.md
+submission-checklist.md
+.claude/
+*.backup
+
+# Local development environment files
+wp-config-local.php
+.env
+.env.local
+
+# Git and version control (if nested)
+.git/
+.gitignore.backup
+
+# Database dumps and exports (if any)
+*.sql
+*.sql.gz
+database-backup/
+
+# Build artifacts (if using build tools)
+build/
+dist/
+*.min.js.map
+*.min.css.map
+
+# Dependencies that should be bundled (keep actual files)
+# Only ignore if you're not including dependencies
