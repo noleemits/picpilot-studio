@@ -10,11 +10,11 @@ defined('ABSPATH') || exit;
     
     <div class="postbox">
         <h2 class="hndle" style="padding: 15px; margin: 0; background: #f1f1f1; border-bottom: 1px solid #ddd;">
-            🤖 What is Pic Pilot Studio?
+            🤖 What is Pic Pilot Meta?
         </h2>
         <div class="inside" style="padding: 20px;">
             <p style="font-size: 14px; line-height: 1.6;">
-                <strong>Pic Pilot Studio</strong> is an AI-powered WordPress plugin that automatically generates high-quality metadata for your images, including alt text, titles, and smart filenames. It supports both OpenAI's GPT-4 Vision and Google's Gemini Pro Vision models to analyze your images and create SEO-friendly, accessible descriptions.
+                <strong>Pic Pilot Meta</strong> is an AI-powered WordPress plugin that automatically generates high-quality metadata for your images, including alt text, titles, and smart filenames. It supports both OpenAI's GPT-4 Vision and Google's Gemini Pro Vision models to analyze your images and create SEO-friendly, accessible descriptions.
             </p>
             
             <h3 style="color: #2271b1; margin-top: 25px;">🎯 Core Features</h3>
@@ -34,7 +34,7 @@ defined('ABSPATH') || exit;
 
     <div class="postbox">
         <h2 class="hndle" style="padding: 15px; margin: 0; background: #f1f1f1; border-bottom: 1px solid #ddd;">
-            📍 Where to Use Pic Pilot Studio
+            📍 Where to Use Pic Pilot Meta
         </h2>
         <div class="inside" style="padding: 20px;">
             

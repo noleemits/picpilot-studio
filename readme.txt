@@ -1,31 +1,46 @@
 === Pic Pilot Meta ===
 Contributors: stephenhernandez
-Tags: AI, image SEO, alt text, image title, media library, OpenAI, GPT, Gemini, accessibility, metadata
+Tags: AI, image SEO, alt text, accessibility, broken images, media library, OpenAI, Gemini, dashboard, scanner
 Requires at least: 5.6
-Tested up to: 6.4
+Tested up to: 6.7
 Requires PHP: 7.4
 Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AI-powered image metadata generation for WordPress. Automatically create SEO-optimized titles, alt text, and duplicate images with intelligent AI assistance.
+Complete AI-powered image management suite. Generate metadata, scan accessibility issues, detect broken images, and automate upload processing with OpenAI and Gemini.
 
 == Description ==
 
-**Pic Pilot Meta** is an AI-powered media management plugin that revolutionizes how you handle image metadata on WordPress sites.
+**Pic Pilot Meta** is a comprehensive AI-powered image management suite that transforms how you handle images, accessibility, and SEO on WordPress sites.
 
-Transform your content workflow with intelligent automation:
+Complete image management solution with intelligent automation:
 
 🤖 **AI-Powered Generation**
-- Generate SEO-optimized titles and alt text using OpenAI GPT-4o or Google Gemini
+- Generate SEO-optimized titles and alt text using OpenAI GPT-4V or Google Gemini Pro Vision
 - Context-aware descriptions with keyword integration
+- Automatic processing on upload with customizable settings
 - Professional-quality metadata in seconds
 
+📊 **Accessibility Dashboard**
+- Comprehensive image accessibility scanning across your entire site
+- Priority-based issue identification (Critical/High/Medium)
+- Real-time progress tracking and detailed reporting
+- CSV export for professional accessibility audits
+- Works with any theme or page builder
+
+🔍 **Broken Images Scanner**
+- Dedicated scanner for detecting broken image links and missing files
+- Identifies external images, orphaned attachments, and broken references
+- Batch processing with real-time progress indicators
+- Professional reporting and management tools
+
 📸 **Smart Media Management**
+- Enhanced Media Library with filtering by missing alt text/titles
 - One-click AI generation directly in Media Library
 - Duplicate images with AI-generated metadata
+- Universal page builder support (Elementor, Beaver Builder, Divi, Visual Composer)
 - Bulk operations for processing multiple images
-- Real-time preview and editing capabilities
 
 ⚡ **Performance Optimized**
 - Modern JavaScript with intelligent caching
@@ -33,13 +48,7 @@ Transform your content workflow with intelligent automation:
 - Throttled operations for smooth UI experience
 - Memory leak prevention and cleanup
 
-🔧 **Developer Features**
-- Built with Composer and PSR-4 architecture
-- Comprehensive logging and debugging tools
-- Translation-ready with text domain support
-- Extensible plugin architecture
-
-**Perfect for:** Content creators, SEO specialists, accessibility compliance, e-commerce sites, and any WordPress site with image-heavy content.
+**Perfect for:** Content creators, SEO specialists, accessibility compliance teams, e-commerce sites, digital agencies, and any WordPress site requiring professional image management.
 
 == Features ==
 
@@ -105,12 +114,12 @@ Transform your content workflow with intelligent automation:
 
 == Screenshots ==
 
-1. AI Tools modal showing title and alt text generation options
-2. Media Library integration with AI generation buttons
-3. Settings page with OpenAI and Gemini configuration
-4. Bulk operations interface for processing multiple images
-5. Real-time generation progress and success messages
-6. Debug logs with copy-to-clipboard functionality
+1. Accessibility Dashboard with comprehensive scanning results and priority-based filtering
+2. Media Library integration showing PicPilot column with generation buttons and filtering options
+3. AI generation modal with image preview, keyword input, and multiple generation options
+4. Broken Images Scanner interface with real-time detection and professional reporting
+5. Settings panel with OpenAI and Gemini configuration plus upload auto-generation options
+6. Enhanced fix modal showing image details, URL, and quick generation tools
 
 == Roadmap ==
 

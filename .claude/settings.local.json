@@ -15,7 +15,9 @@
       "Bash(do echo \"Processing $file...\")",
       "Bash(sed:*)",
       "Bash(done)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebSearch",
+      "WebFetch(domain:alttextgenerator.co)"
     ],
     "deny": []
   }

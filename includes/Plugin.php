@@ -59,8 +59,22 @@ class Plugin {
             'manage_options',
             'pic-pilot-meta',
             [Settings::class, 'render_settings_page'],
-            'dashicons-format-image'
+            self::get_menu_icon()
         );
+    }
+
+    /**
+     * Get custom menu icon as base64 encoded SVG
+     */
+    private static function get_menu_icon() {
+        // Custom Pic Pilot Meta icon - AI/image processing themed
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L3 7l9 5 9-5-9-5zM3 17l9 5 9-5M3 12l9 5 9-5"/>
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M8 8h8v8H8z" fill="none" stroke="currentColor" stroke-width="1"/>
+        </svg>';
+
+        return 'data:image/svg+xml;base64,' . base64_encode($svg);
     }
 
     public static function init_upload_handlers() {
