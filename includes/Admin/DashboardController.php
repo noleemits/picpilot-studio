@@ -426,6 +426,7 @@ class DashboardController {
                         'image_url' => $image_url ?: '',
                         'location' => 'Media Library',
                         'issue_type' => 'missing-file',
+                        /* translators: %s: filename of the missing image file */
                         'details' => sprintf(__('File missing: %s', 'pic-pilot-meta'), basename($file_path ?: '')),
                         'post_title' => get_the_title($attachment_id)
                     ];
@@ -471,6 +472,7 @@ class DashboardController {
                                 'id' => $featured_id,
                                 'post_id' => $post->ID,
                                 'image_url' => wp_get_attachment_url($featured_id) ?: '',
+                                /* translators: %s: post title where the featured image is missing */
                                 'location' => sprintf(__('Featured image in "%s"', 'pic-pilot-meta'), $post->post_title),
                                 'issue_type' => 'missing-file',
                                 'details' => __('Featured image file is missing', 'pic-pilot-meta'),
@@ -501,6 +503,7 @@ class DashboardController {
                                     'type' => 'content_image',
                                     'post_id' => $post->ID,
                                     'image_url' => $img_url,
+                                    /* translators: %s: post title where the content image is broken */
                                     'location' => sprintf(__('Content in "%s"', 'pic-pilot-meta'), $post->post_title),
                                     'issue_type' => 'broken-link',
                                     'details' => __('Image file does not exist', 'pic-pilot-meta'),
@@ -515,6 +518,7 @@ class DashboardController {
                                     'type' => 'external_image',
                                     'post_id' => $post->ID,
                                     'image_url' => $img_url,
+                                    /* translators: %s: post title where the external image is broken */
                                     'location' => sprintf(__('Content in "%s"', 'pic-pilot-meta'), $post->post_title),
                                     'issue_type' => 'external-link',
                                     'details' => __('External image is not accessible', 'pic-pilot-meta'),

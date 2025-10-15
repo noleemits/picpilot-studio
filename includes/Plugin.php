@@ -75,7 +75,7 @@ class Plugin {
                     // Remove the style attribute that WordPress adds with !important
                     iconElement.removeAttribute("style");
                     // Set our custom background image
-                    iconElement.style.backgroundImage = "url(\'' . self::get_menu_icon() . '\')";
+                    iconElement.style.backgroundImage = "url(\'' . esc_js(self::get_menu_icon()) . '\')";
                     iconElement.style.backgroundSize = "20px 20px";
                     iconElement.style.backgroundRepeat = "no-repeat";
                     iconElement.style.backgroundPosition = "center";

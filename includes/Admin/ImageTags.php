@@ -254,7 +254,7 @@ class ImageTags {
             );
         }
 
-        echo implode(' ', $tag_names);
+        echo wp_kses_post(implode(' ', $tag_names));
         echo '<br><button type="button" class="picpilot-add-tag-btn button-link" data-id="' . esc_attr($attachment_id) . '" style="font-size: 12px; color: #0073aa;">' . esc_html__('+ Add tag', 'pic-pilot-meta') . '</button>';
     }
 

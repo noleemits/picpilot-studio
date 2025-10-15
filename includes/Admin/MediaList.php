@@ -542,8 +542,9 @@ class MediaList {
 
         if (isset($_GET['picpilot_bulk_success'])) {
             $count = intval($_GET['picpilot_bulk_success']);
-            echo '<div class="notice notice-success is-dismissible"><p>' . 
-                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-meta'), $count) . 
+            echo '<div class="notice notice-success is-dismissible"><p>' .
+                 /* translators: %d: number of images that had AI metadata generated */
+                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-meta'), $count) .
                  '</p></div>';
         }
     }
