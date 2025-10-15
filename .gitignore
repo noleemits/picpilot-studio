@@ -62,6 +62,7 @@ WORDPRESS-SUBMISSION-ROADMAP.md
 *.backup
 debug.txt
 *.zip
+.wordpress-org/
 
 # Local development environment files
 wp-config-local.php
