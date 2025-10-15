@@ -1,5 +1,5 @@
 /**
- * Pic Pilot Studio Dashboard JavaScript
+ * Pic Pilot Meta Dashboard JavaScript
  */
 
 (function($) {

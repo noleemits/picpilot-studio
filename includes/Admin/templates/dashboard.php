@@ -10,7 +10,7 @@ $scanned_post_types = ScanController::get_scanned_post_types();
 ?>
 
 <div class="wrap pic-pilot-dashboard">
-    <h1><?php _e('Pic Pilot Studio Dashboard', 'pic-pilot-meta'); ?></h1>
+    <h1><?php _e('Pic Pilot Meta Dashboard', 'pic-pilot-meta'); ?></h1>
     
     <!-- Quick Stats Header -->
     <div class="dashboard-header">

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Uninstall script for Pic Pilot Studio
- * 
+ * Uninstall script for Pic Pilot Meta
+ *
  * This file is executed when the plugin is deleted from WordPress
  */
 

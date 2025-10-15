@@ -67,7 +67,7 @@ class ExportController {
         
         // PDF export is a pro feature placeholder
         wp_send_json_error([
-            'message' => __('PDF export is available in Pic Pilot Studio Pro.', 'pic-pilot-meta'),
+            'message' => __('PDF export is available in Pic Pilot Meta Pro.', 'pic-pilot-meta'),
             'pro_feature' => true
         ]);
     }

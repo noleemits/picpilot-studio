@@ -170,7 +170,7 @@ defined('ABSPATH') || exit;
             
             <h3 style="color: #2271b1;">7️⃣ Accessibility Dashboard</h3>
             <ol style="line-height: 1.7;">
-                <li>Go to <strong>Pic Pilot Studio → Dashboard</strong></li>
+                <li>Go to <strong>Pic Pilot Meta → Dashboard</strong></li>
                 <li>Click <strong>"Start New Scan"</strong> to begin accessibility audit</li>
                 <li>Review scan results with priority-based filtering</li>
                 <li>Use <strong>"Fix Now"</strong> buttons for quick repairs</li>
@@ -179,7 +179,7 @@ defined('ABSPATH') || exit;
 
             <h3 style="color: #2271b1;">8️⃣ Broken Images Scanner</h3>
             <ol style="line-height: 1.7;">
-                <li>Go to <strong>Pic Pilot Studio → Dashboard</strong></li>
+                <li>Go to <strong>Pic Pilot Meta → Dashboard</strong></li>
                 <li>Click the <strong>"Broken Images"</strong> tab</li>
                 <li>Click <strong>"Start Broken Images Scan"</strong> to begin detection</li>
                 <li>Review results: missing files, broken links, external images</li>
@@ -188,7 +188,7 @@ defined('ABSPATH') || exit;
 
             <h3 style="color: #2271b1;">9️⃣ Upload Auto-Generation Setup</h3>
             <ol style="line-height: 1.7;">
-                <li>Go to <strong>Pic Pilot Studio → Settings</strong></li>
+                <li>Go to <strong>Pic Pilot Meta → Settings</strong></li>
                 <li>Click the <strong>"Behavior"</strong> tab</li>
                 <li>Enable <strong>"Auto-generate on Upload"</strong></li>
                 <li>Select which metadata to generate: alt text, title, and/or filename</li>

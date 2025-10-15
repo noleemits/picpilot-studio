@@ -76,7 +76,7 @@ Complete image management solution with intelligent automation:
 
 **🔧 Technical Features**
 * PSR-4 autoloading with Composer architecture
-* Translation-ready (text domain: `pic-pilot-studio`)
+* Translation-ready (text domain: `pic-pilot-meta`)
 * Extensible settings system with validation
 * Debug mode for development and troubleshooting
 * WordPress coding standards compliance
