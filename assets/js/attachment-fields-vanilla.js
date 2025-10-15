@@ -176,12 +176,23 @@ function $1(selector, context = document) {
     function initAITools() {
         try {
             const buttons = $('.pic-pilot-launch-modal-btn:not(.bound)');
-            
-            // Mark buttons as bound
+
             buttons.forEach(button => {
                 button.classList.add('bound');
+
+                // Attach direct click handler in case event delegation fails
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const attachmentId = this.dataset.attachmentId;
+                    if (attachmentId) {
+                        openAIToolsModal(attachmentId);
+                    } else {
+                        console.error('PicPilot: No attachment ID found');
+                    }
+                });
             });
-            
+
         } catch (error) {
             console.error('PicPilot: Error in initAITools:', error);
         }
