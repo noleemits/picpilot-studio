@@ -20,7 +20,7 @@ class ScanController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
+            wp_die(esc_html__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         $scan_type = sanitize_text_field($_POST['scan_type'] ?? 'partial');
@@ -68,7 +68,7 @@ class ScanController {
         check_ajax_referer('pic_pilot_dashboard', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Insufficient permissions', 'pic-pilot-meta'));
+            wp_die(esc_html__('Insufficient permissions', 'pic-pilot-meta'));
         }
         
         $scan_id = sanitize_text_field($_POST['scan_id']);
