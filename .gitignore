@@ -51,12 +51,17 @@ phpunit.xml
 
 # Development and submission preparation files
 HISTORY.md
+history.md
+DEVELOPMENT-NOTES.md
 development-notes.md
+SUBMISSION-CHECKLIST.md
 submission-checklist.md
 README.md
 WORDPRESS-SUBMISSION-ROADMAP.md
 .claude/
 *.backup
+debug.txt
+*.zip
 
 # Local development environment files
 wp-config-local.php
