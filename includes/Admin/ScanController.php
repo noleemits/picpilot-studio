@@ -500,11 +500,11 @@ class ScanController {
         // Get surrounding text (50 chars before and after)
         $before_start = max(0, $img_pos - 50);
         $context['before'] = substr($content, $before_start, $img_pos - $before_start);
-        $context['before'] = strip_tags($context['before']);
-        
+        $context['before'] = wp_strip_all_tags($context['before']);
+
         $after_start = $img_pos + strlen($img_tag);
         $context['after'] = substr($content, $after_start, 50);
-        $context['after'] = strip_tags($context['after']);
+        $context['after'] = wp_strip_all_tags($context['after']);
         
         // Find nearest heading
         $before_content = substr($content, 0, $img_pos);

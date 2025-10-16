@@ -20,8 +20,8 @@ defined('ABSPATH') || exit;
 
 class Plugin {
     public static function init() {
-        // Load plugin text domain
-        add_action('plugins_loaded', [__CLASS__, 'load_textdomain']);
+        // Note: load_plugin_textdomain() is no longer needed for WordPress.org hosted plugins (WP 4.6+)
+        // WordPress automatically loads translations from wordpress.org
 
         // Register admin menu
         add_action('admin_menu', [__CLASS__, 'register_admin_page']);
@@ -44,10 +44,6 @@ class Plugin {
         
         // Initialize upload handlers
         self::init_upload_handlers();
-    }
-
-    public static function load_textdomain() {
-        load_plugin_textdomain('pic-pilot-meta', false, dirname(plugin_basename(PIC_PILOT_META_PATH)) . '/languages');
     }
 
     public static function register_admin_page() {

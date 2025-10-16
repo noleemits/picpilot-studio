@@ -436,12 +436,12 @@ class MediaList {
             <div class="picpilot-edit-buttons" style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button type="button" id="picpilot-generate-title-edit" class="button button-secondary" data-id="<?php echo esc_attr($post->ID); ?>">
                     <span class="dashicons dashicons-format-chat" style="margin-right: 5px;"></span>
-                    <?php echo $title_button_text; ?>
+                    <?php echo esc_html($title_button_text); ?>
                 </button>
-                
+
                 <button type="button" id="picpilot-generate-alt-edit" class="button button-secondary" data-id="<?php echo esc_attr($post->ID); ?>">
                     <span class="dashicons dashicons-universal-access-alt" style="margin-right: 5px;"></span>
-                    <?php echo $alt_button_text; ?>
+                    <?php echo esc_html($alt_button_text); ?>
                 </button>
             </div>
 
@@ -544,7 +544,7 @@ class MediaList {
             $count = intval($_GET['picpilot_bulk_success']);
             echo '<div class="notice notice-success is-dismissible"><p>' .
                  /* translators: %d: number of images that had AI metadata generated */
-                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-meta'), $count) .
+                 sprintf(esc_html__('Successfully generated AI metadata for %d images.', 'pic-pilot-meta'), absint($count)) .
                  '</p></div>';
         }
     }
@@ -616,7 +616,7 @@ class MediaList {
             echo sprintf(
                 '<button type="button" class="button button-primary button-small picpilot-generate-both" data-id="%d"%s style="width:100%%;font-weight:600;">🪄 %s</button>',
                 esc_attr($post_id),
-                $both_tooltip ? ' title="' . $both_tooltip . '"' : '',
+                $both_tooltip ? ' title="' . esc_attr($both_tooltip) . '"' : '',
                 esc_html__('Generate Both', 'pic-pilot-meta')
             );
             echo '</div>';
@@ -629,23 +629,23 @@ class MediaList {
         echo sprintf(
             '<button type="button" class="button button-small picpilot-generate-meta" data-id="%d" data-type="alt"%s>%s</button>',
             esc_attr($post_id),
-            $alt_tooltip ? ' title="' . $alt_tooltip . '"' : '',
-            $alt_button_text
+            $alt_tooltip ? ' title="' . esc_attr($alt_tooltip) . '"' : '',
+            esc_html($alt_button_text)
         );
-        
+
         // Title button
         echo sprintf(
             '<button type="button" class="button button-small picpilot-generate-meta" data-id="%d" data-type="title"%s>%s</button>',
             esc_attr($post_id),
-            $title_tooltip ? ' title="' . $title_tooltip . '"' : '',
+            $title_tooltip ? ' title="' . esc_attr($title_tooltip) . '"' : '',
             esc_html__('Gen Title', 'pic-pilot-meta')
         );
-        
+
         // Duplicate button
         echo sprintf(
             '<button type="button" class="button button-small pic-pilot-duplicate-image" data-id="%d"%s>%s</button>',
             esc_attr($post_id),
-            $duplicate_tooltip ? ' title="' . $duplicate_tooltip . '"' : '',
+            $duplicate_tooltip ? ' title="' . esc_attr($duplicate_tooltip) . '"' : '',
             esc_html__('Duplicate', 'pic-pilot-meta')
         );
         
@@ -657,7 +657,7 @@ class MediaList {
             echo sprintf(
                 '<button type="button" class="button button-small picpilot-rename-filename" data-id="%d"%s style="font-size:10px;color:#d63638;">⚠️ %s</button>',
                 esc_attr($post_id),
-                $rename_tooltip ? ' title="' . $rename_tooltip . '"' : '',
+                $rename_tooltip ? ' title="' . esc_attr($rename_tooltip) . '"' : '',
                 esc_html__('Rename', 'pic-pilot-meta')
             );
             echo '</div>';

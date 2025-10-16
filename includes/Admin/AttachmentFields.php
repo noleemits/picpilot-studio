@@ -136,8 +136,10 @@ class AttachmentFields {
             
             
             // Load Universal Modal JavaScript inline for page builder compatibility
-            <?php 
+            <?php
             if (!empty($universal_modal_content)) {
+                // Output JavaScript content directly (already from trusted plugin file)
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 echo $universal_modal_content;
             }
             ?>

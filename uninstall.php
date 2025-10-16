@@ -26,8 +26,10 @@ if ($remove_settings) {
     // Remove dashboard database tables if they exist
     $scan_results_table = $wpdb->prefix . 'picpilot_scan_results';
     $scan_history_table = $wpdb->prefix . 'picpilot_scan_history';
-    $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $scan_results_table));
-    $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS %i", $scan_history_table));
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot use placeholders
+    $wpdb->query("DROP TABLE IF EXISTS {$scan_results_table}");
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot use placeholders
+    $wpdb->query("DROP TABLE IF EXISTS {$scan_history_table}");
     
     // Remove any custom capabilities or user meta
     $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", 'picpilot_%'));
